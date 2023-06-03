@@ -1,0 +1,34 @@
+CLAVE,DESCRIPCION
+01,Casa única en el terreno
+02,Casa que comparte terreno con otra(s)
+03,Casa dúplex
+04,Departamento en edificio
+05,Vivienda en vecindad o cuartería
+06,Vivienda en cuarto de azotea de un edificio
+07,Local no construido para habitación
+08,Vivienda móvil
+09,Refugio
+99,No especificado de vivienda particular
+10,Vivienda colectiva
+11,Casa hogar para menores de edad
+12,Casa hogar para adultos mayores 
+13,Albergue para indígenas 
+14,Albergue para migrantes
+15,Albergue para mujeres o víctimas de violencia intrafamiliar 
+16,Albergue o dormitorio público para personas en situación de calle 
+17,Centro de rehabilitación para personas con adicciones
+18,"Hospital psiquiátrico, centro o residencia para personas con trastornos mentales o discapacidad mental "
+19,Hospital o residencia para personas con enfermedades incurables o terminales 
+20,Albergue para familiares de personas hospitalizadas o que reciben tratamiento médico en hospitales 
+21,Otra clase de albergue para población vulnerable 
+22,"Refugio para mujeres, sus hijas e hijos en situación de violencia"
+23,"Hotel, motel, pensión, casa de huéspedes"
+24,"Hospital, sanatorio, clínica u otro establecimiento de salud"
+25,"Internado escolar, residencia estudiantil"
+26,"Convento, monasterio, congregación religiosa, seminario "
+27,"Cárcel, prisión, reclusorio, penitenciaría, colonia penal"
+28,"Centro de rehabilitación para menores infractores, correccional "
+29,"Campamento de trabajo, barraca de trabajadores, residencia médica"
+30,"Cuartel, campamento, destacamento militar, naval o de policía"
+31,Campamento de damnificados 
+32,"Otra clase diferente a las anteriores (prostíbulo, comuna) "

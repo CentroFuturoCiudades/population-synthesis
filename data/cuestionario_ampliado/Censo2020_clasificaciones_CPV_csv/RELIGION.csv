@@ -1,0 +1,47 @@
+CLAVE,DESCRIPCION
+1101,Católica
+1201,Católica ortodoxa
+1301,Anabautista/Menonita
+1302,Anglicana/Episcopal
+1303,Bautista
+1304,Luterana
+1305,Metodista
+1306,Presbiteriana
+1307,Otras protestantes
+1311,Amistad Cristiana
+1312,Asambleas de Dios
+1313,Iglesia Apostólica de la Fe en Cristo Jesús
+1314,Iglesia de Dios
+1315,Iglesia de Dios de la Profecía
+1316,Iglesia de Dios en México del Evangelio Completo
+1317,Príncipe de Paz
+1318,Otras asociaciones pentecostales
+1321,Iglesia Cristiana Interdenominacional
+1322,"Iglesia del Dios Vivo, Columna y Apoyo de la Verdad, la Luz del Mundo"
+1323,Iglesia de Cristo
+1324,Iglesia del Nazareno
+1325,Movimientos Sincréticos Judaicos Neoisraelitas
+1326,Otras cristianas evangélicas
+1331,Adventista del Séptimo Día
+1332,Iglesia de Jesucristo de los Santos de los Últimos Días (Mormón)
+1333,Testigo de Jehová
+1341,Cristiana
+1342,Evangélica
+1343,Pentecostal
+1344,Protestante
+2101,Judía
+2201,Islámica
+2301,Budista
+2302,Hinduista
+2303,Otras de origen oriental
+2401,New Age y Escuelas esotéricas
+2501,Raíces étnicas
+2601,Raíces afro
+2701,Espiritualista
+2801,Cultos populares
+2901,Otros movimientos religiosos
+3101,Ninguna religión
+3102,Ateos
+3103,Agnósticos
+3104,Sin adscripción religiosa (creyente)
+9999,Religión no especificada

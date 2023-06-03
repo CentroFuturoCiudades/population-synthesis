@@ -1,0 +1,42 @@
+CLAVE,DESCRIPCION
+101,Jefa(e)
+201,Esposa(o)
+202,Concubina(o) o unión libre
+203,Amante o querida(o)
+301,Hija(o)
+302,Hija(o) adoptiva(o)
+303,Hijastra(o)
+304,Hija(o) de crianza
+401,Madre o padre
+402,Madrastra o padrastro
+403,Hermana(o)
+404,Media(o) hermana(o)
+405,Hermanastra(o)
+406,Abuela(o)
+407,Bisabuela(o) o tatarabuela(o)
+408,Nieta(o)
+409,Nietastra(o)
+410,Esposa(o) de nieto(a)
+411,Bisnieta(o) o tataranieta(o)
+412,Tía(o)
+413,Sobrina(o)
+414,Sobrina(o) nieta(o)
+415,Prima(o)
+416,Suegra(o)
+417,Consuegra(o)
+418,Nuera o yerno
+419,Cuñada(o)
+420,Concuña(o)
+421,Madrina o padrino
+422,Ahijada(o)
+423,Comadre o compadre
+424,Otros familiares
+501,Sin parentesco
+502,Tutor(a)
+503,Tutelada(o)
+601,Trabajador(a) doméstico(a)
+611,Esposa(o) de trabajador(a) doméstico(a)
+612,Hija(o) de trabajador(a) doméstico(a)
+613,Otro pariente de trabajador(a) doméstico(a)
+701,Huésped
+999,Parentesco no especificado

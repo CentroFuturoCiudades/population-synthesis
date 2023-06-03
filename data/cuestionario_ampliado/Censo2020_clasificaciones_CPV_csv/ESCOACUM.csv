@@ -1,0 +1,27 @@
+CLAVE,DESCRIPCION,EQUIVALENCIA
+0,0 grados aprobados,Sin escolaridad; Algún grado aprobado en preescolar
+1,1 grado aprobado,1 grado aprobado de primaria
+2,2 grados aprobados,2 grados aprobados de primaria
+3,3 grados aprobados,3 grados aprobados de primaria
+4,4 grados aprobados,4 grados aprobados de primaria
+5,5 grados aprobados,5 grados aprobados de primaria
+6,6 grados aprobados,6 grados aprobados de primaria
+7,7 grados aprobados,1 grado aprobado de secundaria; 1 grado aprobado de estudios técnicos o comerciales con primaria terminada
+8,8 grados aprobados,2 grados aprobados de secundaria; 2 grados aprobados de estudios técnicos o comerciales con primaria terminada
+9,9 grados aprobados,3 grados aprobados de secundaria; 3 o 4 grados aprobados de estudios técnicos o comerciales con primaria terminada
+10,10 grados aprobados,1 grado aprobado de preparatoria o bachillerato general; 1 grado aprobado de bachillerato tecnológico; 1 grado aprobado de estudios técnicos o comerciales con secundaria terminada; 1 grado aprobado de normal con primaria o secundaria terminada
+11,11 grados aprobados,2 grados aprobados de preparatoria o bachillerato general; 2 grados aprobados de bachillerato tecnológico; 2 grados aprobados de estudios técnicos o comerciales con secundaria terminada; 2 grados aprobados de normal con primaria o secundaria terminada
+12,12 grados aprobados,3 o 4 grados aprobados de preparatoria o bachillerato general; 3 o 4 grados aprobados de bachillerato tecnológico; 3 grados aprobados de estudios técnicos o comerciales con secundaria terminada; 3 grados aprobados de normal con primaria o secundaria terminada
+13,13 grados aprobados,4 o 5 grados aprobados de estudios técnicos o comerciales con secundaria terminada; 1 grado aprobado de estudios técnicos o comerciales con preparatoria terminada; 4 grados aprobados de normal con primaria o secundaria terminada; 1 grado aprobado de normal de licenciatura; 1 grado aprobado de licenciatura
+14,14 grados aprobados,2 grados aprobados de estudios técnicos o comerciales con preparatoria terminada; 2 grados aprobados de normal de licenciatura; 2 grados aprobados de licenciatura
+15,15 grados aprobados,3 o 4 grados aprobados de estudios técnicos o comerciales con preparatoria terminada; 3 grados aprobados de normal de licenciatura; 3 grados aprobados de licenciatura
+16,16 grados aprobados,4 grados aprobados de normal de licenciatura; 4 grados aprobados de licenciatura
+17,17 grados aprobados,5 grados aprobados de normal de licenciatura; 5 grados aprobados de licenciatura; 1 año aprobado de especialidad; 1 años aprobado de maestría
+18,18 grados aprobados,6 grados aprobados de normal de licenciatura; 6 grados aprobados de licenciatura; 2 años aprobados de especialidad; 2 años aprobados de maestría
+19,19 grados aprobados,7 grados aprobados de licenciatura; 3 años aprobados de maestría; 1 año aprobado de doctorado
+20,20 grados aprobados,8 grados aprobados de licenciatura; 4 años aprobados de maestría; 2 años aprobados de doctorado
+21,21 grados aprobados,5 años aprobados de maestría; 3 años aprobados de doctorado
+22,22 grados aprobados,6 años aprobados de maestría; 4 años aprobados de doctorado
+23,23 grados aprobados,5 años aprobados de doctorado
+24,24 grados aprobados,6 años aprobados de doctorado
+99,No especificado,"No especificaron grados aprobados en los niveles primaria, secundaria, estudios técnicos o comerciales con primaria terminada, preparatoria o bachillerato general, bachillerato tecnológico, estudios técnicos o comerciales con secundaria terminada, estudios técnicos o comerciales con preparatoria terminada, normal con primaria o secundaria terminada, normal de licenciatura, licenciatura, especialidad, maestría, doctorado.; Nivel no especificado"

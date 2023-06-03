@@ -1,0 +1,120 @@
+CLAVE,DESCRIPCION
+0111,Diseño curricular y pedagogía
+0112,"Planeación, evaluación e investigación educativa"
+0113,Orientación e intervención educativa
+0114,Tecnología y comunicación educativa
+0115,Ciencias de la educación
+0110,Planes multidisciplinarios o generales del campo de ciencias de la educación y pedagogía
+0121,"Formación docente en educación básica, nivel preescolar"
+0122,"Formación docente en educación básica, nivel primaria"
+0123,"Formación docente en educación básica, nivel secundaria"
+0124,Formación docente en educación media superior
+0125,Formación docente en educación superior
+0126,Formación docente en la enseñanza de asignaturas específicas
+0127,Formación docente en otros servicios educativos
+0120,Planes multidisciplinarios o generales del campo de formación docente
+0211,Bellas artes
+0212,Artes escénicas
+0213,Música
+0214,Tecnologías audiovisuales para medios de comunicación
+0215,Diseño y comunicación gráfica y editorial
+0216,"Diseño industrial, de moda e interiores"
+0217,Artesanía tradicional y manualidades
+0210,Planes multidisciplinarios o generales del campo de artes
+0221,Teología
+0222,Adquisición de idiomas extranjeros
+0223,Literatura
+0224,Lingüística
+0225,Historia y arqueología
+0226,Filosofía y ética
+0220,Planes multidisciplinarios o generales del campo de humanidades
+0311,Psicología
+0312,Sociología y antropología
+0313,Ciencias políticas
+0314,Economía
+0315,Trabajo y atención social
+0310,Planes multidisciplinarios o generales del campo de ciencias sociales y estudios del comportamiento
+0321,Comunicación y periodismo
+0322,Biblioteconomía y archivonomía
+0331,Derecho
+0332,Criminología y criminalística
+0411,Negocios y comercio
+0412,Mercadotecnia y publicidad
+0413,"Finanzas, banca y seguros"
+0414,Contabilidad y fiscalización
+0410,Planes multidisciplinarios o generales del campo de negocios y contabilidad
+0421,Administración de empresas
+0422,Administración turística y de restaurantes
+0423,Administración pública
+0424,Administración en el ámbito de la ingeniería y la construcción
+0425,"Administración en los campos de la educación, salud, deporte, agronomía y las artes y humanidades"
+0420,Planes multidisciplinarios o generales del campo de administración y gestión
+0511,Biología
+0512,Bioquímica y biofísica
+0513,Ecología y ciencias ambientales
+0510,Planes multidisciplinarios o generales del campo de ciencias biológicas y ambientales
+0521,Física y astronomía
+0522,Química
+0523,Ciencias de la tierra y de la atmósfera
+0520,"Planes multidisciplinarios o generales del campo de las ciencias físicas, químicas y de la tierra"
+0531, Matemáticas
+0532,Estadística y actuaría
+0611,Ciencias computacionales
+0612,Desarrollo de hardware
+0613,Desarrollo de software
+0610,Planes multidisciplinarios o generales del campo de innovación en tecnologías de la información y la comunicación
+0621,Telecomunicaciones
+0622,Informática
+0623,Soporte y servicios de mantenimiento a las tecnologías de la información y comunicación
+0620,Planes multidisciplinarios o generales del campo de implementación de las tecnologías de la información y la comunicación
+0711,Mecánica y profesiones afines al trabajo metálico
+0712,Electricidad y generación de energía
+0713,"Electrónica, automatización y aplicaciones de la mecánica-eléctrica"
+0714,Ingeniería de procesos químicos
+0715,"Vehículos, barcos y aeronaves motorizadas"
+0716,Tecnología para la protección del medio ambiente
+0717,Ingeniería Industrial
+0710,"Planes multidisciplinarios o generales del campo de ingeniería mecánica, eléctrica, electrónica, química y profesiones afines"
+0721,Industria de la alimentación
+0722,"Industria textil, del calzado y piel"
+0723,"Industrias de materiales diversos (cerámica, madera, plástico y vidrio)"
+0724,"Industria de la minería, extracción y metalurgia"
+0720,Planes multidisciplinarios o generales del campo de manufacturas y procesos
+0731,Arquitectura y urbanismo
+0732,Construcción e ingeniería civil
+0811,Producción y explotación agrícola y ganadera
+0812,Horticultura
+0813,Silvicultura
+0814,Pesca y acuacultura
+0810,"Planes multidisciplinarios o generales del campo de agronomía, horticultura, silvicultura y pesca"
+0821,Veterinaria
+0911,Medicina general
+0912,Medicina homeopática
+0913,Medicina de especialidad
+0921,Enfermería general y obstetricia
+0922,Enfermería de especialidad
+0931,Estomatología y odontología general
+0932,Estomatología y odontología de especialidad
+0941,Terapia y rehabilitación
+0942,Nutrición
+0943,Tratamientos alternativos y acupuntura
+0940,"Planes multidisciplinarios o generales del campo de terapia, rehabilitación y tratamientos alternativos"
+0951,Atención prehospitalaria y emergencias médicas
+0952,Biomedicina
+0953,Diagnóstico médico y tecnología del tratamiento
+0954,Farmacia
+0955,Audiometría y optometría
+0956,Salud pública
+0950,Planes multidisciplinarios o generales el campo de disciplinas auxiliares para la salud
+1011,Deportes
+1012,Servicios funerarios
+1013,Servicios de cuidado personal y belleza
+1014,Servicios de apoyo y asistencia administrativa
+1015,Gastronomía y servicios de alimentos
+1016,Hospitalidad y turismo
+1010,Planes multidisciplinarios o generales del campo de servicios personales y deportes
+1021,Servicios de transporte
+1031,Seguridad para el trabajo
+1041,Seguridad pública
+1042,Servicios militares
+9999,Campo de formación académica no especificado
