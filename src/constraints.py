@@ -37,6 +37,21 @@ DHSERSAL_CATS = sorted(
     ]
 )
 
+NIVACAD_BAS = [
+    'Ninguno',
+    'Preescolar_1', 'Preescolar_2', 'Preescolar_3', 'Preescolar_99',
+    'Primaria_1', 'Primaria_2', 'Primaria_3',
+    'Primaria_4',  'Primaria_5', 'Primaria_99',
+    'Primaria_6',
+    'Estudios técnicos o comerciales con primaria terminada_1',
+    'Estudios técnicos o comerciales con primaria terminada_2',
+    'Estudios técnicos o comerciales con primaria terminada_3',
+    'Estudios técnicos o comerciales con primaria terminada_4',
+    'Estudios técnicos o comerciales con primaria terminada_99',
+    'Secundaria_1', 'Secundaria_2', 'Secundaria_99',
+    'Secundaria_3'
+]
+
 NIVACAD_POSBAS = [
     'Preparatoria o bachillerato general_1',
     'Preparatoria o bachillerato general_2',
@@ -344,6 +359,14 @@ constraints_ind = {
         'EDAD': EDAD_5YMAS,
         'ENT_PAIS_RES_5A': ['OtraEnt'],
     },
+    # Implicit
+    'PNA_OP_BPP_NE': {
+        'ENT_PAIS_NAC': ['OtroPais', 'Blanco por pase', 'No especificado'],
+    },
+    'PRES15_OP_BPP_NE': {
+        'EDAD': EDAD_5YMAS,
+        'ENT_PAIS_RES_5A': ['Blanco por pase', 'OtroPais', 'No especificado'],
+    },
 
     # ETNICITY
 
@@ -411,6 +434,18 @@ constraints_ind = {
     'POB_AFRO_M': {
         'SEXO': ['M'],
         'AFRODES': ['Sí'],
+    },
+    # Implicit
+    'POB_AFRO_NO_NE': {
+        'AFRODES': ['No', 'No especificado']
+    },
+    'P3_LI_NO_BPP_NE': {
+        'EDAD': EDAD_3YMAS,
+        'HLENGUA': ['Blanco por pase', 'No especificado', 'No']
+    },
+    'P5_LI_NO_BPP_NE': {
+        'EDAD': EDAD_5YMAS,
+        'HLENGUA': ['Blanco por pase', 'No especificado', 'No']
     },
 
     # DISABILITY
@@ -534,6 +569,16 @@ constraints_ind = {
         'SEXO': ['M'],
         'ASISTEN': ['Sí'],
     },
+    # Implicit
+    'P3A14_A_NE_BPP': {
+        'EDAD': EDAD_3A5 + EDAD_6A11 + EDAD_12A14,
+        'ASISTEN': ['Sí', 'Blanco por pase', 'No especificado']
+    },
+    'P15A24_NOA_NE_BPP': {
+        'EDAD': EDAD_15A17 + EDAD_18A24,
+        'ASISTEN': ['No', 'Blanco por pase', 'No especificado'],
+    },
+
     'P8A14AN': {
         'EDAD': EDAD_8A14,
         'ALFABET': ['No'],
@@ -562,6 +607,16 @@ constraints_ind = {
         'SEXO': ['M'],
         'ALFABET': ['No'],
     },
+    # Implicit
+    'P8A14AS': {
+        'EDAD': EDAD_8A14,
+        'ALFABET': ['Sí', 'Blanco por pase', 'No especificado'],
+    },
+    'P15YM_AS': {
+        'EDAD': EDAD_15YMAS,
+        'ALFABET': ['Sí', 'Blanco por pase', 'No especificado'],
+    },
+
     'P15YM_SE': {
         'EDAD': EDAD_15YMAS,
         'NIVACAD': [
@@ -681,6 +736,15 @@ constraints_ind = {
         'EDAD': EDAD_18YMAS,
         'SEXO': ['M'],
         'NIVACAD': NIVACAD_POSBAS,
+    },
+    # Implicit
+    'P15_POSBAS_BPP_NE': {
+        'EDAD': EDAD_15YMAS,
+        'NIVACAD': NIVACAD_POSBAS + ['Blanco por pase', 'No especificado'],
+    },
+    'P18_BAS_BPP_NE': {
+        'EDAD': EDAD_18YMAS,
+        'NIVACAD': NIVACAD_BAS + ['Blanco por pase', 'No especificado'],
     },
 
     # ECONOMICS
@@ -827,6 +891,11 @@ constraints_ind = {
             'Buscó trabajo',
         ],
     },
+    # Implici
+    'PE_BPP_NE': {
+        'EDAD': EDAD_12YMAS,
+        'CONACT': ['Blanco por pase', 'No especificado'],
+    },
 
     # HEALTH
     'PSINDER': {
@@ -837,6 +906,10 @@ constraints_ind = {
             c for c in DHSERSAL_CATS
             if sum(int(cc) for cc in c[:8]) > 0
         ]
+    },
+    # Implicit
+    'PDER_NE': {
+        'DHSERSAL': ['0000000001']
     },
     'PDER_IMSS': {
         'DHSERSAL': [c for c in DHSERSAL_CATS if c[0] == '1']
@@ -885,6 +958,11 @@ constraints_ind = {
             'viuda(o)',
         ],
     },
+    # Implicit
+    'P12YM_BPP_NE': {
+        'EDAD': EDAD_12YMAS,
+        'SITUA_CONYUGAL': ['Blanco por pase', 'No especificado'],
+    },
 
     # RELIGION
     'PCATOLICA': {
@@ -898,6 +976,10 @@ constraints_ind = {
     },
     'PSIN_RELIG': {
         'RELIGION': ['Sin religión / Sin adscripción religiosa'],
+    },
+    # Implicit
+    'PRELIG_NE': {
+        'RELIGION': ['Religión no especificada']
     },
 }
 
