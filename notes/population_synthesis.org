@@ -1,0 +1,131 @@
+#+TITLE: Population Synthesis
+
+* Algorithms
+** IPF
+** IPU
+** Generalized Raking
+** CO
+** Reconstruction attack
+
+
+* Ideas
+
+** Pop
+Perform a joint estimation using both surveys and fit them to the census tracks using IPF or take each individual generated using integer programming and input missing variables from the joint distributions.
+Explore different fitting alternatives to IPF, such a generalized raking or IPU.
+Test wether Gurobi can reasonably compute the original records.
+
+* Employment
+
+Data source: Denue 2019, point data with NAICS codes and approximate number of employees (range)
+Draw scalar total employment number from a conditional power law distribution constrained to match total employment per AGEB.
+
+On the census we have total employment by NAICS.
+
+Define categories based on NAICS first two digits, this hard-coded into 4 categories in TASHA.
+Look at NAICS code distribution in Monterrey, try to cluster some prototype categories.
+
+Need to estimate the place of work place of residence matrix using the OD service
+
+Match to match population of employees in the synthetic population to the total number of jobs of DENUE.
+
+Ask INEGI about formal vs informal employment differentiation and whether there have been previous studies.
+
+This formal informal job distribution is a potential very interesting paper.
+
+Also discuss a little about employer based last mile solutions.
+
+Data dictionary for the OD survey.
+
+
+* Literature review
+** Generating synthetic populations using IPF and Monte Carlo techniques, Frick and Axhausen, 2004
+
+In this paper the authors apply IPF to adjust high dimensional contingency tables for population synthesis. A standard application of IPF without household assignment.
+The method is demonstrated for the metropolitan area of Kanton Zurich.
+
+** Population synthesis for microsimulation, state of the art, Axhausen and Muller, 2010
+Here, the state of the art up to 2010 is reviewed, in particular the following implementations:
+- PopSynWin. Fitting: IPF with automatic category reduction.
+- ILUTE. Fitting: IPF with sparse list.
+- PopGen. Fitting: IPU.
+- FSUMTS. Fitting: IPF.
+- CEMDAP. Fitting: IPF.
+- ALBATROS. Fitting: IPF on the relation matrix.
+
+It splits the synthesis process in two steps, fitting and allocation.
+
+*** Fitting
+Fitting is done in all instances with IPF or IPF based methods.
+
+The seed distribution for IPF is generated from the survey and fitted once to the marginals of the whole region.
+
+There are two ways of performing the fitting from the seed: 1) zone-by-zone and 2) multizone. The multizone requires more memory as it fits a single table with an extra dimension referring to the zone ID. It supposedly leads to a better fit (Pritchard and Miller, 2009)
+
+The zero cell problem occurs when there is a marginal in the zone that is not represented in the survey, which leads to a division by zero in the IPF procedure.
+Typically the seed is adjusted with small values in false zero cells, but this introduces bias. Normally, it is sufficient to check that no complete zero rows or columns appear in the seed when the corresponding marginal is non-zero.
+
+Dimensionality problems may arise when the dimensions of the contingency table are large.
+With many dimensions, the seed estimate may be poor (as an alternative consider generating the seed with bayesian networks).
+Also, memory requirements may explode as the number of variables in the table grows exponentially with the number of dimensions.
+Exploiting the fact that the contingency table is inherently sparse, a sparse data structure like a sparse list or a sparse array may be used to alleviate memory problems. See Prichard 2008 and Pritchard and Miller 2009 for a description of a sparse list approach.
+I am more inclined for a sparse array (numpy). Though this may not be a problem in modern computers and a compact set of variables.
+
+Another solution for the zero cell problem and dimensionality problems is category reduction. Though automatic methods doesn't seem very reliable, manually reducing categories may increase accuracy of estimators.
+
+IPU in PopGen (Yen et al 2009) simultaneously controls for multiple hierarchy levels, e.g., individuals and households. Not thoroughly explained, need to read the main reference. It is mentioned that a sparse version of the algorithm is required.
+
+ALBATROSS (Arentze et al 2007) uses a relational matrix to estimate a composition of households that perfectly matches person-level constraints. This is an interesting approach and warrants a revision of the original reference.
+
+*** Allocation
+
+In this step integers counts are obtained and households are selected.
+The list of agents and agent groups is the final output.
+
+Strategies:
+- Repeated probabilistic selection with replacement. Sampling from the contingency matrix.
+- Truncate, replicate, sample. (Lovelace and Ballas, 2013)
+- Sample households then sample agents in the household (Pritchard and Miller 2009)
+
+A conditional sampling on the already sampled individuals and groups may be devised to ensure matching constraints. This may be similiar to the altered selection probabilities of Auld et al (2020).
+
+Another option is to truncate the float counts and use constrained programming to assign missing agents.
+
+
+** Synthetic Population Generation Without a Sample, Barthelemy and Toint, 2013
+
+Presents a methods of Synthetic Reconstruction based on IPF that is able to deal with unreliable data or the fact that a single household - person survey rarely is available, and two competing estimations are needed for IPF that do not usually match.
+
+The steps are:
+- Generate an individual pool at the most disaggregated level using IPF and impute missing attributes from other sources of data at a similar disaggregated level.
+- Estimate household joint distribution finding maximum entropy distribution adjusted using tabu search. (Why not IPF?) Should be more or less equivalent. Maybe there is no household sample, but the this can be accomplished using an uninformative prior in IPF (table of ones).
+- Household generation. Sample households using a technique that preserves the estimated distribution. Draw members from the individuals pool without replacement.
+
+** Creating Synthetic Household Populations, Arentze et.al. (2007)
+
+Creates a table of household types including detailed variables of the members, and updates this table using IPF, relating individual marginals to sums over detailed household types. Promising.
+
+Superseded by IPU.
+
+** Methodology to match distributions of both household and person attributes in generation of synthetic populations, Ye et.al. 2009 (IPU)
+
+This is the paper that introduced Iterational Proportional Updating (IPU) for simultaneously matching households and individuals.
+
+The procedure adjusts weights in list of households with member characteristics to match the constraints of each group where the constraints are estimated using IPF separately for individuals and households.
+
+
+
+* To Read
+- Pritchard and Miller 2009- Sparse Lists
+- Yen et al. 2009 PopGen, IPU
+- Arenztze et al 2007 ALBATROSS, Creating synthetic household populations: Problems and approach
+- Auld et al, Efficient Methodology for Generating Synthetic Populations with Multiple Control Levels, 2010
+
+- Virtual city: An individual-based digital environment for human mobility and interactive behavior
+- Synthetic population and travel demand for Paris and Île-de-France based on open and publicly available data
+- Synthetic Population Generation at Disaggregated Spatial Scales for Land Use and Transportation Microsimulation
+- Creating spatially-detailed heterogeneous synthetic populations for agent-based microsimulation
+- Assignment of a Synthetic Population for Activity-Based Modeling Employing Publicly Available Data
+
+If using IPU:
+- On Iterative Proportional Updating: Limitations and Improvements for General Population Synthesis

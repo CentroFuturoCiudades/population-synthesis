@@ -1,0 +1,10 @@
+*.ipynb_checkpoints*
+*__pycache__*
+data/DENUE/
+data/ENAPE/
+data/ENH/
+data/ENIGH/
+data/ENOE/
+data/ENVI/
+data/INV/
+data/OD_SURVEY/
