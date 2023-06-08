@@ -302,7 +302,7 @@ constraints_ind = {
         'EDAD': EDAD_65YMAS
     },
 
-    # IMPLICIT CONST
+    # Implicit
     'P_UNK': {
         'EDAD': ['Unknown']
     },
@@ -360,12 +360,23 @@ constraints_ind = {
         'ENT_PAIS_RES_5A': ['OtraEnt'],
     },
     # Implicit
-    'PNA_OP_BPP_NE': {
-        'ENT_PAIS_NAC': ['OtroPais', 'Blanco por pase', 'No especificado'],
+    'PNA_OP_BPP_NE_F': {
+        'SEXO': ['F'],
+        'ENT_PAIS_NAC': ['OtroPais', 'No especificado'],
     },
-    'PRES15_OP_BPP_NE': {
+    'PNA_OP_BPP_NE_M': {
+        'SEXO': ['M'],
+        'ENT_PAIS_NAC': ['OtroPais', 'No especificado'],
+    },
+    'PRES15_OP_BPP_NE_F': {
+        'SEXO': ['F'],
         'EDAD': EDAD_5YMAS,
-        'ENT_PAIS_RES_5A': ['Blanco por pase', 'OtroPais', 'No especificado'],
+        'ENT_PAIS_RES_5A': ['OtroPais', 'No especificado'],
+    },
+    'PRES15_OP_BPP_NE_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_5YMAS,
+        'ENT_PAIS_RES_5A': ['OtroPais', 'No especificado'],
     },
 
     # ETNICITY
@@ -436,16 +447,27 @@ constraints_ind = {
         'AFRODES': ['Sí'],
     },
     # Implicit
-    'POB_AFRO_NO_NE': {
+    'POB_AFRO_NO_NE_F': {
+        'SEXO': ['F'],
         'AFRODES': ['No', 'No especificado']
     },
-    'P3_LI_NO_BPP_NE': {
+    'POB_AFRO_NO_NE_M': {
+        'SEXO': ['M'],
+        'AFRODES': ['No', 'No especificado']
+    },
+    'P3_LI_NO_BPP_NE_F': {
+        'SEXO': ['F'],
         'EDAD': EDAD_3YMAS,
-        'HLENGUA': ['Blanco por pase', 'No especificado', 'No']
+        'HLENGUA': ['No especificado', 'No']
+    },
+    'P3_LI_NO_BPP_NE_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_3YMAS,
+        'HLENGUA': ['No especificado', 'No']
     },
     'P5_LI_NO_BPP_NE': {
         'EDAD': EDAD_5YMAS,
-        'HLENGUA': ['Blanco por pase', 'No especificado', 'No']
+        'HLENGUA': ['No especificado', 'No']
     },
 
     # DISABILITY
@@ -570,13 +592,55 @@ constraints_ind = {
         'ASISTEN': ['Sí'],
     },
     # Implicit
-    'P3A14_A_NE_BPP': {
-        'EDAD': EDAD_3A5 + EDAD_6A11 + EDAD_12A14,
-        'ASISTEN': ['Sí', 'Blanco por pase', 'No especificado']
+    'P3A5_A_NE_BPP_F': {
+        'SEXO': ['F'],
+        'EDAD': EDAD_3A5,
+        'ASISTEN': ['Sí', 'No especificado']
     },
-    'P15A24_NOA_NE_BPP': {
-        'EDAD': EDAD_15A17 + EDAD_18A24,
-        'ASISTEN': ['No', 'Blanco por pase', 'No especificado'],
+    'P6A11_A_NE_BPP_F': {
+        'SEXO': ['F'],
+        'EDAD': EDAD_6A11,
+        'ASISTEN': ['Sí', 'No especificado']
+    },
+    'P12A14_A_NE_BPP_F': {
+        'SEXO': ['F'],
+        'EDAD': EDAD_12A14,
+        'ASISTEN': ['Sí', 'No especificado']
+    },
+    'P3A5_A_NE_BPP_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_3A5,
+        'ASISTEN': ['Sí', 'No especificado']
+    },
+    'P6A11_A_NE_BPP_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_6A11,
+        'ASISTEN': ['Sí', 'No especificado']
+    },
+    'P12A14_A_NE_BPP_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_12A14,
+        'ASISTEN': ['Sí', 'No especificado']
+    },
+    'P15A17_NOA_NE_BPP_F': {
+        'SEXO': ['F'],
+        'EDAD': EDAD_15A17,
+        'ASISTEN': ['No', 'No especificado'],
+    },
+    'P18A24_NOA_NE_BPP_F': {
+        'SEXO': ['F'],
+        'EDAD': EDAD_18A24,
+        'ASISTEN': ['No', 'No especificado'],
+    },
+    'P15A17_NOA_NE_BPP_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_15A17,
+        'ASISTEN': ['No', 'No especificado'],
+    },
+    'P18A24_NOA_NE_BPP_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_18A24,
+        'ASISTEN': ['No', 'No especificado'],
     },
 
     'P8A14AN': {
@@ -608,13 +672,25 @@ constraints_ind = {
         'ALFABET': ['No'],
     },
     # Implicit
-    'P8A14AS': {
+    'P8A14AS_F': {
+        'SEXO': ['F'],
         'EDAD': EDAD_8A14,
-        'ALFABET': ['Sí', 'Blanco por pase', 'No especificado'],
+        'ALFABET': ['Sí', 'No especificado'],
     },
-    'P15YM_AS': {
+    'P8A14AS_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_8A14,
+        'ALFABET': ['Sí', 'No especificado'],
+    },
+    'P15YM_AS_F': {
+        'SEXO': ['F'],
         'EDAD': EDAD_15YMAS,
-        'ALFABET': ['Sí', 'Blanco por pase', 'No especificado'],
+        'ALFABET': ['Sí', 'No especificado'],
+    },
+    'P15YM_AS_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_15YMAS,
+        'ALFABET': ['Sí', 'No especificado'],
     },
 
     'P15YM_SE': {
@@ -661,39 +737,39 @@ constraints_ind = {
             'Primaria_4',  'Primaria_5', 'Primaria_99'],
     },
     'P15PRI_CO': {
-            'EDAD': EDAD_15YMAS,
-            'NIVACAD': [
-                'Primaria_6',
-                'Estudios técnicos o comerciales con primaria terminada_1',
-                'Estudios técnicos o comerciales con primaria terminada_2',
-                'Estudios técnicos o comerciales con primaria terminada_3',
-                'Estudios técnicos o comerciales con primaria terminada_4',
-                'Estudios técnicos o comerciales con primaria terminada_99'
-            ],
+        'EDAD': EDAD_15YMAS,
+        'NIVACAD': [
+            'Primaria_6',
+            'Estudios técnicos o comerciales con primaria terminada_1',
+            'Estudios técnicos o comerciales con primaria terminada_2',
+            'Estudios técnicos o comerciales con primaria terminada_3',
+            'Estudios técnicos o comerciales con primaria terminada_4',
+            'Estudios técnicos o comerciales con primaria terminada_99'
+        ],
     },
     'P15PRI_COF': {
-            'EDAD': EDAD_15YMAS,
-            'SEXO': ['F'],
-            'NIVACAD': [
-                'Primaria_6',
-                'Estudios técnicos o comerciales con primaria terminada_1',
-                'Estudios técnicos o comerciales con primaria terminada_2',
-                'Estudios técnicos o comerciales con primaria terminada_3',
-                'Estudios técnicos o comerciales con primaria terminada_4',
-                'Estudios técnicos o comerciales con primaria terminada_99'
-            ],
+        'EDAD': EDAD_15YMAS,
+        'SEXO': ['F'],
+        'NIVACAD': [
+            'Primaria_6',
+            'Estudios técnicos o comerciales con primaria terminada_1',
+            'Estudios técnicos o comerciales con primaria terminada_2',
+            'Estudios técnicos o comerciales con primaria terminada_3',
+            'Estudios técnicos o comerciales con primaria terminada_4',
+            'Estudios técnicos o comerciales con primaria terminada_99'
+        ],
     },
     'P15PRI_COM': {
-            'EDAD': EDAD_15YMAS,
-            'SEXO': ['M'],
-            'NIVACAD': [
-                'Primaria_6',
-                'Estudios técnicos o comerciales con primaria terminada_1',
-                'Estudios técnicos o comerciales con primaria terminada_2',
-                'Estudios técnicos o comerciales con primaria terminada_3',
-                'Estudios técnicos o comerciales con primaria terminada_4',
-                'Estudios técnicos o comerciales con primaria terminada_99'
-            ],
+        'EDAD': EDAD_15YMAS,
+        'SEXO': ['M'],
+        'NIVACAD': [
+            'Primaria_6',
+            'Estudios técnicos o comerciales con primaria terminada_1',
+            'Estudios técnicos o comerciales con primaria terminada_2',
+            'Estudios técnicos o comerciales con primaria terminada_3',
+            'Estudios técnicos o comerciales con primaria terminada_4',
+            'Estudios técnicos o comerciales con primaria terminada_99'
+        ],
     },
     'P15SEC_IN': {
         'EDAD': EDAD_15YMAS,
@@ -738,13 +814,25 @@ constraints_ind = {
         'NIVACAD': NIVACAD_POSBAS,
     },
     # Implicit
-    'P15_POSBAS_BPP_NE': {
+    'P15_POSBAS_BPP_NE_F': {
+        'SEXO': ['F'],
         'EDAD': EDAD_15YMAS,
-        'NIVACAD': NIVACAD_POSBAS + ['Blanco por pase', 'No especificado'],
+        'NIVACAD': NIVACAD_POSBAS + ['No especificado'],
     },
-    'P18_BAS_BPP_NE': {
+    'P15_POSBAS_BPP_NE_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_15YMAS,
+        'NIVACAD': NIVACAD_POSBAS + ['No especificado'],
+    },
+    'P18_BAS_BPP_NE_F': {
+        'SEXO': ['F'],
         'EDAD': EDAD_18YMAS,
-        'NIVACAD': NIVACAD_BAS + ['Blanco por pase', 'No especificado'],
+        'NIVACAD': NIVACAD_BAS + ['No especificado'],
+    },
+    'P18_BAS_BPP_NE_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_18YMAS,
+        'NIVACAD': NIVACAD_BAS + ['No especificado'],
     },
 
     # ECONOMICS
@@ -891,10 +979,16 @@ constraints_ind = {
             'Buscó trabajo',
         ],
     },
-    # Implici
-    'PE_BPP_NE': {
+    # Implicit
+    'PE_BPP_NE_F': {
+        'SEXO': ['F'],
         'EDAD': EDAD_12YMAS,
-        'CONACT': ['Blanco por pase', 'No especificado'],
+        'CONACT': ['No especificado'],
+    },
+    'PE_BPP_NE_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_12YMAS,
+        'CONACT': ['No especificado'],
     },
 
     # HEALTH
@@ -961,7 +1055,7 @@ constraints_ind = {
     # Implicit
     'P12YM_BPP_NE': {
         'EDAD': EDAD_12YMAS,
-        'SITUA_CONYUGAL': ['Blanco por pase', 'No especificado'],
+        'SITUA_CONYUGAL': ['No especificado'],
     },
 
     # RELIGION

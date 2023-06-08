@@ -405,4 +405,9 @@ def process_people_df(file_path):
 
     # personas_cat = personas_cat.drop(columns=cols_to_drop)
 
-    return personas_cat
+    # Split by municipality, the finer aggregation level
+    # statistically representative in the survey.
+    groups = personas_cat.groupby('MUN')
+    group_dict = {mun: df for mun, df in groups}
+
+    return group_dict
