@@ -303,7 +303,12 @@ constraints_ind = {
     },
 
     # Implicit
-    'P_UNK': {
+    'P_UNK_F': {
+        'SEXO': ['F'],
+        'EDAD': ['Unknown']
+    },
+    'P_UNK_M': {
+        'SEXO': ['M'],
         'EDAD': ['Unknown']
     },
 
@@ -468,6 +473,32 @@ constraints_ind = {
     'P5_LI_NO_BPP_NE': {
         'EDAD': EDAD_5YMAS,
         'HLENGUA': ['No especificado', 'No']
+    },
+    'P3HLI_NE_F': {
+        'SEXO': ['F'],
+        'EDAD': EDAD_3YMAS,
+        'HLENGUA': ['Sí/No especificado'],
+    },
+    'P3HLI_NE_M': {
+        'SEXO': ['M'],
+        'EDAD': EDAD_3YMAS,
+        'HLENGUA': ['Sí/No especificado'],
+    },
+    'P5HLI_NE': {
+        'EDAD': EDAD_5YMAS,
+        'HLENGUA': ['Sí/No especificado'],
+    },
+    'P34HLI_HE': {
+        'EDAD': ['3-4'],
+        'HLENGUA': ['Sí/Sí Español'],
+    },
+    'P34HLI_NHE': {
+        'EDAD': ['3-4'],
+        'HLENGUA': ['Sí/No español'],
+    },
+    'P34HLI_NE': {
+        'EDAD': ['3-4'],
+        'HLENGUA': ['Sí/No especificado'],
     },
 
     # DISABILITY

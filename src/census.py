@@ -22,7 +22,7 @@ def create_implicit_consts(df_censo):
     df_max = df_censo.replace(-1, 2)
 
     new_cols = [
-        'P_UNK',
+        'P_UNK_F', 'P_UNK_M',
 
         'PNA_OP_BPP_NE_F', 'PNA_OP_BPP_NE_M',
         'PRES15_OP_BPP_NE_F', 'PRES15_OP_BPP_NE_M',
@@ -30,6 +30,9 @@ def create_implicit_consts(df_censo):
         'POB_AFRO_NO_NE_F', 'POB_AFRO_NO_NE_M',
         'P3_LI_NO_BPP_NE_F', 'P3_LI_NO_BPP_NE_M',
         'P5_LI_NO_BPP_NE',
+        'P3HLI_NE_F', 'P3HLI_NE_M',
+        'P5HLI_NE',
+        'P34HLI_HE', 'P34HLI_NHE', 'P34HLI_NE',
 
         'P3A5_A_NE_BPP_F', 'P3A5_A_NE_BPP_M',
         'P6A11_A_NE_BPP_F', 'P6A11_A_NE_BPP_M',
@@ -54,7 +57,8 @@ def create_implicit_consts(df_censo):
 
     # Create columns
     for df in [df_censo, df_min, df_max]:
-        df['P_UNK'] = df.POBTOT - (df.POB0_14 + df.P_15YMAS)
+        df['P_UNK_F'] = df.POBFEM - (df.P_0A2_F + df.P_3YMAS_F)
+        df['P_UNK_M'] = df.POBMAS - (df.P_0A2_M + df.P_3YMAS_M)
 
         df['PNA_OP_BPP_NE_F'] = df.POBFEM - (df.PNACENT_F + df.PNACOE_F)
         df['PNA_OP_BPP_NE_M'] = df.POBMAS - (df.PNACENT_M + df.PNACOE_M)
@@ -67,7 +71,13 @@ def create_implicit_consts(df_censo):
         df['POB_AFRO_NO_NE_M'] = df.POBMAS - df.POB_AFRO_M
         df['P3_LI_NO_BPP_NE_F'] = df.P_3YMAS_F - df.P3YM_HLI_F
         df['P3_LI_NO_BPP_NE_M'] = df.P_3YMAS_M - df.P3YM_HLI_M
+        df['P3HLI_NE_F'] = df.P3YM_HLI_F - (df.P3HLINHE_F + df.P3HLI_HE_F)
+        df['P3HLI_NE_M'] = df.P3YM_HLI_M - (df.P3HLINHE_M + df.P3HLI_HE_M)
         df['P5_LI_NO_BPP_NE'] = df.P_5YMAS - df.P5_HLI
+        df['P5HLI_NE'] = df.P5_HLI - (df.P5_HLI_NHE + df.P5_HLI_HE)
+        df['P34HLI_HE'] = df.P3HLI_HE - df.P5_HLI_HE
+        df['P34HLI_NHE'] = df.P3HLINHE - df.P5_HLI_NHE
+        df['P34HLI_NE'] = df.P3HLI_NE_F + df.P3HLI_NE_M - df.P5HLI_NE
 
         df['P3A5_A_NE_BPP_F'] = df.P_3A5_F - df.P3A5_NOA_F
         df['P3A5_A_NE_BPP_M'] = df.P_3A5_M - df.P3A5_NOA_M
