@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from scipy.spatial.distance import cdist
 from itertools import product
 import warnings
 from tqdm import tqdm
@@ -58,7 +59,75 @@ def get_W(X, const_dict):
     return pd.DataFrame(w_dict).T
 
 
-def fill_zero(X, W, C, constraints, X_full):
+def fill_zero_nn(X, W, C, constraints):
+    # Identify zero cell problems as zero weight vectors
+    # with non-zero constraints
+    W_zero = W.T.sum()[W.T.sum() == 0]
+    C_non_zero = C.loc[W_zero.index]
+    C_non_zero = C_non_zero[C_non_zero > 0]
+
+    # Iterate over constrains and add missing
+    # attribute combinations to the list
+    X_new_list = []  # holds new or replicated attribute combinations
+    for const_name in C_non_zero.keys():
+        # Get the dictionary of col: valus for the constraint
+        const_dict = constraints[const_name].copy()
+
+        # Find all constrined attribute combinations
+        columns = list(const_dict.keys())
+        attr_combs = product(*const_dict.values())
+
+        # Find integer attr representation
+        attr_combs_df = pd.DataFrame(attr_combs, columns=columns)
+        attr_combs = attr_combs_df.copy()
+        for col in columns:
+            attr_combs[col] = attr_combs[col].astype(X[col].dtype).cat.codes
+        attr_combs = attr_combs.values
+
+        # Get only involved columns in X with integer codes
+        X_arr = X[columns].copy()
+        for col in columns:
+            X_arr[col] = X_arr[col].cat.codes
+        X_arr = X_arr.values
+
+        # Iterate over each atribute comb and find
+        # nearest neighbors in X
+        X2_list = []
+        for attr_c, attr_val in zip(attr_combs, attr_combs_df.values):
+            # Get distance to the attribute combination
+            dist = cdist(attr_c[None, :], X_arr, metric='hamming').ravel()
+
+            # Get mask of nearest neighbors
+            min_dist = dist.min()
+            dist_mask = dist == min_dist
+
+            # Select nearest neighbors from X
+            X2 = X[dist_mask].copy()
+
+            # Replace values in X2
+            for col, val in zip(columns, attr_val):
+                X2[col] = val
+                X2[col] = X2[col].astype(X[col].dtype)
+                assert X2[col].isna().sum() == 0
+            # Collapse X
+            X2 = X2.groupby(
+                list(X2.columns.drop(['FACTOR'])),
+                observed=True
+            )[['FACTOR']].sum().reset_index()
+            X2_list.append(X2)
+        X2 = pd.concat(X2_list, ignore_index=True)
+        assert len(X2) > 0
+        X_new_list.append(X2)
+
+    # Reweight new combinations according to the contraint marginal
+    for i, const_marg in enumerate(C_non_zero.values):
+        old_factor = X_new_list[i].FACTOR
+        X_new_list[i]['FACTOR'] = old_factor * const_marg / old_factor.sum()
+
+    return pd.concat([X] + X_new_list, axis=0, ignore_index=True)
+
+
+def fill_zero_from_global(X, W, C, constraints, X_full):
 
     # Identify zero cell problems as zero weight vectors
     # with non-zero constraints
@@ -78,47 +147,6 @@ def fill_zero(X, W, C, constraints, X_full):
             [f'{col} in @const_dict["{col}"]' for col in const_dict.keys()]
         )
         X2 = X_full.query(query_str).reset_index(drop=True)
-        if len(X2) > 0:
-            # print(f'Filling for {const_name} with method 1.')
-            X_new_list.append(X2)
-            continue
-
-        # Method 2: Replicate nearest neighbors in current X
-        # Check if any column have presence in current X
-        cols_to_query = [
-            col for col, vals in const_dict.items()
-            if X[col].isin(vals).any()
-        ]
-        if len(cols_to_query) > 0:
-            warnings.warn(f'Filling for {const_name} by replicating, '
-                          'structural zeroes may have been incorrectly filled.')
-            query_str = ' & '.join(
-                [f'{col} in @const_dict["{col}"]' for col in cols_to_query]
-            )
-            X2 = X_full.query(query_str).reset_index(drop=True)
-            X_new_list.append(X2)
-            continue
-
-        # Method 3: Replicate full X table replacing involved columns values
-        # Get a list of combinations involved in the constraint
-        warnings.warn(f'Filling for {const_name} by replicating, '
-                      'structural zeroes may have been incorrectly filled.')
-        columns = list(const_dict.keys())
-        attr_combs = product(*const_dict.values())
-        X2_list = []
-        for attr_c in attr_combs:
-            # Replace values in X
-            X2 = X.copy()
-            for col, val in zip(columns, attr_c):
-                X2[col] = val
-                X2[col] = X2[col].astype(X[col].dtype)
-            # Collapse X
-            X2 = X2.groupby(
-                list(X2.columns.drop(['FACTOR'])),
-                observed=True
-            )[['FACTOR']].sum().reset_index()
-            X2_list.append(X2)
-        X2 = pd.concat(X2_list, ignore_index=True)
         assert len(X2) > 0
         X_new_list.append(X2)
 
@@ -136,13 +164,15 @@ def setup_ls(df_survey_dict, df_census, constraints):
     personas_cat_full = pd.concat(df for df in df_survey_dict.values())
     X_full = get_X(personas_cat_full)
 
-    for mun, df in tqdm(df_survey_dict.items()):
+    for i, (mun, df) in tqdm(enumerate(df_survey_dict.items())):
+        # if i != 17: continue
+        # print(mun)
         X = get_X(df)
         W = get_W(X, constraints)
         C = df_census.loc[mun][W.index].copy()
 
         # Fill zero cells with non-zero constraints in X
-        X = fill_zero(X, W, C, constraints, X_full)
+        X = fill_zero_nn(X, W, C, constraints)
         W = get_W(X, constraints)
         C = df_census.loc[mun][W.index].copy()
 
@@ -157,5 +187,6 @@ def setup_ls(df_survey_dict, df_census, constraints):
         # TODO: keep only a set of linearly independent rows in W
 
         XWC_dict[mun] = {'X': X, 'W': W, 'C': C}
+        # if i == 17: break
 
     return XWC_dict
