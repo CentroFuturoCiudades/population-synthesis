@@ -1202,3 +1202,7 @@ sum_zero_contraints_viv = [
         'HAS_INFO': ['Yes']
     }
 ]
+
+
+def get_ind_const():
+    return constraints_ind
