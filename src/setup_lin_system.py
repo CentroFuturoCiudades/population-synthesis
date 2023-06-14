@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 from scipy.spatial.distance import cdist
+from scipy.optimize import nnls
+from scipy.linalg import pinv, qr
 from itertools import product
 import warnings
 from tqdm import tqdm
@@ -59,19 +61,43 @@ def get_W(X, const_dict):
     return pd.DataFrame(w_dict).T
 
 
-def fill_zero_nn(X, W, C, constraints):
-    # Identify zero cell problems as zero weight vectors
-    # with non-zero constraints
-    W_zero = W.T.sum()[W.T.sum() == 0]
-    C_non_zero = C.loc[W_zero.index]
-    C_non_zero = C_non_zero[C_non_zero > 0]
+def find_conf_const(W, C):
+    # Find one independent set of w vectors
+    mask = np.abs(np.diag(qr(W.T.values)[1])) > 1e-10
+    W_ind = W.loc[mask].copy()
+    W_dep = W.loc[~mask].copy()
 
+    # Find the matrix that build dependent vectors
+    # from independent vectors
+    # This is a special case of non noegative
+    # matrix factorization with a known factor
+    A = round(W_dep @ pinv(W_ind)).astype(int)
+    C_ind = C[W_ind.index]
+
+    # Check which dependent have inconsistent constraints
+    # by comparing the explicit constraints with the linear
+    # combinations of independent constraints
+    # Append all involve constraints to list
+    conf_consts = []
+    for cname, c_w in A.iterrows():
+        csum = np.sum(c_w.values * C_ind.values)
+        if csum != C.loc[cname]:
+            conf_consts.append(cname)
+            conf_consts.extend(W_ind.index[c_w.astype(bool)])
+    conf_consts = set(conf_consts)
+
+    return list(conf_consts)
+
+
+def fill_zero_nn(X, C_non_zero, constraints):
     # Iterate over constrains and add missing
     # attribute combinations to the list
     X_new_list = []  # holds new or replicated attribute combinations
+    constraints_new = {}
     for const_name in C_non_zero.keys():
         # Get the dictionary of col: valus for the constraint
         const_dict = constraints[const_name].copy()
+        constraints_new[const_name] = const_dict
 
         # Find all constrined attribute combinations
         columns = list(const_dict.keys())
@@ -93,6 +119,8 @@ def fill_zero_nn(X, W, C, constraints):
         # Iterate over each atribute comb and find
         # nearest neighbors in X
         X2_list = []
+        # print(const_name)
+        # print(attr_combs_df)
         for attr_c, attr_val in zip(attr_combs, attr_combs_df.values):
             # Get distance to the attribute combination
             dist = cdist(attr_c[None, :], X_arr, metric='hamming').ravel()
@@ -119,12 +147,46 @@ def fill_zero_nn(X, W, C, constraints):
         assert len(X2) > 0
         X_new_list.append(X2)
 
-    # Reweight new combinations according to the contraint marginal
-    for i, const_marg in enumerate(C_non_zero.values):
-        old_factor = X_new_list[i].FACTOR
-        X_new_list[i]['FACTOR'] = old_factor * const_marg / old_factor.sum()
+    # Merge all new combs
+    X_new = pd.concat(X_new_list, axis=0, ignore_index=True)
+    # print(X_new.shape)
+    X_new = X_new.groupby(
+        list(X_new.columns.drop(['FACTOR'])),
+        observed=True
+    )[['FACTOR']].max().reset_index()
+    # print(X_new.shape)
 
-    return pd.concat([X] + X_new_list, axis=0, ignore_index=True)
+    # For the weights use the minimum norm solution with positivity constraints
+    # ERROR, some weights are negative
+    W_new = get_W(X_new, constraints_new)
+    C_new = C_non_zero[W_new.index]
+    factors_new, err = nnls(W_new.values, C_new.values)
+    # print(len(factors_new), err, C_new, constraints_new)
+    X_new['FACTOR'] = factors_new
+    # Filter zeroes
+    X_new = X_new[X_new.FACTOR > 0]
+
+    # Reweight new combinations according to the contraint marginal
+    # for i, const_marg in enumerate(C_non_zero.values):
+    #     old_factor = X_new_list[i].FACTOR
+    #     X_new_list[i]['FACTOR'] = old_factor * const_marg / old_factor.sum()
+
+    # X_new = pd.concat([X] + X_new_list, axis=0, ignore_index=True)
+    # # Collapse
+    # X_new = X_new.groupby(
+    #     list(X_new.columns.drop(['FACTOR'])),
+    #     observed=True
+    # )[['FACTOR']].sum().reset_index()
+
+    X_new = pd.concat([X, X_new], axis=0, ignore_index=True)
+    # Collapse, needed only when fixing conflicting contraints
+    # when dealing with zero constraints this has no effect
+    X_new = X_new.groupby(
+        list(X_new.columns.drop(['FACTOR'])),
+        observed=True
+    )[['FACTOR']].first().reset_index()
+
+    return X_new
 
 
 def fill_zero_from_global(X, W, C, constraints, X_full):
@@ -161,28 +223,37 @@ def fill_zero_from_global(X, W, C, constraints, X_full):
 def setup_ls(df_survey_dict, df_census, constraints):
     XWC_dict = {}
 
-    personas_cat_full = pd.concat(df for df in df_survey_dict.values())
-    X_full = get_X(personas_cat_full)
+    # personas_cat_full = pd.concat(df for df in df_survey_dict.values())
+    # X_full = get_X(personas_cat_full)
 
     for i, (mun, df) in tqdm(enumerate(df_survey_dict.items())):
-        # if i != 17: continue
-        # print(mun)
+        # if mun != 'Pesquería': continue
+        print(mun)
         X = get_X(df)
         W = get_W(X, constraints)
         C = df_census.loc[mun][W.index].copy()
 
         # Fill zero cells with non-zero constraints in X
-        X = fill_zero_nn(X, W, C, constraints)
-        W = get_W(X, constraints)
-        C = df_census.loc[mun][W.index].copy()
-
-        # Drop zero constrainst with all zeroes in W
+        # Identify zero cell problems as zero weight vectors
+        # with non-zero constraints
         W_zero = W.T.sum()[W.T.sum() == 0]
         C_non_zero = C.loc[W_zero.index]
-        C_zero = C_non_zero[C_non_zero == 0]
         C_non_zero = C_non_zero[C_non_zero > 0]
-        C = C.drop(C_zero.index)
-        W = W.drop(C_zero.index)
+        if len(C_non_zero) > 0:
+            print('Filling ...')
+            X = fill_zero_nn(X, C_non_zero, constraints)
+            W = get_W(X, constraints)
+            C = df_census.loc[mun][W.index].copy()
+            print('Done.')
+
+        # Drop zero constrainst with all zeroes in W
+        # W_zero = W.T.sum()[W.T.sum() == 0]
+        # C_non_zero = C.loc[W_zero.index]
+        # assert (C_non_zero > 0).sum() == 0, mun
+        # C_zero = C_non_zero[C_non_zero == 0]
+        # C_non_zero = C_non_zero[C_non_zero > 0]
+        # C = C.drop(C_zero.index)
+        # W = W.drop(C_zero.index)
 
         # TODO: keep only a set of linearly independent rows in W
 

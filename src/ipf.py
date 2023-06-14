@@ -4,6 +4,7 @@ import numpy as np
 def check_solvable(W, C):
     WC = np.column_stack([W, C])
 
+    # print(np.linalg.matrix_rank(W), np.linalg.matrix_rank(WC))
     solvable = np.linalg.matrix_rank(W) == np.linalg.matrix_rank(WC)
 
     return solvable
