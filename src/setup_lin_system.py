@@ -8,6 +8,15 @@ import warnings
 from tqdm import tqdm
 
 
+def check_solvable(W, C):
+    WC = np.column_stack([W, C])
+
+    # print(np.linalg.matrix_rank(W), np.linalg.matrix_rank(WC))
+    solvable = np.linalg.matrix_rank(W) == np.linalg.matrix_rank(WC)
+
+    return solvable
+
+
 def get_X(df):
     cat_cols = [
         col for col in df.columns
@@ -63,16 +72,41 @@ def get_W(X, const_dict):
 
 def find_conf_const(W, C):
     # Find one independent set of w vectors
+    rank = np.linalg.matrix_rank(W)
+
+    # r, P = qr(W.T.values, mode='r', pivoting=True)
+    # assert (abs(np.diag(r)) > 1e-10).sum() == rank
+    # W_ind = W.iloc[P[:rank]].copy()
+    # W_dep = W.iloc[P[rank:]].copy()
+    # assert np.linalg.matrix_rank(W_ind) == rank
+
     mask = np.abs(np.diag(qr(W.T.values)[1])) > 1e-10
     W_ind = W.loc[mask].copy()
     W_dep = W.loc[~mask].copy()
+    assert np.linalg.matrix_rank(W_ind) == rank
 
-    # Find the matrix that build dependent vectors
-    # from independent vectors
-    # This is a special case of non noegative
-    # matrix factorization with a known factor
-    A = round(W_dep @ pinv(W_ind)).astype(int)
-    C_ind = C[W_ind.index]
+    # W_sorted = list(W.sum(axis=1).sort_values(ascending=False).index)
+    # work_arr = np.zeros_like(W)
+    # curr_w = W_sorted[0]
+    # work_arr[0, :] = W.loc[curr_w].values
+    # ind_set = [curr_w]
+    # dep_set = []
+    # prank = np.linalg.matrix_rank(work_arr)
+    # idx = 1
+    # for curr_w in W_sorted:
+    #     work_arr[idx, :] = W.loc[curr_w].values
+    #     crank = np.linalg.matrix_rank(work_arr[:idx+1])
+    #     if crank == prank:
+    #         dep_set.append(curr_w)
+    #     else:
+    #         ind_set.append(curr_w)
+    #         prank = crank
+    #         idx += 1
+    # W_ind = W.loc[ind_set]
+    # W_dep = W.loc[dep_set]
+
+    A = round(W_dep @ pinv(W_ind), 5)
+    C_ind = C[W_ind.index].astype(int)
 
     # Check which dependent have inconsistent constraints
     # by comparing the explicit constraints with the linear
@@ -80,13 +114,14 @@ def find_conf_const(W, C):
     # Append all involve constraints to list
     conf_consts = []
     for cname, c_w in A.iterrows():
-        csum = np.sum(c_w.values * C_ind.values)
+        csum = round(np.sum(c_w.values * C_ind.values))
         if csum != C.loc[cname]:
+            # print(cname)
             conf_consts.append(cname)
             conf_consts.extend(W_ind.index[c_w.astype(bool)])
     conf_consts = set(conf_consts)
 
-    return list(conf_consts)
+    return list(conf_consts)#, rank, A, C_ind, W_ind, W_dep
 
 
 def fill_zero_nn(X, C_non_zero, constraints):
@@ -163,8 +198,8 @@ def fill_zero_nn(X, C_non_zero, constraints):
     factors_new, err = nnls(W_new.values, C_new.values)
     # print(len(factors_new), err, C_new, constraints_new)
     X_new['FACTOR'] = factors_new
-    # Filter zeroes
-    X_new = X_new[X_new.FACTOR > 0]
+    # Filter zeroes and small values
+    X_new = X_new[X_new.FACTOR > 1e-10]
 
     # Reweight new combinations according to the contraint marginal
     # for i, const_marg in enumerate(C_non_zero.values):
@@ -226,12 +261,15 @@ def setup_ls(df_survey_dict, df_census, constraints):
     # personas_cat_full = pd.concat(df for df in df_survey_dict.values())
     # X_full = get_X(personas_cat_full)
 
-    for i, (mun, df) in tqdm(enumerate(df_survey_dict.items())):
-        # if mun != 'Pesquería': continue
+    for mun, df in df_survey_dict.items():
+        if mun != 'Cerralvo': continue
         print(mun)
+
+        # Get an initial linear system
         X = get_X(df)
         W = get_W(X, constraints)
         C = df_census.loc[mun][W.index].copy()
+        print(f'    X has {len(X)} entries.')
 
         # Fill zero cells with non-zero constraints in X
         # Identify zero cell problems as zero weight vectors
@@ -240,22 +278,64 @@ def setup_ls(df_survey_dict, df_census, constraints):
         C_non_zero = C.loc[W_zero.index]
         C_non_zero = C_non_zero[C_non_zero > 0]
         if len(C_non_zero) > 0:
-            print('Filling ...')
+            print('    Filling zeroes ...')
             X = fill_zero_nn(X, C_non_zero, constraints)
             W = get_W(X, constraints)
             C = df_census.loc[mun][W.index].copy()
-            print('Done.')
+            print(f'    X has {len(X)} entries.')
+
+        # Find conflicting constraints
+        while not check_solvable(W, C):
+            print('    Solving conflicts ...')
+            conf_const = find_conf_const(W, C)
+            C_conf = C[conf_const]
+            X = fill_zero_nn(X, C_conf, constraints)
+            W = get_W(X, constraints)
+            C = df_census.loc[mun][W.index].copy()
+            print(f'    X has {len(X)} entries.')
 
         # Drop zero constrainst with all zeroes in W
-        # W_zero = W.T.sum()[W.T.sum() == 0]
-        # C_non_zero = C.loc[W_zero.index]
-        # assert (C_non_zero > 0).sum() == 0, mun
-        # C_zero = C_non_zero[C_non_zero == 0]
-        # C_non_zero = C_non_zero[C_non_zero > 0]
-        # C = C.drop(C_zero.index)
-        # W = W.drop(C_zero.index)
+        W_zero = W.T.sum()[W.T.sum() == 0]
+        C_non_zero = C.loc[W_zero.index]
+        assert (C_non_zero > 0).sum() == 0, mun
+        C_zero = C_non_zero[C_non_zero == 0]
+        C_non_zero = C_non_zero[C_non_zero > 0]
+        C = C.drop(C_zero.index)
+        W = W.drop(C_zero.index)
 
-        # TODO: keep only a set of linearly independent rows in W
+        # Set X->0 for C=0, remove them from X and C
+        # This type of constraints may also appear implicitly
+        # as a combination of other constraints.
+        # In such cases the rate of convergende of IPF is
+        # greatly affected since the involve X will converge to
+        # 0 increasily slowly.
+        # Consider the example of two contraints with x1 and x2:
+        # C1 = x1 + x2 = 1, C2 = x1 = 1, Implicit Ci = x2 = 0.
+        # But without Ci x1 converges as x1 = x1/(1+x1), which
+        # slows down as x1 approaches 0.
+        C_zero = C[C == 0]
+        W_to_zero = W.loc[C_zero.index]
+        to_drop = (W_to_zero.values).sum(axis=0) > 0
+        X = X[~to_drop]
+        W = W.drop(index=C_zero.index, columns=list(np.nonzero(to_drop)[0]))
+        C = C.drop(C_zero.index)
+
+        # Keep only a set of linearly independent rows in W
+        # One the conflicting constraints have been solved,
+        # dependent contraints are redundant
+        # NOTE: this really hurts IPF convergence speed
+        # it seems IPF is really bad at handling implicit constraints
+        # and really needs a full set ox explicit constraitns, even if
+        # redudant from the point of view of the linear system.
+        # Yet full row rank is needed for constrained least square
+        # solutions.
+        # rank = np.linalg.matrix_rank(W.values)
+        # r, P = qr(W.T.values, mode='r', pivoting=True)
+        # W = W.iloc[P[:rank]].copy()
+        # assert np.linalg.matrix_rank(W) == rank
+        # C = df_census.loc[mun][W.index].copy()
+
+        assert check_solvable(W, C), mun
 
         XWC_dict[mun] = {'X': X, 'W': W, 'C': C}
         # if i == 17: break
