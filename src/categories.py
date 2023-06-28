@@ -428,6 +428,512 @@ defs = {
         9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
+
+    'paredes': {
+        1: 'Material de desecho',
+        2: 'Lámina de cartón',
+        3: 'Lámina de asbesto o metálica',
+        4: 'Carrizo, bambú  o palma',
+        5: 'Embarro o bajareque',
+        6: 'Madera',
+        7: 'Adobe',
+        8: 'Tabique, ladrillo, block, piedra, cantera, cemento o concreto',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'techos': {
+        1: 'Material de desecho',
+        2: 'Lámina de cartón',
+        3: 'Lámina metálica',
+        4: 'Lámina de asbesto ',
+        5: 'Lámina de fibrocemento',
+        6: 'Palma o paja',
+        7: 'Madera o tejamanil',
+        8: 'Terrado con viguería',
+        9: 'Teja',
+        10: 'Losa de concreto o viguetas con bovedilla',
+        99: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'pisos': {
+        1: 'Tierra',
+        2: 'Cemento o firme',
+        3: 'Madera, mosaico u otro recubrimiento',
+        9: 'No especificado ',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'cocina': {
+        1: 'Sí',
+        3: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'cuadorm': {i: i for i in range(1, 26)} | {
+        99: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'lug_coc': {
+        1: 'Interior de la vivienda.',
+        2: 'Cuarto separado de la vivienda.',
+        3: 'Pasillo o corredor fuera de la vivienda.',
+        4: 'Tejabán o techito.',
+        5: 'Al aire libre.',
+        6: 'No tiene un espacio para cocinar.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'combustible': {
+        1: 'Leña o carbón',
+        2: 'Gas',
+        3: 'Electricidad',
+        4: 'Otro combustible',
+        5: 'No cocinan',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'estufa': {
+        1: 'Tiene un tubo o chimenea para sacar el humo.',
+        3: 'No tiene tubo o chimenea para sacar el humo.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'electricidad': {
+        1: 'Sí',
+        3: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'focos': {i: i for i in range(1, 999)} | {
+        999: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'focos_ahorra': {i: i for i in range(0, 999)} | {
+        999: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'agua_entubada': {
+        1: 'Dentro de la vivienda.',
+        2: 'Sólo en el patio o terreno.',
+        3: 'No tienen agua entubada.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'aba_agua_entu': {
+        1: 'Del servicio público de agua.',
+        2: 'De un pozo comunitario.',
+        3: 'De un pozo particular.',
+        4: 'De una pipa.',
+        5: 'De otra vivienda.',
+        6: 'De la lluvia.',
+        7: 'De otro lugar.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'aba_agua_no_entu': {
+        1: 'Un pozo.',
+        2: 'Una llave comunitaria.',
+        3: 'Otra vivienda.',
+        4: 'Un río, arroyo o lago.',
+        5: 'La trae una pipa.',
+        6: 'La captan de la lluvia.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'tinaco': {
+        1: 'Sí',
+        2: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'cisterna': {
+        3: 'Sí',
+        4: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'bomba_agua': {
+        5: 'Sí',
+        6: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'regadera': {
+        7: 'Sí',
+        8: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'boiler': {
+        1: 'Sí',
+        2: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'calentador_solar': {
+        3: 'Sí',
+        4: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'aire_acon': {
+        5: 'Sí',
+        6: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'panel_solar': {
+        7: 'Sí',
+        8: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'sersan': {
+        1: 'Taza de baño (excusado o sanitario).',
+        2: 'Letrina (pozo u hoyo).',
+        3: 'No tienen taza de baño ni letrina.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'conagua': {
+        1: 'Tiene descarga directa de agua.',
+        2: 'Le echan agua con cubeta.',
+        3: 'No se le puede echar agua.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'usoexc': {
+        1: 'Sí',
+        3: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'drenaje': {
+        1: 'La red pública.',
+        2: 'Una fosa séptica o tanque séptico (biodigestor).',
+        3: 'Una tubería que va a dar a una barranca o grieta.',
+        4: 'Una tubería que va a dar a un río, lago o mar.',
+        5: 'No tiene drenaje.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'separacion1': {
+        1: 'Sí',
+        2: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'separacion2': {
+        3: 'Sí',
+        4: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'separacion3': {
+        5: 'Sí',
+        6: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'separacion4': {
+        7: 'Sí',
+        8: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'destino_bas': {
+        1: 'Se la dan a un camión o carrito de basura.',
+        2: 'La dejan en un contenedor o depósito.',
+        3: 'La queman.',
+        4: 'La entierran.',
+        5: 'La llevan al basurero público.',
+        6: 'La tiran en otro lugar. (Calle, baldío, barranca, río)',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'refrigerador': {
+        1: 'Sí',
+        2: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'lavadora': {
+        3: 'Sí',
+        4: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'horno': {
+        5: 'Sí',
+        6: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'autoprop': {
+        7: 'Sí',
+        8: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'motocicleta': {
+        1: 'Sí',
+        2: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'bicicleta': {
+        3: 'Sí',
+        4: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'radio': {
+        5: 'Sí',
+        6: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'televisor': {
+        7: 'Sí',
+        8: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'computadora': {
+        1: 'Sí',
+        2: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'telefono': {
+        3: 'Sí',
+        4: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'celular': {
+        5: 'Sí',
+        6: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'internet': {
+        7: 'Sí',
+        8: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'serv_tv_paga': {
+        1: 'Sí',
+        2: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'serv_pel_paga': {
+        3: 'Sí',
+        4: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'con_vjuegos': {
+        5: 'Sí',
+        6: 'No',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'tenencia': {
+        1: 'Vive la persona que es dueña o propietaria.',
+        2: 'Se paga renta.',
+        3: 'Es de un familiar o les prestan la vivienda.',
+        4: 'La ocupan en otra situación.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'escrituras': {
+        1: 'A nombre de la persona dueña o propietaria.',
+        2: 'A nombre de otra persona.',
+        3: 'No tiene escrituras.',
+        8: 'No sabe',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'forma_adqui': {
+        1: 'La compró hecha.',
+        2: 'La mandó construir.',
+        3: 'La construyó ella (él) misma(o) o familiares.',
+        4: 'La heredó.',
+        5: 'La recibió como apoyo del gobierno.',
+        6: 'La obtuvo de otra manera.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'financiamiento1': {
+        1: 'INFONAVIT',
+        2: 'FOVISSSTE',
+        3: 'PEMEX',
+        4: 'FONHAPO',
+        5: 'Banco',
+        6: 'Otra institución',
+        7: 'Le prestó un familiar, amiga(o) o prestamista.',
+        8: 'Usó sus propios recursos.',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'financiamiento2': {
+        2: 'FOVISSSTE',
+        3: 'PEMEX',
+        4: 'FONHAPO',
+        5: 'Banco',
+        6: 'Otra institución',
+        7: 'Le prestó un familiar, amiga(o) o prestamista.',
+        8: 'Usó sus propios recursos.',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'financiamiento3': {
+        3: 'PEMEX',
+        4: 'FONHAPO',
+        5: 'Banco',
+        6: 'Otra institución',
+        7: 'Le prestó un familiar, amiga(o) o prestamista.',
+        8: 'Usó sus propios recursos.',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'deuda': {
+        1: 'Está totalmente pagada',
+        2: 'La están pagando',
+        3: 'La dejaron de pagar',
+        8: 'No sabe',
+        9: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'mconmig': {
+        1: 'Sí',
+        3: 'No',
+        9: 'No especificado',
+    },
+
+    'ingr_perotropais': {
+        1: 'Sí',
+        2: 'No',
+        9: 'No especificado',
+    },
+
+    'ingr_perdentpais': {
+        3: 'Sí',
+        4: 'No',
+        9: 'No especificado',
+    },
+
+    'ingr_ayugob': {
+        5: 'Sí',
+        6: 'No',
+        9: 'No especificado',
+    },
+
+    'ingr_jubpen': {
+        7: 'Sí',
+        8: 'No',
+        9: 'No especificado',
+    },
+
+    'alimentacion': {
+        1: 'Sí',
+        3: 'No',
+        9: 'No especificado',
+    },
+
+    'alim_adl1': {
+        1: 'Sí',
+        2: 'No',
+        9: 'No especificado',
+    },
+
+    'alim_adl2': {
+        3: 'Sí',
+        4: 'No',
+        9: 'No especificado',
+    },
+
+    'ing_alim_adl1': {
+        1: 'Sí',
+        2: 'No',
+        9: 'No especificado',
+    },
+
+    'ing_alim_adl2': {
+        3: 'Sí',
+        4: 'No',
+        9: 'No especificado',
+    },
+
+    'ing_alim_adl3': {
+        5: 'Sí',
+        6: 'No',
+        9: 'No especificado',
+    },
+
+    'tipohog': {
+        1: 'Hogar Nuclear (Familiar)',
+        2: 'Hogar Ampliado (Familiar)',
+        3: 'Hogar Compuesto (Familiar)',
+        4: 'Hogar no especificado (Familiar)',
+        5: 'Hogar unipersonal (No familiar)',
+        6: 'Hogar corresidente (No familiar)',
+        9: 'No se sabe la composición',
+    },
+
 }
 
 cats = {
@@ -477,5 +983,70 @@ cats = {
     'tie_traslado_trab': pd.CategoricalDtype(
         defs['tie_traslado_trab'].values()),
     'dhsersal': pd.CategoricalDtype(DHSERSAL_CATS),
-    # 'sino': pd.CategoricalDtype(['Sí', 'No']),
+    'paredes': pd.CategoricalDtype(defs['paredes'].values()),
+    'techos': pd.CategoricalDtype(defs['techos'].values()),
+    'pisos': pd.CategoricalDtype(defs['pisos'].values()),
+    'cocina': pd.CategoricalDtype(defs['cocina'].values()),
+    'cuadorm': pd.CategoricalDtype(defs['cuadorm'].values()),
+    'lug_coc': pd.CategoricalDtype(defs['lug_coc'].values()),
+    'combustible': pd.CategoricalDtype(defs['combustible'].values()),
+    'estufa': pd.CategoricalDtype(defs['estufa'].values()),
+    'electricidad': pd.CategoricalDtype(defs['electricidad'].values()),
+    'focos': pd.CategoricalDtype(defs['focos'].values()),
+    'focos_ahorra': pd.CategoricalDtype(defs['focos_ahorra'].values()),
+    'agua_entubada': pd.CategoricalDtype(defs['agua_entubada'].values()),
+    'aba_agua_entu': pd.CategoricalDtype(defs['aba_agua_entu'].values()),
+    'aba_agua_no_entu': pd.CategoricalDtype(defs['aba_agua_no_entu'].values()),
+    'tinaco': pd.CategoricalDtype(defs['tinaco'].values()),
+    'cisterna': pd.CategoricalDtype(defs['cisterna'].values()),
+    'bomba_agua': pd.CategoricalDtype(defs['bomba_agua'].values()),
+    'regadera': pd.CategoricalDtype(defs['regadera'].values()),
+    'boiler': pd.CategoricalDtype(defs['boiler'].values()),
+    'calentador_solar': pd.CategoricalDtype(defs['calentador_solar'].values()),
+    'aire_acon': pd.CategoricalDtype(defs['aire_acon'].values()),
+    'panel_solar': pd.CategoricalDtype(defs['panel_solar'].values()),
+    'sersan': pd.CategoricalDtype(defs['sersan'].values()),
+    'conagua': pd.CategoricalDtype(defs['conagua'].values()),
+    'usoexc': pd.CategoricalDtype(defs['usoexc'].values()),
+    'drenaje': pd.CategoricalDtype(defs['drenaje'].values()),
+    'separacion1': pd.CategoricalDtype(defs['separacion1'].values()),
+    'separacion2': pd.CategoricalDtype(defs['separacion2'].values()),
+    'separacion3': pd.CategoricalDtype(defs['separacion3'].values()),
+    'separacion4': pd.CategoricalDtype(defs['separacion4'].values()),
+    'destino_bas': pd.CategoricalDtype(defs['destino_bas'].values()),
+    'refrigerador': pd.CategoricalDtype(defs['refrigerador'].values()),
+    'lavadora': pd.CategoricalDtype(defs['lavadora'].values()),
+    'horno': pd.CategoricalDtype(defs['horno'].values()),
+    'autoprop': pd.CategoricalDtype(defs['autoprop'].values()),
+    'motocicleta': pd.CategoricalDtype(defs['motocicleta'].values()),
+    'bicicleta': pd.CategoricalDtype(defs['bicicleta'].values()),
+    'radio': pd.CategoricalDtype(defs['radio'].values()),
+    'televisor': pd.CategoricalDtype(defs['televisor'].values()),
+    'computadora': pd.CategoricalDtype(defs['computadora'].values()),
+    'telefono': pd.CategoricalDtype(defs['telefono'].values()),
+    'celular': pd.CategoricalDtype(defs['celular'].values()),
+    'internet': pd.CategoricalDtype(defs['internet'].values()),
+    'serv_tv_paga': pd.CategoricalDtype(defs['serv_tv_paga'].values()),
+    'serv_pel_paga': pd.CategoricalDtype(defs['serv_pel_paga'].values()),
+    'con_vjuegos': pd.CategoricalDtype(defs['con_vjuegos'].values()),
+    'tenencia': pd.CategoricalDtype(defs['tenencia'].values()),
+    'escrituras': pd.CategoricalDtype(defs['escrituras'].values()),
+    'forma_adqui': pd.CategoricalDtype(defs['forma_adqui'].values()),
+    'financiamiento1': pd.CategoricalDtype(defs['financiamiento1'].values()),
+    'financiamiento2': pd.CategoricalDtype(defs['financiamiento2'].values()),
+    'financiamiento3': pd.CategoricalDtype(defs['financiamiento3'].values()),
+    'deuda': pd.CategoricalDtype(defs['deuda'].values()),
+    'mconmig': pd.CategoricalDtype(defs['mconmig'].values()),
+    'ingr_perotropais': pd.CategoricalDtype(defs['ingr_perotropais'].values()),
+    'ingr_perdentpais': pd.CategoricalDtype(defs['ingr_perdentpais'].values()),
+    'ingr_ayugob': pd.CategoricalDtype(defs['ingr_ayugob'].values()),
+    'ingr_jubpen': pd.CategoricalDtype(defs['ingr_jubpen'].values()),
+    'alimentacion': pd.CategoricalDtype(defs['alimentacion'].values()),
+    'alim_adl1': pd.CategoricalDtype(defs['alim_adl1'].values()),
+    'alim_adl2': pd.CategoricalDtype(defs['alim_adl2'].values()),
+    'ing_alim_adl1': pd.CategoricalDtype(defs['ing_alim_adl1'].values()),
+    'ing_alim_adl2': pd.CategoricalDtype(defs['ing_alim_adl2'].values()),
+    'ing_alim_adl3': pd.CategoricalDtype(defs['ing_alim_adl3'].values()),
+    'tipohog': pd.CategoricalDtype(defs['tipohog'].values()),
+
 }
