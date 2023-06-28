@@ -1109,90 +1109,271 @@ constraints_ind = {
 }
 
 constraints_viv = {
-    'VIVTOT': {},
+    # Not used since they inclued abandoned houses
+    # VIVTOT, includes collective, temporal and abandoned
+    # TVIVHAB, includes collective
+    # TVIVPAR, includes abandoned and temporal
+    # VIVPARHAB, excludes houses with no resident info
 
-    'TVIVHAB': {
-        'HAB': ['Yes'],
+    # HOUSEHOLS LEVEL CONSTRAINTS
+    # Apply to all particular dwellings TOTHOG/TVIVPARHAB
+
+    'TOTHOG': {},  # Same as TVIVPARHAB
+
+    # 'POBHOG': {},  # Conflicts with POBTOT since POBTOT = POBHOG + POBCOL
+    # Sames as OCUPVIVPAR
+    # 'PHOGJEF_F': {},
+    # 'PHOGJEF_M': {},
+
+    'HOGJEF_F': {
+        'JEFE_SEXO': ['F']
     },
 
-    'TVIVPAR': {
-        'TYPE': ['Particular'],
-        'HAS_INFO': ['Yes'],
+    'HOGJEF_M': {
+        'JEFE_SEXO': ['M']
     },
 
-    'VIVPAR_HAB': {
-        'HAB': ['Yes'],
-        'TYPE': ['Particular'],
-        'HAS_INFO': ['Yes'],
-    },
-
-    'VIVPARH_CV': {
-        'HAB': ['Yes'],
-        'TYPE': ['Particular'],
-        'HAS_CHARS': ['Yes'],
-    },
-    'TVIVPARHAB': {
-        'HAB': ['Yes'],
-        'TYPE': ['Particular'],
-    },
-    'VIVPAR_DES': {
-        'HAB': ['No'],
-        'TYPE': ['Particular'],
-        'HAS_INFO': ['No']
-    },
-    'VIVPAR_UT': {
-        'HAB': ['Uso_temp'],
-        'TYPE': ['Particular'],
-        'HAS_INFO': ['No']
-    },
+    # DWELLING LEVEL CONSTRAINTA
+    # The following only apply to a subset of particular dwellings
+    # the one with characteristics VIVPARH_CV
 
     'VPH_PISODT': {
-        'HAB': ['Yes'],
-        'HAS_CHARS': ['Yes'],
-        'FLOOR': ['Other']
+        'PISOS': ['Cemento o firme', 'Madera, mosaico u otro recubrimiento']
     },
+
     'VPH_PISOTI': {
-        'HAB': ['Yes'],
-        'HAS_CHARS': ['Yes'],
-        'FLOOR': ['Dirt']
+        'PISOS': ['Tierra']
     },
 
     'VPH_1DOR': {
-        'HAB': ['Yes'],
-        'HAS_CHARS': ['Yes'],
-        'NUM_BEDROOMS': ['1']
+        'CUADORM': [1]
     },
+
     'VPH_2YMASD': {
-        'HAB': ['Yes'],
-        'HAS_CHARS': ['Yes'],
-        'NUM_BEDROOMS': ['2YMAS']
+        'CUADORM': list(range(2, 26))
     },
 
     'VPH_1CUART': {
-        'HAB': ['Yes'],
-        'HAS_CHARS': ['Yes'],
-        'NUM_ROOMS': ['1']
+        'TOTCUART': [1]
     },
+
     'VPH_2CUART': {
-        'HAB': ['Yes'],
-        'HAS_CHARS': ['Yes'],
-        'NUM_ROOMS': ['2']
+        'TOTCUART': [2]
     },
+
     'VPH_3YMASC': {
-        'HAB': ['Yes'],
-        'HAS_CHARS': ['Yes'],
-        'NUM_ROOMS': ['3YMAS']
+        'TOTCUART': list(range(3, 26))
     },
 
     'VPH_C_ELEC': {
-        'HAB': ['Yes'],
-        'HAS_CHARS': ['Yes'],
-        'HAS_ELEC': ['Yes']
+        'ELECTRICIDAD': ['Sí']
     },
+
     'VPH_S_ELEC': {
-        'HAB': ['Yes'],
-        'HAS_CHARS': ['Yes'],
-        'HAS_ELEC': ['No']
+        'ELECTRICIDAD': ['No']
+    },
+
+    'VPH_AGUADV': {
+        'AGUA_ENTUBADA': [
+            'Dentro de la vivienda.',
+            'Sólo en el patio o terreno.'
+        ]
+    },
+
+    'VPH_AEASP': {
+        'AGUA_ENTUBADA': [
+            'Dentro de la vivienda.',
+            'Sólo en el patio o terreno.'
+        ],
+        'ABA_AGUA_ENTU': ['Del servicio público de agua.']
+    },
+
+    'VPH_AGUAFV': {
+        'AGUA_ENTUBADA': [
+            'No tienen agua entubada.',
+        ]
+    },
+
+    'VPH_TINACO': {
+        'TINACO': ['Sí']
+    },
+
+    'VPH_CISTER': {
+        'CISTERNA': ['Sí']
+    },
+
+    'VPH_EXCSA': {
+        'SERSAN': ['Taza de baño (excusado o sanitario).']
+    },
+
+    'VPH_LETR': {
+        'SERSAN': ['Letrina (pozo u hoyo).']
+    },
+
+    'VPH_DRENAJ': {
+        'DRENAJE': [
+            'La red pública.',
+            'Una fosa séptica o tanque séptico (biodigestor).',
+            'Una tubería que va a dar a una barranca o grieta.',
+            'Una tubería que va a dar a un río, lago o mar.',
+        ]
+    },
+
+    'VPH_NODREN': {
+        'DRENAJE': [
+            'No tiene drenaje.',
+        ]
+    },
+
+    'VPH_C_SERV': {
+        'ELECTRICIDAD': ['Sí'],
+        'AGUA_ENTUBADA': [
+            'Dentro de la vivienda.',
+            'Sólo en el patio o terreno.'
+        ],
+        'DRENAJE': [
+            'La red pública.',
+            'Una fosa séptica o tanque séptico (biodigestor).',
+            'Una tubería que va a dar a una barranca o grieta.',
+            'Una tubería que va a dar a un río, lago o mar.',
+        ]
+    },
+
+    'VPH_NDEAED': {
+        'ELECTRICIDAD': ['No'],
+        'AGUA_ENTUBADA': [
+            'No tienen agua entubada.',
+        ],
+        'DRENAJE': [
+            'No tiene drenaje.',
+        ]
+    },
+
+    'VPH_DSADMA': {
+        'DRENAJE': [
+            'La red pública.',
+            'Una fosa séptica o tanque séptico (biodigestor).',
+            'Una tubería que va a dar a una barranca o grieta.',
+            'Una tubería que va a dar a un río, lago o mar.',
+                ],
+        'SERSAN': [
+            'Taza de baño (excusado o sanitario).',
+            'Letrina (pozo u hoyo).'
+        ],
+        'CONAGUA': [
+            'Tiene descarga directa de agua.',
+            'Le echan agua con cubeta.'
+        ]
+    },
+
+    'VPH_NDACMM': {
+        'AUTOPROP': ['No'],
+        'MOTOCICLETA': ['No']
+    },
+
+    'VPH_SNBIEN': {
+        'REFRIGERADOR': ['No'],
+        'LAVADORA': ['No'],
+        'HORNO': ['No'],
+        'AUTOPROP': ['No'],
+        'MOTOCICLETA': ['No'],
+        'BICICLETA': ['No'],
+        'RADIO': ['No'],
+        'TELEVISOR': ['No'],
+        'COMPUTADORA': ['No'],
+        'INTERNET': ['No'],
+        'TELEFONO': ['No'],
+        'CELULAR': ['No'],
+        'SERV_TV_PAGA': ['No'],
+        'SERV_PEL_PAGA': ['No'],
+        'CON_VJUEGOS': ['No']
+    },
+
+    'VPH_REFRI': {
+        'REFRIGERADOR': ['Sí'],
+    },
+
+    'VPH_LAVAD': {
+        'LAVADORA': ['Sí'],
+    },
+
+    'VPH_HMICRO': {
+        'HORNO': ['Sí'],
+    },
+
+    'VPH_AUTOM': {
+        'AUTOPROP': ['Sí'],
+    },
+
+    'VPH_MOTO': {
+        'MOTOCICLETA': ['Sí'],
+    },
+
+    'VPH_BICI': {
+        'BICICLETA': ['Sí'],
+    },
+
+    'VPH_RADIO': {
+        'RADIO': ['Sí'],
+    },
+
+    'VPH_TV': {
+        'TELEVISOR': ['Sí'],
+    },
+
+    'VPH_PC': {
+        'COMPUTADORA': ['Sí'],
+    },
+
+    'VPH_TELEF': {
+        'TELEFONO': ['Sí'],
+    },
+
+    'VPH_CEL': {
+        'CELULAR': ['Sí'],
+    },
+
+    'VPH_INTER': {
+        'INTERNET': ['Sí'],
+    },
+
+    'VPH_STVP': {
+        'SERV_TV_PAGA': ['Sí'],
+    },
+
+    'VPH_SPMVPI': {
+        'SERV_PEL_PAGA': ['Sí'],
+    },
+
+    'VPH_CVJ': {
+        'CON_VJUEGOS': ['Sí'],
+    },
+
+    'VPH_SINRTV': {
+        'RADIO': ['No'],
+        'TELEVISOR': ['No'],
+    },
+
+    'VPH_SINLTC': {
+        'TELEFONO': ['No'],
+        'CELULAR': ['No'],
+    },
+
+    'VPH_SINCINT': {
+        'COMPUTADORA': ['No'],
+        'INTERNET': ['No'],
+    },
+
+    'VPH_SINTIC': {
+        'RADIO': ['No'],
+        'TELEVISOR': ['No'],
+        'COMPUTADORA': ['No'],
+        'INTERNET': ['No'],
+        'TELEFONO': ['No'],
+        'CELULAR': ['No'],
+        'SERV_TV_PAGA': ['No'],
+        'SERV_PEL_PAGA': ['No'],
+        'CON_VJUEGOS': ['No']
     },
 }
 
@@ -1206,3 +1387,7 @@ sum_zero_contraints_viv = [
 
 def get_ind_const():
     return constraints_ind
+
+
+def get_viv_const():
+    return constraints_viv

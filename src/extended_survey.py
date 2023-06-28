@@ -411,3 +411,315 @@ def process_people_df(file_path):
     group_dict = {mun: df for mun, df in groups}
 
     return group_dict
+
+
+def process_places_df(file_path):
+
+    viviendas = pd.read_csv(file_path)
+
+    viviendas_cat = viviendas[['ID_VIV', 'FACTOR']].copy()
+
+    viviendas_cat['MUN'] = viviendas.MUN.map(defs['muns']).astype(cats['muns'])
+
+    viviendas_cat['CLAVIVP'] = viviendas.CLAVIVP.map(
+        defs['clavivp']
+    ).astype(cats['clavivp'])
+
+    viviendas_cat['PAREDES'] = viviendas.PAREDES.fillna(
+        'Blanco por pase').map(defs['paredes']).astype(cats['paredes'])
+
+    viviendas_cat['TECHOS'] = viviendas.TECHOS.fillna(
+        'Blanco por pase').map(defs['techos']).astype(cats['techos'])
+
+    viviendas_cat['PISOS'] = viviendas.PISOS.fillna(
+        'Blanco por pase').map(defs['pisos']).astype(cats['pisos'])
+
+    viviendas_cat['COCINA'] = viviendas.COCINA.fillna(
+        'Blanco por pase').map(defs['cocina']).astype(cats['cocina'])
+
+    viviendas_cat['CUADORM'] = viviendas.CUADORM.fillna(
+        'Blanco por pase').map(defs['cuadorm']).astype(cats['cuadorm'])
+
+    viviendas_cat['TOTCUART'] = viviendas.TOTCUART.fillna(
+        'Blanco por pase').map(defs['cuadorm']).astype(cats['cuadorm'])
+
+    viviendas_cat['LUG_COC'] = viviendas.LUG_COC.fillna(
+        'Blanco por pase').map(defs['lug_coc']).astype(cats['lug_coc'])
+
+    viviendas_cat['COMBUSTIBLE'] = viviendas.COMBUSTIBLE.fillna(
+        'Blanco por pase').map(defs['combustible']).astype(cats['combustible'])
+
+    viviendas_cat['ESTUFA'] = viviendas.ESTUFA.fillna(
+        'Blanco por pase').map(defs['estufa']).astype(cats['estufa'])
+
+    viviendas_cat['ELECTRICIDAD'] = viviendas.ELECTRICIDAD.fillna(
+        'Blanco por pase').map(
+            defs['electricidad']).astype(cats['electricidad'])
+
+    viviendas_cat['FOCOS'] = viviendas.FOCOS.fillna(
+        'Blanco por pase').map(
+            defs['focos']).astype(cats['focos'])
+
+    viviendas_cat['FOCOS_AHORRA'] = viviendas.FOCOS_AHORRA.fillna(
+        'Blanco por pase').map(
+            defs['focos_ahorra']).astype(cats['focos_ahorra'])
+
+    viviendas_cat['AGUA_ENTUBADA'] = viviendas.AGUA_ENTUBADA.fillna(
+        'Blanco por pase').map(
+            defs['agua_entubada']).astype(cats['agua_entubada'])
+
+    viviendas_cat['ABA_AGUA_ENTU'] = viviendas.ABA_AGUA_ENTU.fillna(
+        'Blanco por pase').map(
+            defs['aba_agua_entu']).astype(cats['aba_agua_entu'])
+
+    viviendas_cat['ABA_AGUA_NO_ENTU'] = viviendas.ABA_AGUA_NO_ENTU.fillna(
+        'Blanco por pase').map(
+            defs['aba_agua_no_entu']).astype(cats['aba_agua_no_entu'])
+
+    viviendas_cat['TINACO'] = viviendas.TINACO.fillna(
+        'Blanco por pase').map(
+            defs['tinaco']).astype(cats['tinaco'])
+
+    viviendas_cat['CISTERNA'] = viviendas.CISTERNA.fillna(
+        'Blanco por pase').map(
+            defs['cisterna']).astype(cats['cisterna'])
+
+    viviendas_cat['BOMBA_AGUA'] = viviendas.BOMBA_AGUA.fillna(
+        'Blanco por pase').map(
+            defs['bomba_agua']).astype(cats['bomba_agua'])
+
+    viviendas_cat['REGADERA'] = viviendas.REGADERA.fillna(
+        'Blanco por pase').map(
+            defs['regadera']).astype(cats['regadera'])
+
+    viviendas_cat['BOILER'] = viviendas.BOILER.fillna(
+        'Blanco por pase').map(
+            defs['boiler']).astype(cats['boiler'])
+
+    viviendas_cat['CALENTADOR_SOLAR'] = viviendas.CALENTADOR_SOLAR.fillna(
+        'Blanco por pase').map(
+            defs['calentador_solar']).astype(cats['calentador_solar'])
+
+    viviendas_cat['AIRE_ACON'] = viviendas.AIRE_ACON.fillna(
+        'Blanco por pase').map(
+            defs['aire_acon']).astype(cats['aire_acon'])
+
+    viviendas_cat['PANEL_SOLAR'] = viviendas.PANEL_SOLAR.fillna(
+        'Blanco por pase').map(
+            defs['panel_solar']).astype(cats['panel_solar'])
+
+    viviendas_cat['SERSAN'] = viviendas.SERSAN.fillna(
+        'Blanco por pase').map(
+            defs['sersan']).astype(cats['sersan'])
+
+    viviendas_cat['CONAGUA'] = viviendas.CONAGUA.fillna(
+        'Blanco por pase').map(
+            defs['conagua']).astype(cats['conagua'])
+
+    viviendas_cat['USOEXC'] = viviendas.USOEXC.fillna(
+        'Blanco por pase').map(
+            defs['usoexc']).astype(cats['usoexc'])
+
+    viviendas_cat['DRENAJE'] = viviendas.DRENAJE.fillna(
+        'Blanco por pase').map(
+            defs['drenaje']).astype(cats['drenaje'])
+
+    viviendas_cat['SEPARACION1'] = viviendas.SEPARACION1.fillna(
+        'Blanco por pase').map(
+            defs['separacion1']).astype(cats['separacion1'])
+
+    viviendas_cat['SEPARACION2'] = viviendas.SEPARACION2.fillna(
+        'Blanco por pase').map(
+            defs['separacion2']).astype(cats['separacion2'])
+
+    viviendas_cat['SEPARACION3'] = viviendas.SEPARACION3.fillna(
+        'Blanco por pase').map(
+            defs['separacion3']).astype(cats['separacion3'])
+
+    viviendas_cat['SEPARACION4'] = viviendas.SEPARACION4.fillna(
+        'Blanco por pase').map(
+            defs['separacion4']).astype(cats['separacion4'])
+
+    viviendas_cat['DESTINO_BAS'] = viviendas.DESTINO_BAS.fillna(
+        'Blanco por pase').map(
+            defs['destino_bas']).astype(cats['destino_bas'])
+
+    viviendas_cat['REFRIGERADOR'] = viviendas.REFRIGERADOR.fillna(
+        'Blanco por pase').map(
+            defs['refrigerador']).astype(cats['refrigerador'])
+
+    viviendas_cat['LAVADORA'] = viviendas.LAVADORA.fillna(
+        'Blanco por pase').map(
+            defs['lavadora']).astype(cats['lavadora'])
+
+    viviendas_cat['HORNO'] = viviendas.HORNO.fillna(
+        'Blanco por pase').map(
+            defs['horno']).astype(cats['horno'])
+
+    viviendas_cat['AUTOPROP'] = viviendas.AUTOPROP.fillna(
+        'Blanco por pase').map(
+            defs['autoprop']).astype(cats['autoprop'])
+
+    viviendas_cat['MOTOCICLETA'] = viviendas.MOTOCICLETA.fillna(
+        'Blanco por pase').map(
+            defs['motocicleta']).astype(cats['motocicleta'])
+
+    viviendas_cat['BICICLETA'] = viviendas.BICICLETA.fillna(
+        'Blanco por pase').map(
+            defs['bicicleta']).astype(cats['bicicleta'])
+
+    viviendas_cat['RADIO'] = viviendas.RADIO.fillna(
+        'Blanco por pase').map(
+            defs['radio']).astype(cats['radio'])
+
+    viviendas_cat['TELEVISOR'] = viviendas.TELEVISOR.fillna(
+        'Blanco por pase').map(
+            defs['televisor']).astype(cats['televisor'])
+
+    viviendas_cat['COMPUTADORA'] = viviendas.COMPUTADORA.fillna(
+        'Blanco por pase').map(
+            defs['computadora']).astype(cats['computadora'])
+
+    viviendas_cat['TELEFONO'] = viviendas.TELEFONO.fillna(
+        'Blanco por pase').map(
+            defs['telefono']).astype(cats['telefono'])
+
+    viviendas_cat['CELULAR'] = viviendas.CELULAR.fillna(
+        'Blanco por pase').map(
+            defs['celular']).astype(cats['celular'])
+
+    viviendas_cat['INTERNET'] = viviendas.INTERNET.fillna(
+        'Blanco por pase').map(
+            defs['internet']).astype(cats['internet'])
+
+    viviendas_cat['SERV_TV_PAGA'] = viviendas.SERV_TV_PAGA.fillna(
+        'Blanco por pase').map(
+            defs['serv_tv_paga']).astype(cats['serv_tv_paga'])
+
+    viviendas_cat['SERV_PEL_PAGA'] = viviendas.SERV_PEL_PAGA.fillna(
+        'Blanco por pase').map(
+            defs['serv_pel_paga']).astype(cats['serv_pel_paga'])
+
+    viviendas_cat['CON_VJUEGOS'] = viviendas.CON_VJUEGOS.fillna(
+        'Blanco por pase').map(
+            defs['con_vjuegos']).astype(cats['con_vjuegos'])
+
+    viviendas_cat['TENENCIA'] = viviendas.TENENCIA.fillna(
+        'Blanco por pase').map(
+            defs['tenencia']).astype(cats['tenencia'])
+
+    viviendas_cat['ESCRITURAS'] = viviendas.ESCRITURAS.fillna(
+        'Blanco por pase').map(
+            defs['escrituras']).astype(cats['escrituras'])
+
+    viviendas_cat['FORMA_ADQUI'] = viviendas.FORMA_ADQUI.fillna(
+        'Blanco por pase').map(
+            defs['forma_adqui']).astype(cats['forma_adqui'])
+
+    viviendas_cat['FINANCIAMIENTO1'] = viviendas.FINANCIAMIENTO1.fillna(
+        'Blanco por pase').map(
+            defs['financiamiento1']).astype(cats['financiamiento1'])
+
+    viviendas_cat['FINANCIAMIENTO2'] = viviendas.FINANCIAMIENTO2.fillna(
+        'Blanco por pase').map(
+            defs['financiamiento2']).astype(cats['financiamiento2'])
+
+    viviendas_cat['FINANCIAMIENTO3'] = viviendas.FINANCIAMIENTO3.fillna(
+        'Blanco por pase').map(
+            defs['financiamiento3']).astype(cats['financiamiento3'])
+
+    viviendas_cat['DEUDA'] = viviendas.DEUDA.fillna(
+        'Blanco por pase').map(
+            defs['deuda']).astype(cats['deuda'])
+
+    viviendas_cat['NUMPERS'] = viviendas.NUMPERS.astype('category')
+
+    viviendas_cat['MCONMIG'] = viviendas.MCONMIG.fillna(
+        'Blanco por pase').map(
+            defs['mconmig']).astype(cats['mconmig'])
+
+    viviendas_cat['MNUMPERS'] = viviendas.MNUMPERS.fillna(
+        'Blanco por pase').astype('category')
+
+    viviendas_cat['INGR_PEROTROPAIS'] = viviendas.INGR_PEROTROPAIS.fillna(
+        'Blanco por pase').map(
+            defs['ingr_perotropais']).astype(cats['ingr_perotropais'])
+
+    viviendas_cat['INGR_PERDENTPAIS'] = viviendas.INGR_PERDENTPAIS.fillna(
+        'Blanco por pase').map(
+            defs['ingr_perdentpais']).astype(cats['ingr_perdentpais'])
+
+    viviendas_cat['INGR_AYUGOB'] = viviendas.INGR_AYUGOB.fillna(
+        'Blanco por pase').map(
+            defs['ingr_ayugob']).astype(cats['ingr_ayugob'])
+
+    viviendas_cat['INGR_JUBPEN'] = viviendas.INGR_JUBPEN.fillna(
+        'Blanco por pase').map(
+            defs['ingr_jubpen']).astype(cats['ingr_jubpen'])
+
+    viviendas_cat['ALIMENTACION'] = viviendas.ALIMENTACION.fillna(
+        'Blanco por pase').map(
+            defs['alimentacion']).astype(cats['alimentacion'])
+
+    viviendas_cat['ALIM_ADL1'] = viviendas.ALIM_ADL1.fillna(
+        'Blanco por pase').map(
+            defs['alim_adl1']).astype(cats['alim_adl1'])
+
+    viviendas_cat['ALIM_ADL2'] = viviendas.ALIM_ADL2.fillna(
+        'Blanco por pase').map(
+            defs['alim_adl2']).astype(cats['alim_adl2'])
+
+    viviendas_cat['ING_ALIM_ADL1'] = viviendas.ING_ALIM_ADL1.fillna(
+        'Blanco por pase').map(
+            defs['ing_alim_adl1']).astype(cats['ing_alim_adl1'])
+
+    viviendas_cat['ING_ALIM_ADL2'] = viviendas.ING_ALIM_ADL2.fillna(
+        'Blanco por pase').map(
+            defs['ing_alim_adl2']).astype(cats['ing_alim_adl2'])
+
+    viviendas_cat['ING_ALIM_ADL3'] = viviendas.ING_ALIM_ADL3.fillna(
+        'Blanco por pase').map(
+            defs['ing_alim_adl3']).astype(cats['ing_alim_adl3'])
+
+    viviendas_cat['TIPOHOG'] = viviendas.TIPOHOG.fillna(
+        'Blanco por pase').map(
+            defs['tipohog']).astype(cats['tipohog'])
+
+    viviendas_cat['INGTRHOG'] = pd.cut(
+        viviendas.INGTRHOG.fillna(2e6),
+        (0, 1000, 5000, 10000, 20000, 40000, 80000, 150000, 999999, 1e6, 3e6),
+        right=False,
+        labels=[
+            '0-999', '1,000-4,999', '5,000-9,999', '10,000-19,999',
+            '20,000-39,999', '40,000-79,999', '80,000-149,999',
+            '150,000yMas', 'No especificado', 'Blanco por pase'
+        ]
+    )
+
+    viviendas_cat['JEFE_SEXO'] = viviendas.JEFE_SEXO.map(
+        defs['sexo']).astype(cats['sexo'])
+
+    viviendas_cat['JEFE_EDAD'] = pd.cut(
+        viviendas.JEFE_EDAD,
+        (0, 3, 5, 6, 8, 12, 15, 18, 25, 50, 60, 65, 131, 1000),
+        right=False,
+        labels=cats['edad']
+    )
+
+    assert viviendas_cat.isna().sum().sum() == 0
+
+    # cols_to_drop = [
+    #     'NACIONALIDAD', 'SERSALUD', 'ELENGUA', 'PERTE_INDIGENA',
+    #     'ENT_PAIS_ASI', 'ENT_PAIS_RES_5A', 'AGUINALDO', 'VACACIONES',
+    #     'SERVICIO_MEDICO', 'UTILIDADES', 'INCAP_SUELDO', 'SAR_AFORE',
+    #     'CREDITO_VIVIENDA', 'ENT_PAIS_TRAB'
+    # ]
+
+    # viviendas_cat = viviendas_cat.drop(columns=cols_to_drop)
+
+    # Split by municipality, the finer aggregation level
+    # statistically representative in the survey.
+    groups = viviendas_cat.groupby('MUN')
+    group_dict = {mun: df.set_index('ID_VIV') for mun, df in groups}
+
+    return group_dict

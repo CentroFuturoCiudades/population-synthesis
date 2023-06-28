@@ -29,6 +29,42 @@ def get_X(df):
     return df_agg
 
 
+def get_X_I(df):
+    cat_cols = [
+        col for col in df.columns
+        if df[col].dtype == 'category'
+    ]
+
+    df_agg = df.groupby(
+        cat_cols,
+        observed=True
+    )[['FACTOR', 'ID_VIV']].apply(
+        lambda df: (list(df.FACTOR), list(df.ID_VIV))
+    ).sort_index().reset_index()
+
+    df_agg['FACTOR'] = [sum(x[0]) for x in df_agg[0]]
+    df_agg['ID_VIV'] = [x[1] for x in df_agg[0]]
+    df_agg['F_LIST'] = [x[0] for x in df_agg[0]]
+    df_id_viv = df_agg.drop(columns=[0, 'FACTOR'])
+    df_agg = df_agg.drop(columns=[0, 'ID_VIV', 'F_LIST'])
+
+    index = np.sort(np.unique(np.concatenate(df_id_viv.ID_VIV)))
+    columns = df_agg.index
+    I = pd.DataFrame(
+        np.zeros((len(index), len(columns)), dtype=int),
+        index=index,
+        columns=columns)
+
+    for idx, row in df_id_viv.iterrows():
+        for f, idv in zip(row.F_LIST, row.ID_VIV):
+            # Households have their own expansion factor
+            # Its the same as the one found on the people table
+            # So just add 1 per person in household
+            I.loc[idv, idx] += 1
+
+    return df_agg, I
+
+
 def get_w_vec(X, const):
 
     def get_mask(X, const):
@@ -67,7 +103,7 @@ def get_W(X, const_dict):
         else:
             w = get_w_vec(X, const)
         w_dict[k] = w
-    return pd.DataFrame(w_dict).T
+    return pd.DataFrame(w_dict, index=X.index).T
 
 
 def find_conf_const(W, C):
