@@ -723,3 +723,96 @@ def process_places_df(file_path):
     group_dict = {mun: df.set_index('ID_VIV') for mun, df in groups}
 
     return group_dict
+
+
+def places_postproc(df):
+
+    # ID columns
+    id_cols = [
+        'FACTOR',
+        'MUN'
+    ]
+
+    # Columns controlled by census
+    census_cols = [
+        'ABA_AGUA_ENTU',
+        'AGUA_ENTUBADA',
+        'AUTOPROP',
+        'BICICLETA',
+        'CELULAR',
+        'CISTERNA',
+        'COMPUTADORA',
+        'CONAGUA',
+        'CON_VJUEGOS',
+        'CUADORM',  # ISNUM
+        'DRENAJE',
+        'ELECTRICIDAD',
+        'HORNO',
+        'INTERNET',
+        'JEFE_SEXO',
+        'LAVADORA',
+        'MOTOCICLETA',
+        'PISOS',
+        'RADIO',
+        'REFRIGERADOR',
+        'SERSAN',
+        'SERV_PEL_PAGA',
+        'SERV_TV_PAGA',
+        'TELEFONO',
+        'TELEVISOR',
+        'TINACO',
+        'TOTCUART'  # ISNUM
+    ]
+
+    # Columns only in extended survey
+    extended_cols = [
+        'ABA_AGUA_NO_ENTU',
+        'AIRE_ACON',
+        'ALIMENTACION',
+        'ALIM_ADL1',
+        'ALIM_ADL2',
+        'BOILER',
+        'BOMBA_AGUA',
+        'CALENTADOR_SOLAR',
+        'COCINA',
+        'COMBUSTIBLE',
+        'DESTINO_BAS',
+        'DEUDA',
+        'ESCRITURAS',
+        'ESTUFA',
+        'FINANCIAMIENTO1',  # Needs encoding
+        'FINANCIAMIENTO2',  # Needs encoding
+        'FINANCIAMIENTO3',  # Needs encoding
+        'FOCOS',  # ISNUM
+        'FOCOS_AHORRA',  #ISNUM
+        'FORMA_ADQUI',
+        'INGR_AYUGOB',
+        'INGR_JUBPEN',
+        'INGR_PERDENTPAIS',
+        'INGR_PEROTROPAIS',
+        'ING_ALIM_ADL1',
+        'ING_ALIM_ADL2',
+        'ING_ALIM_ADL3',
+        'LUG_COC',
+        'MCONMIG',
+        'MNUMPERS',  #ISNUM
+        'PANEL_SOLAR',
+        'PAREDES',
+        'REGADERA',
+        'SEPARACION1',
+        'SEPARACION2',
+        'SEPARACION3',
+        'SEPARACION4',
+        'TECHOS',
+        'TENENCIA',
+        'USOEXC'
+    ]
+
+    # Columns related to household structure and form
+    household_cols = [
+        'CLAVIVP', 'NUMPERS', 'INGTRHOG', 'JEFE_EDAD', 'TIPOHOG',
+    ]
+
+
+def people_postproc(df):
+    pass

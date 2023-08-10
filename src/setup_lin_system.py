@@ -29,11 +29,18 @@ def get_X(df):
     return df_agg
 
 
-def get_X_I(df):
+def get_X_I_fast(df):
+    df = df.copy()
+
     cat_cols = [
-        col for col in df.columns
-        if df[col].dtype == 'category'
+            col for col in df.columns
+            if df[col].dtype == 'category'
     ]
+
+    # Map ID_VIV to integers for fast indexing
+    index = np.sort(np.unique(df.ID_VIV.values))
+    id_map = {id_viv: i for i, id_viv in enumerate(index)}
+    df['ID_VIV'] = df.ID_VIV.map(id_map)
 
     df_agg = df.groupby(
         cat_cols,
@@ -42,20 +49,65 @@ def get_X_I(df):
         lambda df: (list(df.FACTOR), list(df.ID_VIV))
     ).sort_index().reset_index()
 
+    # Create an aggregated factor column
     df_agg['FACTOR'] = [sum(x[0]) for x in df_agg[0]]
+
+    # Create a dedicaded columns for id list and factor list
     df_agg['ID_VIV'] = [x[1] for x in df_agg[0]]
     df_agg['F_LIST'] = [x[0] for x in df_agg[0]]
+
+    # Create people dataframe and auxiliary df for I
     df_id_viv = df_agg.drop(columns=[0, 'FACTOR'])
     df_agg = df_agg.drop(columns=[0, 'ID_VIV', 'F_LIST'])
 
+    columns = df_agg.index
+    I_ar = np.zeros((len(index), len(columns)), dtype=np.uint8)
+    for idx, idv in df_id_viv.ID_VIV.items():
+        np.add.at(I_ar, (idv, idx), 1)
+
+    I = pd.DataFrame(
+        I_ar,
+        index=index,
+        columns=columns)
+
+    return df_agg, I
+
+
+def get_X_I(df):
+
+    # Use only categorical columns
+    cat_cols = [
+        col for col in df.columns
+        if df[col].dtype == 'category'
+    ]
+
+    # Create aggregated data frame wit cat cols and
+    # a list of factors and ID_VIV per class
+    # Sort index to speed up searches
+    df_agg = df.groupby(
+        cat_cols,
+        observed=True
+    )[['FACTOR', 'ID_VIV']].apply(
+        lambda df: (list(df.FACTOR), list(df.ID_VIV))
+    ).sort_index().reset_index()
+
+    # Create an aggregated factor column
+    df_agg['FACTOR'] = [sum(x[0]) for x in df_agg[0]]
+
+    # Create a dedicaded columns for id list and factor list
+    df_agg['ID_VIV'] = [x[1] for x in df_agg[0]]
+    df_agg['F_LIST'] = [x[0] for x in df_agg[0]]
+
+    # Create people dataframe and auxiliary df for I
+    df_id_viv = df_agg.drop(columns=[0, 'FACTOR'])
+    df_agg = df_agg.drop(columns=[0, 'ID_VIV', 'F_LIST'])
     index = np.sort(np.unique(np.concatenate(df_id_viv.ID_VIV)))
     columns = df_agg.index
     I = pd.DataFrame(
         np.zeros((len(index), len(columns)), dtype=int),
         index=index,
         columns=columns)
-
-    for idx, row in df_id_viv.iterrows():
+    for i, (idx, row) in enumerate(df_id_viv.iterrows()):
         for f, idv in zip(row.F_LIST, row.ID_VIV):
             # Households have their own expansion factor
             # Its the same as the one found on the people table
@@ -95,15 +147,19 @@ def get_w_vec(X, const):
     return mask.astype(int)
 
 
-def get_W(X, const_dict):
+def get_W(X, const_dict, ignore=[]):
     w_dict = {}
     for k, const in const_dict.items():
+        if k in ignore:
+            continue
         if k == 'POBTOT':
             w = np.ones(len(X), dtype=int)
         else:
             w = get_w_vec(X, const)
         w_dict[k] = w
-    return pd.DataFrame(w_dict, index=X.index).T
+    W = pd.DataFrame(w_dict, index=X.index).T
+
+    return W.astype(np.uint8)
 
 
 def find_conf_const(W, C):
@@ -291,53 +347,127 @@ def fill_zero_from_global(X, W, C, constraints, X_full):
     return pd.concat([X] + X_new_list, axis=0, ignore_index=True)
 
 
-def setup_ls(df_survey_dict, df_census, constraints):
+def find_zero_nozero_const(W, C):
+    W_zero = W.T.sum()[W.T.sum() == 0]
+    C_non_zero = C.loc[W_zero.index]
+    C_non_zero = C_non_zero[C_non_zero > 0]
+
+    return C_non_zero
+
+
+def find_nonzero_zero_const(W, C):
+    W_nonzero = W.T.sum()[W.T.sum() > 0]
+    C_zero = C.loc[W_nonzero.index]
+    C_zero = C_zero[C_zero == 0]
+
+    return C_zero
+
+
+def setup_ls(personas_cat, viviendas_cat,
+             df_mun,
+             constraints_ind, constraints_viv,
+             ignore_cols_p=[],
+             ignore_cols_v=[],
+             verbose=True):
     XWC_dict = {}
 
-    # personas_cat_full = pd.concat(df for df in df_survey_dict.values())
-    # X_full = get_X(personas_cat_full)
+    # Setup list of ignored constraints
+    ignore_const_p = []
+    for col in ignore_cols_p:
+        for const, coldict in constraints_ind.items():
+            if col in coldict.keys():
+                ignore_const_p.append(const)
+    ignore_const_p = set(ignore_const_p)
 
-    for mun, df in df_survey_dict.items():
-        if mun != 'Cerralvo': continue
+    ignore_const_v = []
+    for col in ignore_cols_v:
+        for const, coldict in constraints_viv.items():
+            if col in coldict.keys():
+                ignore_const_v.append(const)
+    ignore_const_v = set(ignore_const_v)
+
+    for mun in personas_cat.keys():
         print(mun)
+        personas = personas_cat[mun]
+        viviendas = viviendas_cat[mun]
 
-        # Get an initial linear system
-        X = get_X(df)
-        W = get_W(X, constraints)
-        C = df_census.loc[mun][W.index].copy()
-        print(f'    X has {len(X)} entries.')
+        # People linear system
+        X, I = get_X_I_fast(personas)
+        # The people weight matrix
+        W = get_W(X, constraints_ind, ignore=ignore_const_p)
+
+        # The household weight matrix can be obtaibed in blocks
+        # We work on the non aggregated household table
+        # The household weight matrix for household constraints
+        Uh = get_W(viviendas, constraints_viv, ignore=ignore_cols_v)
+
+        # The household weight matrix for person level constraints
+        Up = (W @ I.T)
+
+        U = pd.concat([Uh, Up])
+
+        # Before getting Y, we need to concatenate the I matrix
+        Y = pd.concat([viviendas, I], axis=1)
+
+        C = df_mun.loc[mun].loc[U.index]
+
+        XWC_dict[mun] = {'X': X, 'I': I, 'W': W,
+                         'Y': Y, 'U': U, 'C': C}
+
+        if verbose:
+            print('Zero-non-zero constraints (Missing in sample): ')
+            print(find_zero_nozero_const(U, C))
+            print()
+            print('Non-zero-zero constraints: ')
+            print(find_nonzero_zero_const(U, C))
+            print()
+            print(f'Solvable: {check_solvable(U, C)}')
+            print()
+            C = df_mun.loc[mun]
+            assert C.POBHOG == C.OCUPVIVPAR
+            assert C.TOTHOG == C.TVIVPARHAB
+            print(f'Total people: {C.POBTOT}\n'
+                  f'people in particular dwelligns: {C.POBHOG}\n'
+                  f'people in collective dwellings: {C.POBTOT - C.POBHOG}')
+            print(f'Particular+Collective dwellings: {C.TVIVHAB}\n'
+                  f'Total collective dwellings: {C.TVIVHAB - C.TVIVPARHAB}\n'
+                  f'Total particular dwellings/households (1 household per dwelling): {C.TVIVPARHAB}\n'
+                  f'Particular with characteristics: {C.VIVPARH_CV}. Controlled by census constraints.\n'
+                  f'Particular without characteristics: {C.TVIVPARHAB - C.VIVPARH_CV}.'
+                  )
+            print('-------------------------------')
 
         # Fill zero cells with non-zero constraints in X
         # Identify zero cell problems as zero weight vectors
         # with non-zero constraints
-        W_zero = W.T.sum()[W.T.sum() == 0]
-        C_non_zero = C.loc[W_zero.index]
-        C_non_zero = C_non_zero[C_non_zero > 0]
-        if len(C_non_zero) > 0:
-            print('    Filling zeroes ...')
-            X = fill_zero_nn(X, C_non_zero, constraints)
-            W = get_W(X, constraints)
-            C = df_census.loc[mun][W.index].copy()
-            print(f'    X has {len(X)} entries.')
+        # W_zero = W.T.sum()[W.T.sum() == 0]
+        # C_non_zero = C.loc[W_zero.index]
+        # C_non_zero = C_non_zero[C_non_zero > 0]
+        # if len(C_non_zero) > 0:
+        #     print('    Filling zeroes ...')
+        #     X = fill_zero_nn(X, C_non_zero, constraints)
+        #     W = get_W(X, constraints)
+        #     C = df_census.loc[mun][W.index].copy()
+        #     print(f'    X has {len(X)} entries.')
 
-        # Find conflicting constraints
-        while not check_solvable(W, C):
-            print('    Solving conflicts ...')
-            conf_const = find_conf_const(W, C)
-            C_conf = C[conf_const]
-            X = fill_zero_nn(X, C_conf, constraints)
-            W = get_W(X, constraints)
-            C = df_census.loc[mun][W.index].copy()
-            print(f'    X has {len(X)} entries.')
+        # # Find conflicting constraints
+        # while not check_solvable(W, C):
+        #     print('    Solving conflicts ...')
+        #     conf_const = find_conf_const(W, C)
+        #     C_conf = C[conf_const]
+        #     X = fill_zero_nn(X, C_conf, constraints)
+        #     W = get_W(X, constraints)
+        #     C = df_census.loc[mun][W.index].copy()
+        #     print(f'    X has {len(X)} entries.')
 
-        # Drop zero constrainst with all zeroes in W
-        W_zero = W.T.sum()[W.T.sum() == 0]
-        C_non_zero = C.loc[W_zero.index]
-        assert (C_non_zero > 0).sum() == 0, mun
-        C_zero = C_non_zero[C_non_zero == 0]
-        C_non_zero = C_non_zero[C_non_zero > 0]
-        C = C.drop(C_zero.index)
-        W = W.drop(C_zero.index)
+        # # Drop zero constrainst with all zeroes in W
+        # W_zero = W.T.sum()[W.T.sum() == 0]
+        # C_non_zero = C.loc[W_zero.index]
+        # assert (C_non_zero > 0).sum() == 0, mun
+        # C_zero = C_non_zero[C_non_zero == 0]
+        # C_non_zero = C_non_zero[C_non_zero > 0]
+        # C = C.drop(C_zero.index)
+        # W = W.drop(C_zero.index)
 
         # Set X->0 for C=0, remove them from X and C
         # This type of constraints may also appear implicitly
@@ -349,12 +479,12 @@ def setup_ls(df_survey_dict, df_census, constraints):
         # C1 = x1 + x2 = 1, C2 = x1 = 1, Implicit Ci = x2 = 0.
         # But without Ci x1 converges as x1 = x1/(1+x1), which
         # slows down as x1 approaches 0.
-        C_zero = C[C == 0]
-        W_to_zero = W.loc[C_zero.index]
-        to_drop = (W_to_zero.values).sum(axis=0) > 0
-        X = X[~to_drop]
-        W = W.drop(index=C_zero.index, columns=list(np.nonzero(to_drop)[0]))
-        C = C.drop(C_zero.index)
+        # C_zero = C[C == 0]
+        # W_to_zero = W.loc[C_zero.index]
+        # to_drop = (W_to_zero.values).sum(axis=0) > 0
+        # X = X[~to_drop]
+        # W = W.drop(index=C_zero.index, columns=list(np.nonzero(to_drop)[0]))
+        # C = C.drop(C_zero.index)
 
         # Keep only a set of linearly independent rows in W
         # One the conflicting constraints have been solved,
@@ -371,9 +501,6 @@ def setup_ls(df_survey_dict, df_census, constraints):
         # assert np.linalg.matrix_rank(W) == rank
         # C = df_census.loc[mun][W.index].copy()
 
-        assert check_solvable(W, C), mun
-
-        XWC_dict[mun] = {'X': X, 'W': W, 'C': C}
-        # if i == 17: break
+        # assert check_solvable(W, C), mun
 
     return XWC_dict
