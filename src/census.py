@@ -132,6 +132,62 @@ def create_implicit_consts(df_censo):
     return df_censo, df_min, df_max
 
 
+def locate_collective(df_mun, df_loc):
+    cols = ['POBTOT', 'POBHOG',
+            'TVIVHAB', 'TVIVPARHAB']
+
+    df_mun = df_mun.copy()[cols]
+    df_loc = df_loc.copy()[cols]
+
+    df_mun['TVIVCOLHAB'] = df_mun.TVIVHAB - df_mun.TVIVPARHAB
+    df_mun['POBCOL'] = df_mun.POBTOT - df_mun.POBHOG
+
+    df_loc['TVIVCOLHAB'] = df_loc.TVIVHAB - df_loc.TVIVPARHAB
+    df_loc['POBCOL'] = df_loc.POBTOT - df_loc.POBHOG
+
+    df_loc_agg = df_loc.groupby('MUN').sum()
+    df_mun['MUN'] = np.arange(1, 52)
+    df_mun = df_mun.set_index('MUN')
+
+    # This data frame locates collective dwellings into municipalities
+    df_mun_loc = df_mun.merge(df_loc_agg, on='MUN', suffixes=('_mun', '_loc'))
+    # Some collective dwellings may fall in localoties with nan counts
+    # Identify them
+    df_mun_loc['TVIVCOLHAB_diff'] = df_mun_loc.TVIVCOLHAB_mun - df_mun_loc.TVIVCOLHAB_loc
+    df_mun_loc['POBCOL_diff'] = df_mun_loc.POBCOL_mun - df_mun_loc.POBCOL_loc
+    mask1 = df_mun_loc.POBCOL_mun != df_mun_loc.POBCOL_loc
+    mask2 = df_mun_loc.TVIVCOLHAB_mun != df_mun_loc.TVIVCOLHAB_loc
+    assert np.all(mask1 == mask2)
+
+    # We can handle a single missing dwelling per municipality
+    # which is the case for Nuevo Leon
+    assert df_mun_loc['TVIVCOLHAB_diff'].max() <= 1
+
+    def filt_loc(row, pobcol):
+        if row.POBTOT == pobcol and row.TVIVHAB > 1:
+            return False
+        if row.TVIVHAB == 1 and row.POBTOT != pobcol:
+            return False
+        return True
+
+    df_mun_missing = df_mun_loc[mask1]
+    # Get list of possible localities
+    loc_list = []
+    for mun, row in df_mun_missing.iterrows():
+        # print(mun, row.POBCOL_diff, row.TVIVCOLHAB_diff)
+        df_loc_m = df_loc.loc[mun]
+        df_loc_m = df_loc_m[
+            (df_loc_m.POBTOT >= row.POBCOL_diff)
+            & (df_loc_m.TVIVCOLHAB.isna())
+            & (df_loc_m.apply(filt_loc, args=(row.POBCOL_diff,), axis=1))
+        ]
+        loc_list.append((mun, row.POBCOL_diff, row.TVIVCOLHAB_diff, df_loc_m))
+
+    return loc_list
+    return df_mun_missing
+    # return muns_with_missing
+
+
 def process_census(census_iter_path, census_resageburb_path):
     non_count_cols = [
         'REL_H_M', 'PROM_HNV', 'GRAPROES',
