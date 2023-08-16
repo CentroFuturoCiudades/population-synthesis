@@ -163,6 +163,9 @@ def get_W(X, const_dict, ignore=[]):
 
 
 def find_conf_const(W, C):
+
+    W = W.astype(float)
+    C = C.astype(float)
     # Find one independent set of w vectors
     rank = np.linalg.matrix_rank(W)
 
@@ -363,6 +366,187 @@ def find_nonzero_zero_const(W, C):
     return C_zero
 
 
+def get_matrices(personas, viviendas,
+                 constraints_ind, constraints_viv,
+                 census_series):
+
+    # People linear system
+    X, I = get_X_I_fast(personas)
+    # The people weight matrix
+    W = get_W(X, constraints_ind)
+
+    # The household weight matrix can be obtaibed in blocks
+    # We work on the non aggregated household table
+    # The household weight matrix for household constraints
+    Uh = get_W(viviendas, constraints_viv)
+    # The household weight matrix for person level constraints
+    Up = (W @ I.T)
+    U = pd.concat([Uh, Up])
+    # For Y, we need to concatenate the I matrix
+    Y = pd.concat([viviendas, I], axis=1)
+
+    C = census_series.loc[U.index]
+
+    return X, I, W, U, Y, C
+
+
+def find_zero_cell_global(personas_full, viviendas_full,
+                          constraints_ind, constraints_viv):
+    consts = []
+
+    X_full = get_X(personas_full)
+    W_full = get_W(X_full, constraints_ind)
+    C_full = W_full @ X_full.FACTOR.values
+    consts += C_full[C_full == 0].index.tolist()
+
+    Uh_full = get_W(viviendas_full, constraints_viv)
+    C_full_viv = Uh_full @ viviendas_full.FACTOR.values
+    consts += C_full_viv[C_full_viv == 0].index.tolist()
+
+    return consts
+
+
+def replace_mun(df, mun_col, mun_orig, mun_dest):
+    muntype = df[mun_col].dtype
+    df[mun_col] = df[mun_col].where(
+        df[mun_col].isin(
+            [
+                mun_orig,
+                'Blanco por pase', 'No especificado',
+                'OtroPais', 'OtraEnt'
+            ]
+        ),
+        'No especificado'
+    )
+    df[mun_col] = df[mun_col].replace(mun_orig, mun_dest)
+    df[mun_col] = df[mun_col].astype(muntype)
+
+
+def fill_zero_h(mun_dest, XWC_dict, constraints_ind, constraints_viv,
+                personas_cat, viviendas_cat, df_mun):
+    consts = XWC_dict[mun_dest]['zero_nozero'].index
+    assert len(consts) > 0
+
+    query = ' | '.join([f'{const} > 0' for const in consts])
+    viviendas_ext_l = []
+    personas_ext_l = []
+
+    mun_type = XWC_dict[mun_dest]['X'].MUN.dtype
+
+    # Loop over municipalities
+    for mun, mun_dict in XWC_dict.items():
+        # Skip current, we know there are no matches
+        if mun == mun_dest:
+            continue
+
+        # Extract current valurs
+        X = mun_dict['X']
+        I = mun_dict['I']
+        Y = mun_dict['Y']
+        U = mun_dict['U']
+
+        # Get household IDs using the U weight matrix
+        viv_ids = U.T.query(query).index
+        if len(viv_ids) == 0:
+            continue
+
+        # Extract list of households, remove I part of dataframe
+        viviendas_ext = Y.loc[viv_ids].copy().select_dtypes(
+            include=['int64', 'category'])
+        viviendas_ext['MUN'] = mun_dest
+        viviendas_ext['MUN'] = viviendas_ext['MUN'].astype(Y.MUN.dtype)
+        viviendas_ext_l.append(viviendas_ext)
+
+        # Get people IDs using the I matrix
+        viv_ids, p_ids = np.array(
+            I.loc[viv_ids][I.loc[viv_ids] > 0].stack().index.tolist()).T
+
+        # Reconstruct people list with viv id
+        personas_ext = X.loc[p_ids].copy()
+        personas_ext['ID_PERSONA'] = 0
+        personas_ext['ID_VIV'] = viv_ids
+        personas_ext['MUN'] = mun_dest
+        personas_ext['MUN'] = personas_ext['MUN'].astype(mun_type)
+        replace_mun(personas_ext, 'MUN_TRAB', mun, mun_dest)
+        replace_mun(personas_ext, 'MUN_ASI', mun, mun_dest)
+        replace_mun(personas_ext, 'MUN_RES_5A', mun, mun_dest)
+
+        personas_ext['TIE_TRASLADO_ESCU'] = personas_ext[
+            'TIE_TRASLADO_ESCU'
+        ].where(
+            personas_ext['TIE_TRASLADO_ESCU'].isin(
+                ['No se traslada', 'No especificado', 'Blanco por pase']
+            ),
+            'No especificado'
+        )
+
+        personas_ext['TIE_TRASLADO_TRAB'] = personas_ext[
+            'TIE_TRASLADO_TRAB'
+        ].where(
+            personas_ext['TIE_TRASLADO_TRAB'].isin(
+                [
+                    'No se traslada', 'No especificado',
+                    'Blanco por pase', 'No es posible determinarlo'
+                ]
+            ),
+            'No especificado'
+        )
+
+        personas_ext_l.append(personas_ext)
+
+    # Merge dfs
+    personas_ext = pd.concat(personas_ext_l)
+    viviendas_ext = pd.concat(viviendas_ext_l)
+
+    # Adjust weights using a restricted problem
+    # The nnls solution is sparse, which leads to
+    # a minimal addition to the original seed
+    # Note selection bias may be introduced.
+    # Consider adding all entries equally distributing weights.
+    constraints_ind_r = {
+        k: v for k, v in constraints_ind.items()
+        if k in consts
+    }
+    constraints_viv_r = {
+        k: v for k, v in constraints_viv.items()
+        if k in consts
+    }
+
+    X_r, I_r, W_r, U_r, Y_r, C_r = get_matrices(
+        personas_ext, viviendas_ext,
+        constraints_ind_r, constraints_viv_r,
+        df_mun.loc[mun_dest]
+    )
+
+    factors_new, err = nnls(U_r.values.astype(float), C_r)
+    # Replace household factor values.
+    # People factors are never used and can be ignored.
+    assert np.all(Y_r.index == viviendas_ext.index)
+    viviendas_ext['FACTOR'] = factors_new
+    # Filter data frames
+    viviendas_ext = viviendas_ext[viviendas_ext.FACTOR > 1e-10]
+    personas_ext = personas_ext[personas_ext.ID_VIV.isin(viviendas_ext.index)]
+
+    # Merge with full dataframes
+    personas_ext = pd.concat(
+        [personas_cat[mun_dest], personas_ext],
+        ignore_index=True
+    )
+    viviendas_ext = pd.concat(
+        [viviendas_cat[mun_dest], viviendas_ext],
+        ignore_index=False
+    )
+
+    # Create new extended matrices
+    X_ext, I_ext, W_ext, U_ext, Y_ext, C_ext = get_matrices(
+        personas_ext, viviendas_ext,
+        constraints_ind, constraints_viv,
+        df_mun.loc[mun_dest]
+    )
+
+    return X_ext, I_ext, W_ext, U_ext, Y_ext, C_ext
+
+
 def setup_ls(personas_cat, viviendas_cat,
              df_mun,
              constraints_ind, constraints_viv,
@@ -386,56 +570,128 @@ def setup_ls(personas_cat, viviendas_cat,
                 ignore_const_v.append(const)
     ignore_const_v = set(ignore_const_v)
 
+    # Build initial dict
+    print('Building initial dict ... ')
     for mun in personas_cat.keys():
-        print(mun)
+        print(f'    {mun} ...', end='')
         personas = personas_cat[mun]
         viviendas = viviendas_cat[mun]
 
-        # People linear system
-        X, I = get_X_I_fast(personas)
-        # The people weight matrix
-        W = get_W(X, constraints_ind, ignore=ignore_const_p)
+        X, I, W, U, Y, C = get_matrices(
+            personas, viviendas,
+            constraints_ind, constraints_viv,
+            df_mun.loc[mun]
+        )
 
-        # The household weight matrix can be obtaibed in blocks
-        # We work on the non aggregated household table
-        # The household weight matrix for household constraints
-        Uh = get_W(viviendas, constraints_viv, ignore=ignore_cols_v)
-
-        # The household weight matrix for person level constraints
-        Up = (W @ I.T)
-
-        U = pd.concat([Uh, Up])
-
-        # Before getting Y, we need to concatenate the I matrix
-        Y = pd.concat([viviendas, I], axis=1)
-
-        C = df_mun.loc[mun].loc[U.index]
+        # Find zero cell problems
+        zero_nozero = find_zero_nozero_const(U, C)
 
         XWC_dict[mun] = {'X': X, 'I': I, 'W': W,
-                         'Y': Y, 'U': U, 'C': C}
+                         'Y': Y, 'U': U, 'C': C,
+                         'zero_nozero': zero_nozero}
 
-        if verbose:
-            print('Zero-non-zero constraints (Missing in sample): ')
-            print(find_zero_nozero_const(U, C))
-            print()
-            print('Non-zero-zero constraints: ')
-            print(find_nonzero_zero_const(U, C))
-            print()
-            print(f'Solvable: {check_solvable(U, C)}')
-            print()
-            C = df_mun.loc[mun]
-            assert C.POBHOG == C.OCUPVIVPAR
-            assert C.TOTHOG == C.TVIVPARHAB
-            print(f'Total people: {C.POBTOT}\n'
-                  f'people in particular dwelligns: {C.POBHOG}\n'
-                  f'people in collective dwellings: {C.POBTOT - C.POBHOG}')
-            print(f'Particular+Collective dwellings: {C.TVIVHAB}\n'
-                  f'Total collective dwellings: {C.TVIVHAB - C.TVIVPARHAB}\n'
-                  f'Total particular dwellings/households (1 household per dwelling): {C.TVIVPARHAB}\n'
-                  f'Particular with characteristics: {C.VIVPARH_CV}. Controlled by census constraints.\n'
-                  f'Particular without characteristics: {C.TVIVPARHAB - C.VIVPARH_CV}.'
-                  )
-            print('-------------------------------')
+        print('Done.')
+
+    # IMPORTANT NOTE:
+    # TODO
+    # Nuevo León have global zero cell problem for the constraint
+    # P34HLI_NHE involving EDAD=3-4 and HLENGUA=Si/No español
+    # We create an artifical set of households using neares neighbor
+    # imputation as to fill the zero cells.
+    # This process is note yet automatized for households and
+    # specifically for HLENGUA we need to split the columns again into
+    # HLENGUA and HESPANOL
+    # We give priority to No especificado neighbors over other
+    # neighbors.
+    # To identify the global zero cells use the find_zero_cell_global
+    # function.
+
+    personas_full = pd.concat(personas_cat.values())
+    viviendas_full = pd.concat(viviendas_cat.values())
+
+    viv_imp_ids = personas_full.query(
+        'EDAD == "3-4" & HLENGUA == "Sí/No especificado"'
+    ).ID_VIV.unique()
+
+    personas_imp = personas_full[personas_full.ID_VIV.isin(viv_imp_ids)].copy()
+    personas_imp['MUN'] = 'IMPUTED'
+    personas_imp['MUN'] = personas_imp.MUN.astype('category')
+    personas_imp['HLENGUA'] = personas_imp.HLENGUA.replace(
+        'Sí/No especificado', 'Sí/No español'
+    ).astype(personas_full.HLENGUA.dtype)
+
+    viviendas_imp = viviendas_full.loc[viv_imp_ids]
+
+    viv_imp_ids_map = {
+        vid: 500000000000 + i
+        for i, vid in enumerate(viv_imp_ids)
+    }
+    personas_imp['ID_VIV'] = personas_imp.ID_VIV.map(viv_imp_ids_map)
+
+    viviendas_imp.index = viviendas_imp.index.map(viv_imp_ids_map)
+
+    X_imp, I_imp, W_imp, U_imp, Y_imp, C_imp = get_matrices(
+                personas_imp, viviendas_imp,
+                constraints_ind, constraints_viv,
+                df_mun.sum()
+            )
+
+    XWC_dict['IMPUTED'] = {'X': X_imp, 'I': I_imp, 'W': W_imp,
+                           'Y': Y_imp, 'U': U_imp, 'C': C_imp}
+
+    # Second loop to fix zero cell problems
+    print('Filling zero cell problems ... ')
+    for mun in personas_cat.keys():
+        if mun == 'IMPUTED':
+            continue
+
+        print(f'    {mun} ...', end='')
+        consts = XWC_dict[mun]['zero_nozero'].index
+        if len(consts) == 0:
+            Y_ext = XWC_dict[mun]['Y']
+            U_ext = XWC_dict[mun]['U']
+            C_ext = XWC_dict[mun]['C']
+        else:
+            X_ext, I_ext, W_ext, U_ext, Y_ext, C_ext = fill_zero_h(
+                mun,
+                XWC_dict,
+                constraints_ind, constraints_viv,
+                personas_cat, viviendas_cat,
+                df_mun)
+
+        zero_nozero = find_zero_nozero_const(U_ext, C_ext)
+        assert len(zero_nozero) == 0, zero_nozero
+
+        XWC_dict[mun]['Y_ext'] = Y_ext
+        XWC_dict[mun]['U_ext'] = U_ext
+        XWC_dict[mun]['C_ext'] = C_ext
+
+        Y = XWC_dict[mun]['Y']
+        print(f'Added {len(Y_ext) - len(Y)} extra households.')
+
+        conf_consts = find_conf_const(U_ext, C_ext)
+        XWC_dict[mun]['conf_consts'] = conf_consts
+
+    # Third loop to fix conflicts among constraints
+
+        # if verbose:
+            # print(f'    Solvable: {check_solvable(U_ext, C_ext)}')
+            # print()
+            # print('Non-zero-zero constraints: ')
+            # print(find_nonzero_zero_const(U, C))
+            # print()
+            # C = df_mun.loc[mun]
+            # assert C.POBHOG == C.OCUPVIVPAR
+            # assert C.TOTHOG == C.TVIVPARHAB
+            # print(f'Total people: {C.POBTOT}\n'
+            #       f'people in particular dwelligns: {C.POBHOG}\n'
+            #       f'people in collective dwellings: {C.POBTOT - C.POBHOG}')
+            # print(f'Particular+Collective dwellings: {C.TVIVHAB}\n'
+            #       f'Total collective dwellings: {C.TVIVHAB - C.TVIVPARHAB}\n'
+            #       f'Total particular dwellings/households (1 household per dwelling): {C.TVIVPARHAB}\n'
+            #       f'Particular with characteristics: {C.VIVPARH_CV}. Controlled by census constraints.\n'
+            #       f'Particular without characteristics: {C.TVIVPARHAB - C.VIVPARH_CV}.'
+            #       )
 
         # Fill zero cells with non-zero constraints in X
         # Identify zero cell problems as zero weight vectors
