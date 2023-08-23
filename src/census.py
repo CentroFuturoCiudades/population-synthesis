@@ -116,8 +116,53 @@ def create_implicit_consts(df_censo):
             df.PCATOLICA + df.PRO_CRIEVA + df.POTRAS_REL + df.PSIN_RELIG
         )
 
+        # VIVIENDAS
+
+        df['VPH_PISONE'] = df['TOTHOG'] - (df['VPH_PISODT'] + df['VPH_PISOTI'])
+        df['VPH_NEDOR'] = df['TOTHOG'] - (df['VPH_1DOR'] + df['VPH_2YMASD'])
+        df['VPH_NECUART'] = df['TOTHOG'] - (
+            df.VPH_1CUART + df.VPH_2CUART + df.VPH_3YMASC
+        )
+        df['VPH_NE_ELEC'] = df['TOTHOG'] - (
+            df.VPH_C_ELEC + df.VPH_S_ELEC
+        )
+        df['VPH_AGUANE'] = df['TOTHOG'] - (
+            df.VPH_AGUADV + df.VPH_AGUAFV
+        )
+        df['VPH_AENSP'] = df['VPH_AGUADV'] - df.VPH_AEASP
+        df['VPH_TINACO_NO_NE'] = df['TOTHOG'] - df.VPH_TINACO
+        df['VPH_CISTER_NO_NE'] = df['TOTHOG'] - df.VPH_CISTER
+        df['VPH_NO_EXCSA'] = df['TOTHOG'] - (df.VPH_EXCSA + df.VPH_LETR)
+        df['VPH_NEDREN'] = df['TOTHOG'] - (df.VPH_DRENAJ + df.VPH_NODREN)
+        df['VPH_REFRI_NO'] = df['TOTHOG'] - df.VPH_REFRI
+        df['VPH_LAVAD_NO'] = df['TOTHOG'] - df.VPH_LAVAD
+        df['VPH_HMICRO_NO'] = df['TOTHOG'] - df.VPH_HMICRO
+        df['VPH_AUTOM_NO'] = df['TOTHOG'] - df.VPH_AUTOM
+        df['VPH_MOTO_NO'] = df['TOTHOG'] - df.VPH_MOTO
+        df['VPH_BICI_NO'] = df['TOTHOG'] - df.VPH_BICI
+        df['VPH_RADIO_NO'] = df['TOTHOG'] - df.VPH_RADIO
+        df['VPH_TV_NO'] = df['TOTHOG'] - df.VPH_TV
+        df['VPH_PC_NO'] = df['TOTHOG'] - df.VPH_PC
+        df['VPH_TELEF_NO'] = df['TOTHOG'] - df.VPH_TELEF
+        df['VPH_CEL_NO'] = df['TOTHOG'] - df.VPH_CEL
+        df['VPH_INTER_NO'] = df['TOTHOG'] - df.VPH_INTER
+        df['VPH_STVP_NO'] = df['TOTHOG'] - df.VPH_STVP
+        df['VPH_SPMVPI_NO'] = df['TOTHOG'] - df.VPH_SPMVPI
+        df['VPH_CVJ_NO'] = df['TOTHOG'] - df.VPH_CVJ
+
+    new_cols_viv = [
+        'VPH_PISONE', 'VPH_NEDOR', 'VPH_NECUART', 'VPH_NE_ELEC',
+        'VPH_AGUANE', 'VPH_AENSP', 'VPH_TINACO_NO_NE',
+        'VPH_CISTER_NO_NE', 'VPH_NO_EXCSA', 'VPH_NEDREN',
+        'VPH_REFRI_NO', 'VPH_LAVAD_NO', 'VPH_HMICRO_NO',
+        'VPH_AUTOM_NO', 'VPH_MOTO_NO', 'VPH_BICI_NO',
+        'VPH_RADIO_NO', 'VPH_TV_NO', 'VPH_PC_NO', 'VPH_TELEF_NO',
+        'VPH_CEL_NO', 'VPH_INTER_NO', 'VPH_STVP_NO',
+        'VPH_SPMVPI_NO', 'VPH_CVJ_NO'
+    ]
+
     # Mark uncertain values with -1 again
-    for col in new_cols:
+    for col in new_cols + new_cols_viv:
         # assert df_min[col].min() >= 0, col
         # assert df_max[col].min() >= 0, col
         df_censo[col] = df_censo[col].where(
