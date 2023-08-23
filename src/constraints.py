@@ -38,80 +38,106 @@ DHSERSAL_CATS = sorted(
 )
 
 NIVACAD_BAS = [
-    'Ninguno',
-    'Preescolar_1', 'Preescolar_2', 'Preescolar_3', 'Preescolar_99',
-    'Primaria_1', 'Primaria_2', 'Primaria_3',
-    'Primaria_4',  'Primaria_5', 'Primaria_99',
-    'Primaria_6',
-    'Estudios técnicos o comerciales con primaria terminada_1',
-    'Estudios técnicos o comerciales con primaria terminada_2',
-    'Estudios técnicos o comerciales con primaria terminada_3',
-    'Estudios técnicos o comerciales con primaria terminada_4',
-    'Estudios técnicos o comerciales con primaria terminada_99',
-    'Secundaria_1', 'Secundaria_2', 'Secundaria_99',
-    'Secundaria_3'
+    # 'Ninguno',
+    # 'Preescolar_1', 'Preescolar_2', 'Preescolar_3', 'Preescolar_99',
+    # 'Primaria_1', 'Primaria_2', 'Primaria_3',
+    # 'Primaria_4',  'Primaria_5', 'Primaria_99',
+    # 'Primaria_6',
+    # 'Estudios técnicos o comerciales con primaria terminada_1',
+    # 'Estudios técnicos o comerciales con primaria terminada_2',
+    # 'Estudios técnicos o comerciales con primaria terminada_3',
+    # 'Estudios técnicos o comerciales con primaria terminada_4',
+    # 'Estudios técnicos o comerciales con primaria terminada_99',
+    # 'Secundaria_1', 'Secundaria_2', 'Secundaria_99',
+    # 'Secundaria_3',
+
+    'Sin Educación',
+    'Primaria_com',
+    'Primaria_incom',
+    'EToC_prim',
+    'Secundaria_com',
+    'Secundaria_incom'
 ]
 
 NIVACAD_POSBAS = [
-    'Preparatoria o bachillerato general_1',
-    'Preparatoria o bachillerato general_2',
-    'Preparatoria o bachillerato general_3',
-    'Preparatoria o bachillerato general_4',
-    'Preparatoria o bachillerato general_99',
-    'Bachillerato tecnológico_1',
-    'Bachillerato tecnológico_2',
-    'Bachillerato tecnológico_3',
-    'Bachillerato tecnológico_4',
-    'Bachillerato tecnológico_99',
-    'Estudios técnicos o comerciales con secundaria terminada_1',
-    'Estudios técnicos o comerciales con secundaria terminada_2',
-    'Estudios técnicos o comerciales con secundaria terminada_3',
-    'Estudios técnicos o comerciales con secundaria terminada_4',
-    'Estudios técnicos o comerciales con secundaria terminada_5',
-    'Estudios técnicos o comerciales con secundaria terminada_99',
-    'Estudios técnicos o comerciales con preparatoria terminada_1',
-    'Estudios técnicos o comerciales con preparatoria terminada_2',
-    'Estudios técnicos o comerciales con preparatoria terminada_3',
-    'Estudios técnicos o comerciales con preparatoria terminada_4',
-    'Estudios técnicos o comerciales con preparatoria terminada_99',
-    'Normal con primaria o secundaria terminada_1',
-    'Normal con primaria o secundaria terminada_2',
-    'Normal con primaria o secundaria terminada_3',
-    'Normal con primaria o secundaria terminada_4',
-    'Normal con primaria o secundaria terminada_99',
-    'Normal de licenciatura_1',
-    'Normal de licenciatura_2',
-    'Normal de licenciatura_3',
-    'Normal de licenciatura_4',
-    'Normal de licenciatura_5',
-    'Normal de licenciatura_6',
-    'Normal de licenciatura_99',
-    'Licenciatura_1',
-    'Licenciatura_2',
-    'Licenciatura_3',
-    'Licenciatura_4',
-    'Licenciatura_5',
-    'Licenciatura_6',
-    'Licenciatura_7',
-    'Licenciatura_8',
-    'Licenciatura_99',
-    'Especialidad_1',
-    'Especialidad_2',
-    'Especialidad_99',
-    'Maestría_1',
-    'Maestría_2',
-    'Maestría_3',
-    'Maestría_4',
-    'Maestría_5',
-    'Maestría_6',
-    'Maestría_99',
-    'Doctorado_1',
-    'Doctorado_2',
-    'Doctorado_3',
-    'Doctorado_4',
-    'Doctorado_5',
-    'Doctorado_6',
-    'Doctorado_99'
+    # 'Preparatoria o bachillerato general_1',
+    # 'Preparatoria o bachillerato general_2',
+    # 'Preparatoria o bachillerato general_3',
+    # 'Preparatoria o bachillerato general_4',
+    # 'Preparatoria o bachillerato general_99',
+    'Preparatoria',
+
+    # 'Bachillerato tecnológico_1',
+    # 'Bachillerato tecnológico_2',
+    # 'Bachillerato tecnológico_3',
+    # 'Bachillerato tecnológico_4',
+    # 'Bachillerato tecnológico_99',
+    'Bachillerato tecnológico',
+
+    # 'Estudios técnicos o comerciales con secundaria terminada_1',
+    # 'Estudios técnicos o comerciales con secundaria terminada_2',
+    # 'Estudios técnicos o comerciales con secundaria terminada_3',
+    # 'Estudios técnicos o comerciales con secundaria terminada_4',
+    # 'Estudios técnicos o comerciales con secundaria terminada_5',
+    # 'Estudios técnicos o comerciales con secundaria terminada_99',
+    'EToC_sec',
+
+    # 'Estudios técnicos o comerciales con preparatoria terminada_1',
+    # 'Estudios técnicos o comerciales con preparatoria terminada_2',
+    # 'Estudios técnicos o comerciales con preparatoria terminada_3',
+    # 'Estudios técnicos o comerciales con preparatoria terminada_4',
+    # 'Estudios técnicos o comerciales con preparatoria terminada_99',
+    'EToC_prep',
+
+    # 'Normal con primaria o secundaria terminada_1',
+    # 'Normal con primaria o secundaria terminada_2',
+    # 'Normal con primaria o secundaria terminada_3',
+    # 'Normal con primaria o secundaria terminada_4',
+    # 'Normal con primaria o secundaria terminada_99',
+    'Normal prim/sec term',
+
+    # 'Normal de licenciatura_1',
+    # 'Normal de licenciatura_2',
+    # 'Normal de licenciatura_3',
+    # 'Normal de licenciatura_4',
+    # 'Normal de licenciatura_5',
+    # 'Normal de licenciatura_6',
+    # 'Normal de licenciatura_99',
+    'Normal de licenciatura',
+
+    # 'Licenciatura_1',
+    # 'Licenciatura_2',
+    # 'Licenciatura_3',
+    # 'Licenciatura_4',
+    # 'Licenciatura_5',
+    # 'Licenciatura_6',
+    # 'Licenciatura_7',
+    # 'Licenciatura_8',
+    # 'Licenciatura_99',
+    'Licenciatura',
+
+    # 'Especialidad_1',
+    # 'Especialidad_2',
+    # 'Especialidad_99',
+    'Especialidad',
+
+    # 'Maestría_1',
+    # 'Maestría_2',
+    # 'Maestría_3',
+    # 'Maestría_4',
+    # 'Maestría_5',
+    # 'Maestría_6',
+    # 'Maestría_99',
+    'Maestría',
+
+    # 'Doctorado_1',
+    # 'Doctorado_2',
+    # 'Doctorado_3',
+    # 'Doctorado_4',
+    # 'Doctorado_5',
+    # 'Doctorado_6',
+    # 'Doctorado_99',
+    'Doctorado'
 ]
 
 # Specify crosstabulations for census constraints.
@@ -432,7 +458,9 @@ def get_ind_const():
         },
         'P5_HLI': {
             'EDAD': EDAD_5YMAS,
-            'HLENGUA': ['Sí/Sí Español', 'Sí/No español', 'Sí/No especificado'],
+            'HLENGUA': [
+                'Sí/Sí Español', 'Sí/No español', 'Sí/No especificado'
+            ],
         },
         'P5_HLI_NHE': {
             'EDAD': EDAD_5YMAS,
@@ -729,108 +757,144 @@ def get_ind_const():
         'P15YM_SE': {
             'EDAD': EDAD_15YMAS,
             'NIVACAD': [
-                'Ninguno',
-                'Preescolar_1', 'Preescolar_2', 'Preescolar_3', 'Preescolar_99',
+                'Sin Educación',
+                # 'Ninguno',
+                # 'Preescolar_1', 'Preescolar_2', 'Preescolar_3',
+                # 'Preescolar_99',
             ],
         },
         'P15YM_SE_F': {
             'EDAD': EDAD_15YMAS,
             'SEXO': ['F'],
             'NIVACAD': [
-                'Ninguno',
-                'Preescolar_1', 'Preescolar_2', 'Preescolar_3', 'Preescolar_99',
+                'Sin Educación',
+                # 'Ninguno',
+                # 'Preescolar_1', 'Preescolar_2', 'Preescolar_3',
+                # 'Preescolar_99',
             ],
         },
         'P15YM_SE_M': {
             'EDAD': EDAD_15YMAS,
             'SEXO': ['M'],
             'NIVACAD': [
-                'Ninguno',
-                'Preescolar_1', 'Preescolar_2', 'Preescolar_3', 'Preescolar_99',
+                'Sin Educación',
+                # 'Ninguno',
+                # 'Preescolar_1', 'Preescolar_2', 'Preescolar_3',
+                # 'Preescolar_99',
             ],
         },
         'P15PRI_IN': {
             'EDAD': EDAD_15YMAS,
             'NIVACAD': [
-                'Primaria_1', 'Primaria_2', 'Primaria_3',
-                'Primaria_4',  'Primaria_5', 'Primaria_99'],
+                'Primaria_incom',
+                # 'Primaria_1', 'Primaria_2', 'Primaria_3',
+                # 'Primaria_4',  'Primaria_5', 'Primaria_99'
+            ],
         },
         'P15PRI_INF': {
             'EDAD': EDAD_15YMAS,
             'SEXO': ['F'],
             'NIVACAD': [
-                'Primaria_1', 'Primaria_2', 'Primaria_3',
-                'Primaria_4',  'Primaria_5', 'Primaria_99'],
+                'Primaria_incom',
+                # 'Primaria_1', 'Primaria_2', 'Primaria_3',
+                # 'Primaria_4',  'Primaria_5', 'Primaria_99'
+            ],
         },
         'P15PRI_INM': {
             'EDAD': EDAD_15YMAS,
             'SEXO': ['M'],
             'NIVACAD': [
-                'Primaria_1', 'Primaria_2', 'Primaria_3',
-                'Primaria_4',  'Primaria_5', 'Primaria_99'],
+                'Primaria_incom',
+                # 'Primaria_1', 'Primaria_2', 'Primaria_3',
+                # 'Primaria_4',  'Primaria_5', 'Primaria_99'
+            ],
         },
         'P15PRI_CO': {
             'EDAD': EDAD_15YMAS,
             'NIVACAD': [
-                'Primaria_6',
-                'Estudios técnicos o comerciales con primaria terminada_1',
-                'Estudios técnicos o comerciales con primaria terminada_2',
-                'Estudios técnicos o comerciales con primaria terminada_3',
-                'Estudios técnicos o comerciales con primaria terminada_4',
-                'Estudios técnicos o comerciales con primaria terminada_99'
+                'Primaria_com',
+                'EToC_prim',
+                # 'Primaria_6',
+                # 'Estudios técnicos o comerciales con primaria terminada_1',
+                # 'Estudios técnicos o comerciales con primaria terminada_2',
+                # 'Estudios técnicos o comerciales con primaria terminada_3',
+                # 'Estudios técnicos o comerciales con primaria terminada_4',
+                # 'Estudios técnicos o comerciales con primaria terminada_99'
             ],
         },
         'P15PRI_COF': {
             'EDAD': EDAD_15YMAS,
             'SEXO': ['F'],
             'NIVACAD': [
-                'Primaria_6',
-                'Estudios técnicos o comerciales con primaria terminada_1',
-                'Estudios técnicos o comerciales con primaria terminada_2',
-                'Estudios técnicos o comerciales con primaria terminada_3',
-                'Estudios técnicos o comerciales con primaria terminada_4',
-                'Estudios técnicos o comerciales con primaria terminada_99'
+                'Primaria_com',
+                'EToC_prim',
+                # 'Primaria_6',
+                # 'Estudios técnicos o comerciales con primaria terminada_1',
+                # 'Estudios técnicos o comerciales con primaria terminada_2',
+                # 'Estudios técnicos o comerciales con primaria terminada_3',
+                # 'Estudios técnicos o comerciales con primaria terminada_4',
+                # 'Estudios técnicos o comerciales con primaria terminada_99'
             ],
         },
         'P15PRI_COM': {
             'EDAD': EDAD_15YMAS,
             'SEXO': ['M'],
             'NIVACAD': [
-                'Primaria_6',
-                'Estudios técnicos o comerciales con primaria terminada_1',
-                'Estudios técnicos o comerciales con primaria terminada_2',
-                'Estudios técnicos o comerciales con primaria terminada_3',
-                'Estudios técnicos o comerciales con primaria terminada_4',
-                'Estudios técnicos o comerciales con primaria terminada_99'
+                'Primaria_com',
+                'EToC_prim',
+                # 'Primaria_6',
+                # 'Estudios técnicos o comerciales con primaria terminada_1',
+                # 'Estudios técnicos o comerciales con primaria terminada_2',
+                # 'Estudios técnicos o comerciales con primaria terminada_3',
+                # 'Estudios técnicos o comerciales con primaria terminada_4',
+                # 'Estudios técnicos o comerciales con primaria terminada_99'
             ],
         },
         'P15SEC_IN': {
             'EDAD': EDAD_15YMAS,
-            'NIVACAD': ['Secundaria_1', 'Secundaria_2', 'Secundaria_99'],
+            'NIVACAD': [
+                'Secundaria_incom',
+                # 'Secundaria_1', 'Secundaria_2', 'Secundaria_99'
+            ],
         },
         'P15SEC_INF': {
             'EDAD': EDAD_15YMAS,
             'SEXO': ['F'],
-            'NIVACAD': ['Secundaria_1', 'Secundaria_2', 'Secundaria_99'],
+            'NIVACAD': [
+                'Secundaria_incom',
+                # 'Secundaria_1', 'Secundaria_2', 'Secundaria_99'
+            ],
         },
         'P15SEC_INM': {
             'EDAD': EDAD_15YMAS,
             'SEXO': ['M'],
-            'NIVACAD': ['Secundaria_1', 'Secundaria_2', 'Secundaria_99'],
+            'NIVACAD': [
+                'Secundaria_incom',
+                # 'Secundaria_1', 'Secundaria_2', 'Secundaria_99'
+            ],
         },
         'P15SEC_CO': {
             'EDAD': EDAD_15YMAS,
-            'NIVACAD': ['Secundaria_3'],
+            'NIVACAD': [
+                'Secundaria_com',
+                # 'Secundaria_3'
+            ],
         },
         'P15SEC_COF': {
             'EDAD': EDAD_15YMAS,
             'SEXO': ['F'],
-            'NIVACAD': ['Secundaria_3'],
+            'NIVACAD': [
+                'Secundaria_com',
+                # 'Secundaria_3'
+            ],
         },
         'P15SEC_COM': {
             'EDAD': EDAD_15YMAS,
             'SEXO': ['M'],
-            'NIVACAD': ['Secundaria_3'],
+            'NIVACAD': [
+                'Secundaria_com',
+                # 'Secundaria_3'
+            ],
         },
         'P18YM_PB': {
             'EDAD': EDAD_18YMAS,
@@ -872,15 +936,16 @@ def get_ind_const():
         'PEA': {
             'EDAD': EDAD_12YMAS,
             'CONACT': [
-                'Trabajó',
-                'Declara que busca trabajo /  se rescata que trabaja',
-                'Declara jubilado o pensionado / se rescata que trabaja',
-                'Declara estudiante / se rescata que trabaja',
-                'Se dedica a los quehaceres del hogar / se rescata que trabaja',
-                'Declara que tiene limitaciónes / se rescata que trabaja',
-                'Declara otra situación de actividad / se rescata que trabaja',
-                'No se tiene información / se rescata que trabaja',
-                'Tenía trabajo pero no trabajó',
+                'Trabaja',
+                # 'Trabajó',
+                # 'Declara que busca trabajo /  se rescata que trabaja',
+                # 'Declara jubilado o pensionado / se rescata que trabaja',
+                # 'Declara estudiante / se rescata que trabaja',
+                # 'Se dedica a los quehaceres del hogar / se rescata que trabaja',
+                # 'Declara que tiene limitaciónes / se rescata que trabaja',
+                # 'Declara otra situación de actividad / se rescata que trabaja',
+                # 'No se tiene información / se rescata que trabaja',
+                # 'Tenía trabajo pero no trabajó',
                 'Buscó trabajo',
             ],
         },
@@ -888,15 +953,16 @@ def get_ind_const():
             'EDAD': EDAD_12YMAS,
             'SEXO': ['F'],
             'CONACT': [
-                'Trabajó',
-                'Declara que busca trabajo /  se rescata que trabaja',
-                'Declara jubilado o pensionado / se rescata que trabaja',
-                'Declara estudiante / se rescata que trabaja',
-                'Se dedica a los quehaceres del hogar / se rescata que trabaja',
-                'Declara que tiene limitaciónes / se rescata que trabaja',
-                'Declara otra situación de actividad / se rescata que trabaja',
-                'No se tiene información / se rescata que trabaja',
-                'Tenía trabajo pero no trabajó',
+                'Trabaja',
+                # 'Trabajó',
+                # 'Declara que busca trabajo /  se rescata que trabaja',
+                # 'Declara jubilado o pensionado / se rescata que trabaja',
+                # 'Declara estudiante / se rescata que trabaja',
+                # 'Se dedica a los quehaceres del hogar / se rescata que trabaja',
+                # 'Declara que tiene limitaciónes / se rescata que trabaja',
+                # 'Declara otra situación de actividad / se rescata que trabaja',
+                # 'No se tiene información / se rescata que trabaja',
+                # 'Tenía trabajo pero no trabajó',
                 'Buscó trabajo',
             ],
         },
@@ -904,25 +970,26 @@ def get_ind_const():
             'EDAD': EDAD_12YMAS,
             'SEXO': ['M'],
             'CONACT': [
-                'Trabajó',
-                'Declara que busca trabajo /  se rescata que trabaja',
-                'Declara jubilado o pensionado / se rescata que trabaja',
-                'Declara estudiante / se rescata que trabaja',
-                'Se dedica a los quehaceres del hogar / se rescata que trabaja',
-                'Declara que tiene limitaciónes / se rescata que trabaja',
-                'Declara otra situación de actividad / se rescata que trabaja',
-                'No se tiene información / se rescata que trabaja',
-                'Tenía trabajo pero no trabajó',
+                'Trabaja',
+                # 'Trabajó',
+                # 'Declara que busca trabajo /  se rescata que trabaja',
+                # 'Declara jubilado o pensionado / se rescata que trabaja',
+                # 'Declara estudiante / se rescata que trabaja',
+                # 'Se dedica a los quehaceres del hogar / se rescata que trabaja',
+                # 'Declara que tiene limitaciónes / se rescata que trabaja',
+                # 'Declara otra situación de actividad / se rescata que trabaja',
+                # 'No se tiene información / se rescata que trabaja',
+                # 'Tenía trabajo pero no trabajó',
                 'Buscó trabajo',
             ],
         },
         'PE_INAC': {
             'EDAD': EDAD_12YMAS,
             'CONACT': [
-                'Es pensionada(o) o jubilada(o)',
-                'Es estudiante',
-                'Se dedica a los quehaceres del hogar',
-                'Está incapacitado permanentemente para trabajar',
+                # 'Es pensionada(o) o jubilada(o)',
+                # 'Es estudiante',
+                # 'Se dedica a los quehaceres del hogar',
+                # 'Está incapacitado permanentemente para trabajar',
                 'No trabaja',
             ],
         },
@@ -930,10 +997,10 @@ def get_ind_const():
             'EDAD': EDAD_12YMAS,
             'SEXO': ['F'],
             'CONACT': [
-                'Es pensionada(o) o jubilada(o)',
-                'Es estudiante',
-                'Se dedica a los quehaceres del hogar',
-                'Está incapacitado permanentemente para trabajar',
+                # 'Es pensionada(o) o jubilada(o)',
+                # 'Es estudiante',
+                # 'Se dedica a los quehaceres del hogar',
+                # 'Está incapacitado permanentemente para trabajar',
                 'No trabaja',
             ],
         },
@@ -941,55 +1008,58 @@ def get_ind_const():
             'EDAD': EDAD_12YMAS,
             'SEXO': ['M'],
             'CONACT': [
-                'Es pensionada(o) o jubilada(o)',
-                'Es estudiante',
-                'Se dedica a los quehaceres del hogar',
-                'Está incapacitado permanentemente para trabajar',
+                # 'Es pensionada(o) o jubilada(o)',
+                # 'Es estudiante',
+                # 'Se dedica a los quehaceres del hogar',
+                # 'Está incapacitado permanentemente para trabajar',
                 'No trabaja',
             ],
         },
         'POCUPADA': {
             'EDAD': EDAD_12YMAS,
             'CONACT': [
-                'Trabajó',
-                'Declara que busca trabajo /  se rescata que trabaja',
-                'Declara jubilado o pensionado / se rescata que trabaja',
-                'Declara estudiante / se rescata que trabaja',
-                'Se dedica a los quehaceres del hogar / se rescata que trabaja',
-                'Declara que tiene limitaciónes / se rescata que trabaja',
-                'Declara otra situación de actividad / se rescata que trabaja',
-                'No se tiene información / se rescata que trabaja',
-                'Tenía trabajo pero no trabajó',
+                'Trabaja',
+                # 'Trabajó',
+                # 'Declara que busca trabajo /  se rescata que trabaja',
+                # 'Declara jubilado o pensionado / se rescata que trabaja',
+                # 'Declara estudiante / se rescata que trabaja',
+                # 'Se dedica a los quehaceres del hogar / se rescata que trabaja',
+                # 'Declara que tiene limitaciónes / se rescata que trabaja',
+                # 'Declara otra situación de actividad / se rescata que trabaja',
+                # 'No se tiene información / se rescata que trabaja',
+                # 'Tenía trabajo pero no trabajó',
             ],
         },
         'POCUPADA_F': {
             'EDAD': EDAD_12YMAS,
             'SEXO': ['F'],
             'CONACT': [
-                'Trabajó',
-                'Declara que busca trabajo /  se rescata que trabaja',
-                'Declara jubilado o pensionado / se rescata que trabaja',
-                'Declara estudiante / se rescata que trabaja',
-                'Se dedica a los quehaceres del hogar / se rescata que trabaja',
-                'Declara que tiene limitaciónes / se rescata que trabaja',
-                'Declara otra situación de actividad / se rescata que trabaja',
-                'No se tiene información / se rescata que trabaja',
-                'Tenía trabajo pero no trabajó',
+                'Trabaja',
+                # 'Trabajó',
+                # 'Declara que busca trabajo /  se rescata que trabaja',
+                # 'Declara jubilado o pensionado / se rescata que trabaja',
+                # 'Declara estudiante / se rescata que trabaja',
+                # 'Se dedica a los quehaceres del hogar / se rescata que trabaja',
+                # 'Declara que tiene limitaciónes / se rescata que trabaja',
+                # 'Declara otra situación de actividad / se rescata que trabaja',
+                # 'No se tiene información / se rescata que trabaja',
+                # 'Tenía trabajo pero no trabajó',
             ],
         },
         'POCUPADA_M': {
             'EDAD': EDAD_12YMAS,
             'SEXO': ['M'],
             'CONACT': [
-                'Trabajó',
-                'Declara que busca trabajo /  se rescata que trabaja',
-                'Declara jubilado o pensionado / se rescata que trabaja',
-                'Declara estudiante / se rescata que trabaja',
-                'Se dedica a los quehaceres del hogar / se rescata que trabaja',
-                'Declara que tiene limitaciónes / se rescata que trabaja',
-                'Declara otra situación de actividad / se rescata que trabaja',
-                'No se tiene información / se rescata que trabaja',
-                'Tenía trabajo pero no trabajó',
+                'Trabaja',
+                # 'Trabajó',
+                # 'Declara que busca trabajo /  se rescata que trabaja',
+                # 'Declara jubilado o pensionado / se rescata que trabaja',
+                # 'Declara estudiante / se rescata que trabaja',
+                # 'Se dedica a los quehaceres del hogar / se rescata que trabaja',
+                # 'Declara que tiene limitaciónes / se rescata que trabaja',
+                # 'Declara otra situación de actividad / se rescata que trabaja',
+                # 'No se tiene información / se rescata que trabaja',
+                # 'Tenía trabajo pero no trabajó',
             ],
         },
         'PDESOCUP': {
@@ -1148,11 +1218,19 @@ def get_viv_const():
         # the one with characteristics VIVPARH_CV
 
         'VPH_PISODT': {
-            'PISOS': ['Cemento o firme', 'Madera, mosaico u otro recubrimiento']
+            'PISOS': [
+                'No Tierra',
+                # 'Cemento o firme', 'Madera, mosaico u otro recubrimiento'
+            ]
         },
 
         'VPH_PISOTI': {
             'PISOS': ['Tierra']
+        },
+
+        # IMPLICIT
+        'VPH_PISONE': {
+            'PISOS': ['Blanco por pase', 'No especificado']
         },
 
         'VPH_1DOR': {
@@ -1160,7 +1238,12 @@ def get_viv_const():
         },
 
         'VPH_2YMASD': {
-            'CUADORM': list(range(2, 26))
+            'CUADORM': ['2+']  # list(range(2, 26))
+        },
+
+        # IMPLICIT
+        'VPH_NEDOR': {
+            'CUADORM': ['No especificado', 'Blanco por pase']
         },
 
         'VPH_1CUART': {
@@ -1172,7 +1255,12 @@ def get_viv_const():
         },
 
         'VPH_3YMASC': {
-            'TOTCUART': list(range(3, 26))
+            'TOTCUART': ['3+']  # list(range(3, 26))
+        },
+
+        # IMPLICIT
+        'VPH_NECUART': {
+            'TOTCUART': ['No especificado', 'Blanco por pase']
         },
 
         'VPH_C_ELEC': {
@@ -1183,19 +1271,17 @@ def get_viv_const():
             'ELECTRICIDAD': ['No']
         },
 
-        'VPH_AGUADV': {
-            'AGUA_ENTUBADA': [
-                'Dentro de la vivienda.',
-                'Sólo en el patio o terreno.'
-            ]
+        # IMPLICIT
+        'VPH_NE_ELEC': {
+            'ELECTRICIDAD': ['No especificado', 'Blanco por pase']
         },
 
-        'VPH_AEASP': {
+        'VPH_AGUADV': {
             'AGUA_ENTUBADA': [
-                'Dentro de la vivienda.',
-                'Sólo en el patio o terreno.'
-            ],
-            'ABA_AGUA_ENTU': ['Del servicio público de agua.']
+                'Tienen agua entubada.',
+                # 'Dentro de la vivienda.',
+                # 'Sólo en el patio o terreno.'
+            ]
         },
 
         'VPH_AGUAFV': {
@@ -1204,12 +1290,55 @@ def get_viv_const():
             ]
         },
 
+        # IMPLICIT
+        'VPH_AGUANE': {
+            'AGUA_ENTUBADA': ['No especificado', 'Blanco por pase']
+        },
+
+        'VPH_AEASP': {
+            'AGUA_ENTUBADA': [
+                'Tienen agua entubada.',
+                # 'Dentro de la vivienda.',
+                # 'Sólo en el patio o terreno.'
+            ],
+            'ABA_AGUA_ENTU': ['Del servicio público de agua.']
+        },
+
+        # IMPLICIT
+        'VPH_AENSP': {
+            'AGUA_ENTUBADA': [
+                'Tienen agua entubada.',
+                # 'Dentro de la vivienda.',
+                # 'Sólo en el patio o terreno.'
+            ],
+            'ABA_AGUA_ENTU': [
+                # 'De un pozo comunitario.',
+                # 'De un pozo particular.',
+                # 'De una pipa.',
+                # 'De otra vivienda.',
+                # 'De la lluvia.',
+                'De otro lugar.',
+                'No especificado',
+                'Blanco por pase'
+            ]
+        },
+
         'VPH_TINACO': {
             'TINACO': ['Sí']
         },
 
+        # IMPLICIT
+        'VPH_TINACO_NO_NE': {
+            'TINACO': ['No', 'No especificado', 'Blanco por pase']
+        },
+
         'VPH_CISTER': {
             'CISTERNA': ['Sí']
+        },
+
+        # IMPLICIT
+        'VPH_CISTER_NO_NE': {
+            'CISTERNA': ['No', 'No especificado', 'Blanco por pase']
         },
 
         'VPH_EXCSA': {
@@ -1220,12 +1349,21 @@ def get_viv_const():
             'SERSAN': ['Letrina (pozo u hoyo).']
         },
 
+        # IMPLICIT
+        'VPH_NO_EXCSA': {
+            'SERSAN': [
+                'No tienen taza de baño ni letrina.',
+                'No especificado',
+                'Blanco por pase']
+        },
+
         'VPH_DRENAJ': {
             'DRENAJE': [
-                'La red pública.',
-                'Una fosa séptica o tanque séptico (biodigestor).',
-                'Una tubería que va a dar a una barranca o grieta.',
-                'Una tubería que va a dar a un río, lago o mar.',
+                'Tiene drenaje.',
+                # 'La red pública.',
+                # 'Una fosa séptica o tanque séptico (biodigestor).',
+                # 'Una tubería que va a dar a una barranca o grieta.',
+                # 'Una tubería que va a dar a un río, lago o mar.',
             ]
         },
 
@@ -1235,17 +1373,25 @@ def get_viv_const():
             ]
         },
 
+        'VPH_NEDREN': {
+            'DRENAJE': [
+                'No especificado', 'Blanco por pase',
+            ]
+        },
+
         'VPH_C_SERV': {
             'ELECTRICIDAD': ['Sí'],
             'AGUA_ENTUBADA': [
-                'Dentro de la vivienda.',
-                'Sólo en el patio o terreno.'
+                'Tienen agua entubada.',
+                # 'Dentro de la vivienda.',
+                # 'Sólo en el patio o terreno.'
             ],
             'DRENAJE': [
-                'La red pública.',
-                'Una fosa séptica o tanque séptico (biodigestor).',
-                'Una tubería que va a dar a una barranca o grieta.',
-                'Una tubería que va a dar a un río, lago o mar.',
+                'Tiene drenaje.',
+                # 'La red pública.',
+                # 'Una fosa séptica o tanque séptico (biodigestor).',
+                # 'Una tubería que va a dar a una barranca o grieta.',
+                # 'Una tubería que va a dar a un río, lago o mar.',
             ]
         },
 
@@ -1261,18 +1407,20 @@ def get_viv_const():
 
         'VPH_DSADMA': {
             'DRENAJE': [
-                'La red pública.',
-                'Una fosa séptica o tanque séptico (biodigestor).',
-                'Una tubería que va a dar a una barranca o grieta.',
-                'Una tubería que va a dar a un río, lago o mar.',
+                'Tiene drenaje.',
+                # 'La red pública.',
+                # 'Una fosa séptica o tanque séptico (biodigestor).',
+                # 'Una tubería que va a dar a una barranca o grieta.',
+                # 'Una tubería que va a dar a un río, lago o mar.',
                     ],
             'SERSAN': [
                 'Taza de baño (excusado o sanitario).',
                 'Letrina (pozo u hoyo).'
             ],
             'CONAGUA': [
-                'Tiene descarga directa de agua.',
-                'Le echan agua con cubeta.'
+                'Con agua.',
+                # 'Tiene descarga directa de agua.',
+                # 'Le echan agua con cubeta.'
             ]
         },
 
@@ -1302,61 +1450,107 @@ def get_viv_const():
         'VPH_REFRI': {
             'REFRIGERADOR': ['Sí'],
         },
+        # IMPLICIT
+        'VPH_REFRI_NO': {
+            'REFRIGERADOR': ['No', 'No especificado', 'Blanco por pase'],
+        },
 
         'VPH_LAVAD': {
             'LAVADORA': ['Sí'],
+        },
+        'VPH_LAVAD_NO': {
+            'LAVADORA': ['No', 'No especificado', 'Blanco por pase'],
         },
 
         'VPH_HMICRO': {
             'HORNO': ['Sí'],
         },
+        'VPH_HMICRO_NO': {
+            'HORNO': ['No', 'No especificado', 'Blanco por pase'],
+        },
 
         'VPH_AUTOM': {
             'AUTOPROP': ['Sí'],
+        },
+        'VPH_AUTOM_NO': {
+            'AUTOPROP': ['No', 'No especificado', 'Blanco por pase'],
         },
 
         'VPH_MOTO': {
             'MOTOCICLETA': ['Sí'],
         },
+        'VPH_MOTO_NO': {
+            'MOTOCICLETA': ['No', 'No especificado', 'Blanco por pase'],
+        },
 
         'VPH_BICI': {
             'BICICLETA': ['Sí'],
+        },
+        'VPH_BICI_NO': {
+            'BICICLETA': ['No', 'No especificado', 'Blanco por pase'],
         },
 
         'VPH_RADIO': {
             'RADIO': ['Sí'],
         },
+        'VPH_RADIO_NO': {
+            'RADIO': ['No', 'No especificado', 'Blanco por pase'],
+        },
 
         'VPH_TV': {
             'TELEVISOR': ['Sí'],
+        },
+        'VPH_TV_NO': {
+            'TELEVISOR': ['No', 'No especificado', 'Blanco por pase'],
         },
 
         'VPH_PC': {
             'COMPUTADORA': ['Sí'],
         },
+        'VPH_PC_NO': {
+            'COMPUTADORA': ['No', 'No especificado', 'Blanco por pase'],
+        },
 
         'VPH_TELEF': {
             'TELEFONO': ['Sí'],
+        },
+        'VPH_TELEF_NO': {
+            'TELEFONO': ['No', 'No especificado', 'Blanco por pase'],
         },
 
         'VPH_CEL': {
             'CELULAR': ['Sí'],
         },
+        'VPH_CEL_NO': {
+            'CELULAR': ['No', 'No especificado', 'Blanco por pase'],
+        },
 
         'VPH_INTER': {
             'INTERNET': ['Sí'],
+        },
+        'VPH_INTER_NO': {
+            'INTERNET': ['No', 'No especificado', 'Blanco por pase'],
         },
 
         'VPH_STVP': {
             'SERV_TV_PAGA': ['Sí'],
         },
+        'VPH_STVP_NO': {
+            'SERV_TV_PAGA': ['No', 'No especificado', 'Blanco por pase'],
+        },
 
         'VPH_SPMVPI': {
             'SERV_PEL_PAGA': ['Sí'],
         },
+        'VPH_SPMVPI_NO': {
+            'SERV_PEL_PAGA': ['No', 'No especificado', 'Blanco por pase'],
+        },
 
         'VPH_CVJ': {
             'CON_VJUEGOS': ['Sí'],
+        },
+        'VPH_CVJ_NO': {
+            'CON_VJUEGOS': ['No', 'No especificado', 'Blanco por pase'],
         },
 
         'VPH_SINRTV': {

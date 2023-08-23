@@ -249,21 +249,41 @@ defs = {
         'Blanco por pase': 'Blanco por pase',
     },
 
+    # 'conact': {
+    #     10: 'Trabajó',
+    #     13: 'Declara que busca trabajo /  se rescata que trabaja',
+    #     14: 'Declara jubilado o pensionado / se rescata que trabaja',
+    #     15: 'Declara estudiante / se rescata que trabaja',
+    #     16: 'Se dedica a los quehaceres del hogar / se rescata que trabaja',
+    #     17: 'Declara que tiene limitaciónes / se rescata que trabaja',
+    #     18: 'Declara otra situación de actividad / se rescata que trabaja',
+    #     19: 'No se tiene información / se rescata que trabaja',
+    #     20: 'Tenía trabajo pero no trabajó',
+    #     30: 'Buscó trabajo',
+    #     40: 'Es pensionada(o) o jubilada(o)',
+    #     50: 'Es estudiante',
+    #     60: 'Se dedica a los quehaceres del hogar',
+    #     70: 'Está incapacitado permanentemente para trabajar',
+    #     80: 'No trabaja',
+    #     99: 'No especificado',
+    #     'Blanco por pase': 'Blanco por pase',
+    # },
+
     'conact': {
-        10: 'Trabajó',
-        13: 'Declara que busca trabajo /  se rescata que trabaja',
-        14: 'Declara jubilado o pensionado / se rescata que trabaja',
-        15: 'Declara estudiante / se rescata que trabaja',
-        16: 'Se dedica a los quehaceres del hogar / se rescata que trabaja',
-        17: 'Declara que tiene limitaciónes / se rescata que trabaja',
-        18: 'Declara otra situación de actividad / se rescata que trabaja',
-        19: 'No se tiene información / se rescata que trabaja',
-        20: 'Tenía trabajo pero no trabajó',
+        10: 'Trabaja',
+        13: 'Trabaja',
+        14: 'Trabaja',
+        15: 'Trabaja',
+        16: 'Trabaja',
+        17: 'Trabaja',
+        18: 'Trabaja',
+        19: 'Trabaja',
+        20: 'Trabaja',
         30: 'Buscó trabajo',
-        40: 'Es pensionada(o) o jubilada(o)',
-        50: 'Es estudiante',
-        60: 'Se dedica a los quehaceres del hogar',
-        70: 'Está incapacitado permanentemente para trabajar',
+        40: 'No trabaja',
+        50: 'No trabaja',
+        60: 'No trabaja',
+        70: 'No trabaja',
         80: 'No trabaja',
         99: 'No especificado',
         'Blanco por pase': 'Blanco por pase',
@@ -459,9 +479,9 @@ defs = {
 
     'pisos': {
         1: 'Tierra',
-        2: 'Cemento o firme',
-        3: 'Madera, mosaico u otro recubrimiento',
-        9: 'No especificado ',
+        2: 'No Tierra',  # 'Cemento o firme',
+        3: 'No Tierra',  # 'Madera, mosaico u otro recubrimiento',
+        9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
@@ -472,7 +492,12 @@ defs = {
         'Blanco por pase': 'Blanco por pase'
     },
 
-    'cuadorm': {i: i for i in range(1, 26)} | {
+    'cuadorm': {1: 1} | {i: '2+' for i in range(2, 26)} | {
+        99: 'No especificado',
+        'Blanco por pase': 'Blanco por pase'
+    },
+
+    'totcuart': {1: 1, 2: 2} | {i: '3+' for i in range(3, 26)} | {
         99: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
@@ -523,8 +548,8 @@ defs = {
     },
 
     'agua_entubada': {
-        1: 'Dentro de la vivienda.',
-        2: 'Sólo en el patio o terreno.',
+        1: 'Tienen agua entubada.',  # 'Dentro de la vivienda.',
+        2: 'Tienen agua entubada.',  # 'Sólo en el patio o terreno.',
         3: 'No tienen agua entubada.',
         9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
@@ -532,11 +557,11 @@ defs = {
 
     'aba_agua_entu': {
         1: 'Del servicio público de agua.',
-        2: 'De un pozo comunitario.',
-        3: 'De un pozo particular.',
-        4: 'De una pipa.',
-        5: 'De otra vivienda.',
-        6: 'De la lluvia.',
+        2: 'De otro lugar.',  # 'De un pozo comunitario.',
+        3: 'De otro lugar.',  # 'De un pozo particular.',
+        4: 'De otro lugar.',  # 'De una pipa.',
+        5: 'De otro lugar.',  # 'De otra vivienda.',
+        6: 'De otro lugar.',  # 'De la lluvia.',
         7: 'De otro lugar.',
         9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
@@ -618,8 +643,8 @@ defs = {
     },
 
     'conagua': {
-        1: 'Tiene descarga directa de agua.',
-        2: 'Le echan agua con cubeta.',
+        1: 'Con agua.',  # 'Tiene descarga directa de agua.',
+        2: 'Con agua.',  # 'Le echan agua con cubeta.',
         3: 'No se le puede echar agua.',
         9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
@@ -633,10 +658,10 @@ defs = {
     },
 
     'drenaje': {
-        1: 'La red pública.',
-        2: 'Una fosa séptica o tanque séptico (biodigestor).',
-        3: 'Una tubería que va a dar a una barranca o grieta.',
-        4: 'Una tubería que va a dar a un río, lago o mar.',
+        1: 'Tiene drenaje.',  # 'La red pública.',
+        2: 'Tiene drenaje.',  # 'Una fosa séptica o tanque séptico (biodigestor).',
+        3: 'Tiene drenaje.',  # 'Una tubería que va a dar a una barranca o grieta.',
+        4: 'Tiene drenaje.',  # 'Una tubería que va a dar a un río, lago o mar.',
         5: 'No tiene drenaje.',
         9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
@@ -973,7 +998,7 @@ cats = {
     'nivacad': pd.CategoricalDtype(NIVACAD_CATS),
     'alfabet': pd.CategoricalDtype(defs['alfabet'].values()),
     'situa_conyugal': pd.CategoricalDtype(defs['situa_conyugal'].values()),
-    'conact': pd.CategoricalDtype(defs['conact'].values()),
+    'conact': pd.CategoricalDtype(set(defs['conact'].values())),
     'ocupacion': pd.CategoricalDtype(defs['ocupacion'].values()),
     'ocupacion_compact': pd.CategoricalDtype(
         defs['ocupacion_compact'].values()),
@@ -985,17 +1010,18 @@ cats = {
     'dhsersal': pd.CategoricalDtype(DHSERSAL_CATS),
     'paredes': pd.CategoricalDtype(defs['paredes'].values()),
     'techos': pd.CategoricalDtype(defs['techos'].values()),
-    'pisos': pd.CategoricalDtype(defs['pisos'].values()),
+    'pisos': pd.CategoricalDtype(set(defs['pisos'].values())),
     'cocina': pd.CategoricalDtype(defs['cocina'].values()),
-    'cuadorm': pd.CategoricalDtype(defs['cuadorm'].values()),
+    'cuadorm': pd.CategoricalDtype(set(defs['cuadorm'].values())),
+    'totcuart': pd.CategoricalDtype(set(defs['totcuart'].values())),
     'lug_coc': pd.CategoricalDtype(defs['lug_coc'].values()),
     'combustible': pd.CategoricalDtype(defs['combustible'].values()),
     'estufa': pd.CategoricalDtype(defs['estufa'].values()),
     'electricidad': pd.CategoricalDtype(defs['electricidad'].values()),
     'focos': pd.CategoricalDtype(defs['focos'].values()),
     'focos_ahorra': pd.CategoricalDtype(defs['focos_ahorra'].values()),
-    'agua_entubada': pd.CategoricalDtype(defs['agua_entubada'].values()),
-    'aba_agua_entu': pd.CategoricalDtype(defs['aba_agua_entu'].values()),
+    'agua_entubada': pd.CategoricalDtype(set(defs['agua_entubada'].values())),
+    'aba_agua_entu': pd.CategoricalDtype(set(defs['aba_agua_entu'].values())),
     'aba_agua_no_entu': pd.CategoricalDtype(defs['aba_agua_no_entu'].values()),
     'tinaco': pd.CategoricalDtype(defs['tinaco'].values()),
     'cisterna': pd.CategoricalDtype(defs['cisterna'].values()),
@@ -1006,9 +1032,9 @@ cats = {
     'aire_acon': pd.CategoricalDtype(defs['aire_acon'].values()),
     'panel_solar': pd.CategoricalDtype(defs['panel_solar'].values()),
     'sersan': pd.CategoricalDtype(defs['sersan'].values()),
-    'conagua': pd.CategoricalDtype(defs['conagua'].values()),
+    'conagua': pd.CategoricalDtype(set(defs['conagua'].values())),
     'usoexc': pd.CategoricalDtype(defs['usoexc'].values()),
-    'drenaje': pd.CategoricalDtype(defs['drenaje'].values()),
+    'drenaje': pd.CategoricalDtype(set(defs['drenaje'].values())),
     'separacion1': pd.CategoricalDtype(defs['separacion1'].values()),
     'separacion2': pd.CategoricalDtype(defs['separacion2'].values()),
     'separacion3': pd.CategoricalDtype(defs['separacion3'].values()),

@@ -102,6 +102,106 @@ def code_nivacad(row):
         return f'{nivacad}_{int(escolari)}'
 
 
+nivacad_posmap = {
+    'Ninguno': 'Sin Educación',
+    'Preescolar_1': 'Sin Educación',
+    'Preescolar_2': 'Sin Educación',
+    'Preescolar_3': 'Sin Educación',
+    'Preescolar_99': 'Sin Educación',
+
+    'Primaria_1': 'Primaria_incom',
+    'Primaria_2': 'Primaria_incom',
+    'Primaria_3': 'Primaria_incom',
+    'Primaria_4': 'Primaria_incom',
+    'Primaria_5': 'Primaria_incom',
+    'Primaria_6': 'Primaria_com',
+    'Primaria_99': 'Primaria_incom',
+
+    'Estudios técnicos o comerciales con primaria terminada_1': 'EToC_prim',
+    'Estudios técnicos o comerciales con primaria terminada_2': 'EToC_prim',
+    'Estudios técnicos o comerciales con primaria terminada_3': 'EToC_prim',
+    'Estudios técnicos o comerciales con primaria terminada_4': 'EToC_prim',
+    'Estudios técnicos o comerciales con primaria terminada_99': 'EToC_prim',
+
+    'Secundaria_1': 'Secundaria_incom',
+    'Secundaria_2': 'Secundaria_incom',
+    'Secundaria_3': 'Secundaria_com',
+    'Secundaria_99': 'Secundaria_incom',
+
+    'Preparatoria o bachillerato general_1': 'Preparatoria',
+    'Preparatoria o bachillerato general_2': 'Preparatoria',
+    'Preparatoria o bachillerato general_3': 'Preparatoria',
+    'Preparatoria o bachillerato general_4': 'Preparatoria',
+    'Preparatoria o bachillerato general_99': 'Preparatoria',
+
+    'Bachillerato tecnológico_1': 'Bachillerato tecnológico',
+    'Bachillerato tecnológico_2': 'Bachillerato tecnológico',
+    'Bachillerato tecnológico_3': 'Bachillerato tecnológico',
+    'Bachillerato tecnológico_4': 'Bachillerato tecnológico',
+    'Bachillerato tecnológico_99': 'Bachillerato tecnológico',
+
+    'Estudios técnicos o comerciales con secundaria terminada_1': 'EToC_sec',
+    'Estudios técnicos o comerciales con secundaria terminada_2': 'EToC_sec',
+    'Estudios técnicos o comerciales con secundaria terminada_3': 'EToC_sec',
+    'Estudios técnicos o comerciales con secundaria terminada_4': 'EToC_sec',
+    'Estudios técnicos o comerciales con secundaria terminada_5': 'EToC_sec',
+    'Estudios técnicos o comerciales con secundaria terminada_99': 'EToC_sec',
+
+    'Estudios técnicos o comerciales con preparatoria terminada_1': 'EToC_prep',
+    'Estudios técnicos o comerciales con preparatoria terminada_2': 'EToC_prep',
+    'Estudios técnicos o comerciales con preparatoria terminada_3': 'EToC_prep',
+    'Estudios técnicos o comerciales con preparatoria terminada_4': 'EToC_prep',
+    'Estudios técnicos o comerciales con preparatoria terminada_99': 'EToC_prep',
+
+    'Normal con primaria o secundaria terminada_1': 'Normal prim/sec term',
+    'Normal con primaria o secundaria terminada_2': 'Normal prim/sec term',
+    'Normal con primaria o secundaria terminada_3': 'Normal prim/sec term',
+    'Normal con primaria o secundaria terminada_4': 'Normal prim/sec term',
+    'Normal con primaria o secundaria terminada_99': 'Normal prim/sec term',
+
+    'Normal de licenciatura_1': 'Normal de licenciatura',
+    'Normal de licenciatura_2': 'Normal de licenciatura',
+    'Normal de licenciatura_3': 'Normal de licenciatura',
+    'Normal de licenciatura_4': 'Normal de licenciatura',
+    'Normal de licenciatura_5': 'Normal de licenciatura',
+    'Normal de licenciatura_6': 'Normal de licenciatura',
+    'Normal de licenciatura_99': 'Normal de licenciatura',
+
+    'Licenciatura_1': 'Licenciatura',
+    'Licenciatura_2': 'Licenciatura',
+    'Licenciatura_3': 'Licenciatura',
+    'Licenciatura_4': 'Licenciatura',
+    'Licenciatura_5': 'Licenciatura',
+    'Licenciatura_6': 'Licenciatura',
+    'Licenciatura_7': 'Licenciatura',
+    'Licenciatura_8': 'Licenciatura',
+    'Licenciatura_99': 'Licenciatura',
+
+    'Especialidad_1': 'Especialidad',
+    'Especialidad_2': 'Especialidad',
+    'Especialidad_99': 'Especialidad',
+
+    'Maestría_1': 'Maestría',
+    'Maestría_2': 'Maestría',
+    'Maestría_3': 'Maestría',
+    'Maestría_4': 'Maestría',
+    'Maestría_5': 'Maestría',
+    'Maestría_6': 'Maestría',
+    'Maestría_99': 'Maestría',
+
+    'Doctorado_1': 'Doctorado',
+    'Doctorado_2': 'Doctorado',
+    'Doctorado_3': 'Doctorado',
+    'Doctorado_4': 'Doctorado',
+    'Doctorado_5': 'Doctorado',
+    'Doctorado_6': 'Doctorado',
+    'Doctorado_99': 'Doctorado',
+
+    'No especificado': 'No especificado',
+    'Blanco por pase': 'Blanco por pase'
+}
+
+
 def process_people_df(file_path):
 
     personas = pd.read_csv(file_path)
@@ -260,7 +360,8 @@ def process_people_df(file_path):
 
     personas_cat['NIVACAD'] = personas[['NIVACAD', 'ESCOLARI']].fillna(
         'Blanco por pase').apply(
-            code_nivacad, axis=1).astype(cats['nivacad'])
+        code_nivacad, axis=1).map(nivacad_posmap).astype(
+            pd.CategoricalDtype(list(set(nivacad_posmap.values()))))
 
     # personas_cat['ESCOLARI'] = personas.ESCOLARI.fillna(
     #     'Blanco por pase').astype(
@@ -413,7 +514,7 @@ def process_people_df(file_path):
     return group_dict
 
 
-def process_places_df(file_path):
+def process_places_df(file_path, to_drop=[]):
 
     viviendas = pd.read_csv(file_path)
 
@@ -441,7 +542,7 @@ def process_places_df(file_path):
         'Blanco por pase').map(defs['cuadorm']).astype(cats['cuadorm'])
 
     viviendas_cat['TOTCUART'] = viviendas.TOTCUART.fillna(
-        'Blanco por pase').map(defs['cuadorm']).astype(cats['cuadorm'])
+        'Blanco por pase').map(defs['totcuart']).astype(cats['totcuart'])
 
     viviendas_cat['LUG_COC'] = viviendas.LUG_COC.fillna(
         'Blanco por pase').map(defs['lug_coc']).astype(cats['lug_coc'])
@@ -719,6 +820,8 @@ def process_places_df(file_path):
 
     # Split by municipality, the finer aggregation level
     # statistically representative in the survey.
+    viviendas_cat = viviendas_cat.drop(columns=to_drop)
+
     groups = viviendas_cat.groupby('MUN')
     group_dict = {mun: df.set_index('ID_VIV') for mun, df in groups}
 
