@@ -10,7 +10,7 @@ DIS_CATS = [f'{i}{j}{k}{l}{m}{n}{o}'
             in product(product([1, 2, 3, 4, 8, 9], repeat=6), [5, 6, 9])]
 
 DHSERSAL_CATS = sorted(
-    ['0000000001', '0000000010']
+    ['No especificado', '0000000010']
     + [
         f'{i}{j}{k}{l}{m}{n}{o}{p}00'
         for i, j, k, l, m, n, o, p in product([0, 1], repeat=8)
@@ -70,6 +70,9 @@ def load_paren_defs():
         encoding='ISO-8859-1',
         index_col='CLAVE'
     ).to_dict()['DESCRIPCION']
+
+    del parentesco_defs[999]
+
     return parentesco_defs
 
 
@@ -100,7 +103,7 @@ defs = {
         7: 'Local no construido para habitación',
         8: 'Vivienda móvil',
         9: 'Refugio',
-        99: 'No especificado de vivienda particular'
+        # 99: 'No especificado de vivienda particular'
     },
 
     'sexo': {
@@ -121,7 +124,7 @@ defs = {
         8: 'Consultorio de farmacia',
         9: 'Otro lugar',
         10: 'No se atiende',
-        99: 'No especificado'
+        # 99: 'No especificado'
     },
 
     'dhsersal': {
@@ -139,7 +142,7 @@ defs = {
     'sino_139': {
         1: 'Sí',
         3: 'No',
-        9: 'No especificado'
+        # 9: 'No especificado'
     },
 
     'dis': {
@@ -148,13 +151,13 @@ defs = {
         3: 'Lo hace con mucha dificultad',
         4: 'No puede hacerlo',
         8: 'Se desconoce el grado de la discapacidad',
-        9: 'No especificado'
+        # 9: 'No especificado'
     },
 
     'dis_mental': {
         5: 'Sí',
         6: 'No',
-        9: 'No especificado'
+        # 9: 'No especificado'
     },
 
     'hlengua': {
@@ -188,7 +191,7 @@ defs = {
         4: 'Más de 1 hora y hasta 2 horas',
         5: 'Más de 2 horas',
         6: 'No se traslada',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
@@ -396,7 +399,7 @@ defs = {
         6: 'No',
         7: 'Sí',
         8: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase',
     },
 
@@ -432,8 +435,8 @@ defs = {
         81: 'Otros servicios excepto actividades gubernamentales',
         93: 'Actividades legislativas, gubernamentales, de impartición'
         ' de justicia y de organismos internacionales y extraterritoriales',
-        99: 'Descripciones insuficientemente especificadas general'
-        ' de sector de actividad',
+        # 99: 'Descripciones insuficientemente especificadas general'
+        # ' de sector de actividad',
         'Blanco por pase': 'Blanco por pase',
     },
 
@@ -445,7 +448,7 @@ defs = {
         5: 'Más de 2 horas',
         6: 'No es posible determinarlo',
         7: 'No se traslada',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
@@ -479,9 +482,9 @@ defs = {
 
     'pisos': {
         1: 'Tierra',
-        2: 'No Tierra',  # 'Cemento o firme',
-        3: 'No Tierra',  # 'Madera, mosaico u otro recubrimiento',
-        9: 'No especificado',
+        2: 'Cemento o firme',
+        3: 'Madera, mosaico u otro recubrimiento',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
@@ -581,14 +584,14 @@ defs = {
     'tinaco': {
         1: 'Sí',
         2: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'cisterna': {
         3: 'Sí',
         4: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
@@ -638,7 +641,7 @@ defs = {
         1: 'Taza de baño (excusado o sanitario).',
         2: 'Letrina (pozo u hoyo).',
         3: 'No tienen taza de baño ni letrina.',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
@@ -646,7 +649,7 @@ defs = {
         1: 'Con agua.',  # 'Tiene descarga directa de agua.',
         2: 'Con agua.',  # 'Le echan agua con cubeta.',
         3: 'No se le puede echar agua.',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
@@ -709,105 +712,105 @@ defs = {
     'refrigerador': {
         1: 'Sí',
         2: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'lavadora': {
         3: 'Sí',
         4: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'horno': {
         5: 'Sí',
         6: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'autoprop': {
         7: 'Sí',
         8: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'motocicleta': {
         1: 'Sí',
         2: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'bicicleta': {
         3: 'Sí',
         4: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'radio': {
         5: 'Sí',
         6: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'televisor': {
         7: 'Sí',
         8: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'computadora': {
         1: 'Sí',
         2: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'telefono': {
         3: 'Sí',
         4: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'celular': {
         5: 'Sí',
         6: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'internet': {
         7: 'Sí',
         8: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'serv_tv_paga': {
         1: 'Sí',
         2: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'serv_pel_paga': {
         3: 'Sí',
         4: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
     'con_vjuegos': {
         5: 'Sí',
         6: 'No',
-        9: 'No especificado',
+        # 9: 'No especificado',
         'Blanco por pase': 'Blanco por pase'
     },
 
@@ -956,7 +959,7 @@ defs = {
         4: 'Hogar no especificado (Familiar)',
         5: 'Hogar unipersonal (No familiar)',
         6: 'Hogar corresidente (No familiar)',
-        9: 'No se sabe la composición',
+        # 9: 'No se sabe la composición',
     },
 
 }
@@ -967,12 +970,12 @@ cats = {
     'sexo': pd.CategoricalDtype(defs['sexo'].values()),
     'edad': [
         '0-2', '3-4', '5', '6-7', '8-11', '12-14', '15-17', '18-24',
-        '25-49', '50-59', '60-64', '65-130', 'Unknown'
+        '25-49', '50-59', '60-64', '65-130'
     ],
     'ent': pd.CategoricalDtype(
         [
             'EstaEnt', 'OtraEnt', 'OtroPais',
-            'No especificado', 'Blanco por pase'
+            'Blanco por pase'
         ]
     ),
     'parentesco': pd.CategoricalDtype(defs['parentesco'].values()),
@@ -981,7 +984,7 @@ cats = {
     'religion': pd.CategoricalDtype([
         'Católica', 'Protestante/cristiano evangélico', 'Otros credos',
         'Sin religión / Sin adscripción religiosa',
-        'Religión no especificada'
+        'No especificado'
     ]),
     'dis': pd.CategoricalDtype(DIS_CATS),
     # 'dis_mental': pd.CategoricalDtype(defs['dis_mental'].values()),

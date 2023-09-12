@@ -21,148 +21,141 @@ def create_implicit_consts(df_censo):
     df_min = df_censo.replace(-1, 0)
     df_max = df_censo.replace(-1, 2)
 
-    new_cols = [
-        'P_UNK_F', 'P_UNK_M',
-
-        'PNA_OP_BPP_NE_F', 'PNA_OP_BPP_NE_M',
-        'PRES15_OP_BPP_NE_F', 'PRES15_OP_BPP_NE_M',
-
-        'POB_AFRO_NO_NE_F', 'POB_AFRO_NO_NE_M',
-        'P3_LI_NO_BPP_NE_F', 'P3_LI_NO_BPP_NE_M',
-        'P5_LI_NO_BPP_NE',
-        'P3HLI_NE_F', 'P3HLI_NE_M',
-        'P5HLI_NE',
-        'P34HLI_HE', 'P34HLI_NHE', 'P34HLI_NE',
-
-        'P3A5_A_NE_BPP_F', 'P3A5_A_NE_BPP_M',
-        'P6A11_A_NE_BPP_F', 'P6A11_A_NE_BPP_M',
-        'P12A14_A_NE_BPP_F', 'P12A14_A_NE_BPP_M',
-        'P15A17_NOA_NE_BPP_F', 'P15A17_NOA_NE_BPP_M',
-        'P18A24_NOA_NE_BPP_F', 'P18A24_NOA_NE_BPP_M',
-
-        'P8A14AS_F', 'P8A14AS_M',
-        'P15YM_AS_F', 'P15YM_AS_M',
-
-        'P15_POSBAS_BPP_NE_F', 'P15_POSBAS_BPP_NE_M',
-        'P18_BAS_BPP_NE_F', 'P18_BAS_BPP_NE_M',
-
-        'PE_BPP_NE_F', 'PE_BPP_NE_M',
-
-        'PDER_NE',
-
-        'P12YM_BPP_NE',
-
-        'PRELIG_NE',
-    ]
-
     # Create columns
     for df in [df_censo, df_min, df_max]:
-        df['P_UNK_F'] = df.POBFEM - (df.P_0A2_F + df.P_3YMAS_F)
-        df['P_UNK_M'] = df.POBMAS - (df.P_0A2_M + df.P_3YMAS_M)
+        # df['IMP_EDAD'] = df.POBTOT - (df.P_0A2 + df.P_3YMAS)
+        # df['IMP_EDAD_F'] = df.POBFEM - (df.P_0A2_F + df.P_3YMAS_F)
+        # df['IMP_EDAD_M'] = df.POBMAS - (df.P_0A2_M + df.P_3YMAS_M)
 
-        df['PNA_OP_BPP_NE_F'] = df.POBFEM - (df.PNACENT_F + df.PNACOE_F)
-        df['PNA_OP_BPP_NE_M'] = df.POBMAS - (df.PNACENT_M + df.PNACOE_M)
-        df['PRES15_OP_BPP_NE_F'] = df.P_5YMAS_F - (
-            df.PRES2015_F + df.PRESOE15_F)
-        df['PRES15_OP_BPP_NE_M'] = df.P_5YMAS_M - (
-            df.PRES2015_M + df.PRESOE15_M)
+        # df['IMP_MIG_NAC'] = df.POBTOT - (df.PNACENT + df.PNACOE)
+        # df['IMP_MIG_NAC_F'] = df.POBFEM - (df.PNACENT_F + df.PNACOE_F)
+        # df['IMP_MIG_NAC_M'] = df.POBMAS - (df.PNACENT_M + df.PNACOE_M)
 
-        df['POB_AFRO_NO_NE_F'] = df.POBFEM - df.POB_AFRO_F
-        df['POB_AFRO_NO_NE_M'] = df.POBMAS - df.POB_AFRO_M
-        df['P3_LI_NO_BPP_NE_F'] = df.P_3YMAS_F - df.P3YM_HLI_F
-        df['P3_LI_NO_BPP_NE_M'] = df.P_3YMAS_M - df.P3YM_HLI_M
-        df['P3HLI_NE_F'] = df.P3YM_HLI_F - (df.P3HLINHE_F + df.P3HLI_HE_F)
-        df['P3HLI_NE_M'] = df.P3YM_HLI_M - (df.P3HLINHE_M + df.P3HLI_HE_M)
-        df['P5_LI_NO_BPP_NE'] = df.P_5YMAS - df.P5_HLI
-        df['P5HLI_NE'] = df.P5_HLI - (df.P5_HLI_NHE + df.P5_HLI_HE)
+        # df['IMP_MIG_RES'] = df.P_5YMAS - (df.PRES2015 + df.PRESOE15)
+        # df['IMP_MIG_RES_F'] = df.P_5YMAS_F - (df.PRES2015_F + df.PRESOE15_F)
+        # df['IMP_MIG_RES_M'] = df.P_5YMAS_M - (df.PRES2015_M + df.PRESOE15_M)
+
+        # df['IMP_3HLI'] = df.P_3YMAS - df.P3YM_HLI
+        # df['IMP_3HLI_F'] = df.P_3YMAS_F - df.P3YM_HLI_F
+        # df['IMP_3HLI_M'] = df.P_3YMAS_M - df.P3YM_HLI_M
+
+        # df['IMP_3HESPANOL'] = df.P3YM_HLI - (df.P3HLINHE + df.P3HLI_HE)
+        # df['IMP_3HESPANOL_F'] = df.P3YM_HLI_F - (df.P3HLINHE_F + df.P3HLI_HE_F)
+        # df['IMP_3HESPANOL_M'] = df.P3YM_HLI_M - (df.P3HLINHE_M + df.P3HLI_HE_M)
+
+        # df['IMP_5HLE'] = df.P_5YMAS - df.P5_HLI
+        # df['IMP_5HESPANOL'] = df.P5_HLI - (df.P5_HLI_NHE + df.P5_HLI_HE)
+
+        # This needed to identify zero cell of true values
+        df['P34HLI'] = df.P3YM_HLI - df.P5_HLI
         df['P34HLI_HE'] = df.P3HLI_HE - df.P5_HLI_HE
         df['P34HLI_NHE'] = df.P3HLINHE - df.P5_HLI_NHE
-        df['P34HLI_NE'] = df.P3HLI_NE_F + df.P3HLI_NE_M - df.P5HLI_NE
+        # df['IMP_34HESPANOL'] = df.P3HLI_NE_F + df.P3HLI_NE_M - df.P5HLI_NE
 
-        df['P3A5_A_NE_BPP_F'] = df.P_3A5_F - df.P3A5_NOA_F
-        df['P3A5_A_NE_BPP_M'] = df.P_3A5_M - df.P3A5_NOA_M
-        df['P6A11_A_NE_BPP_F'] = df.P_6A11_F - df.P6A11_NOAF
-        df['P6A11_A_NE_BPP_M'] = df.P_6A11_M - df.P6A11_NOAM
-        df['P12A14_A_NE_BPP_F'] = df.P_12A14_F - df.P12A14NOAF
-        df['P12A14_A_NE_BPP_M'] = df.P_12A14_M - df.P12A14NOAM
-        df['P15A17_NOA_NE_BPP_F'] = df.P_15A17_F - df.P15A17A_F
-        df['P15A17_NOA_NE_BPP_M'] = df.P_15A17_M - df.P15A17A_M
-        df['P18A24_NOA_NE_BPP_F'] = df.P_18A24_F - df.P18A24A_F
-        df['P18A24_NOA_NE_BPP_M'] = df.P_18A24_M - df.P18A24A_M
+        # df['POB_AFRO_NO_NE_F'] = df.POBFEM - df.POB_AFRO_F
+        # df['POB_AFRO_NO_NE_M'] = df.POBMAS - df.POB_AFRO_M
 
-        df['P8A14AS_F'] = df.P_8A14_F - df.P8A14AN_F
-        df['P8A14AS_M'] = df.P_8A14_M - df.P8A14AN_M
-        df['P15YM_AS_F'] = df.P_15YMAS_F - df.P15YM_AN_F
-        df['P15YM_AS_M'] = df.P_15YMAS_M - df.P15YM_AN_M
+        # df['P3A5_A_NE_BPP_F'] = df.P_3A5_F - df.P3A5_NOA_F
+        # df['P3A5_A_NE_BPP_M'] = df.P_3A5_M - df.P3A5_NOA_M
+        # df['P6A11_A_NE_BPP_F'] = df.P_6A11_F - df.P6A11_NOAF
+        # df['P6A11_A_NE_BPP_M'] = df.P_6A11_M - df.P6A11_NOAM
+        # df['P12A14_A_NE_BPP_F'] = df.P_12A14_F - df.P12A14NOAF
+        # df['P12A14_A_NE_BPP_M'] = df.P_12A14_M - df.P12A14NOAM
+        # df['P15A17_NOA_NE_BPP_F'] = df.P_15A17_F - df.P15A17A_F
+        # df['P15A17_NOA_NE_BPP_M'] = df.P_15A17_M - df.P15A17A_M
+        # df['P18A24_NOA_NE_BPP_F'] = df.P_18A24_F - df.P18A24A_F
+        # df['P18A24_NOA_NE_BPP_M'] = df.P_18A24_M - df.P18A24A_M
 
-        df['P15_POSBAS_BPP_NE_F'] = df.P_15YMAS_F - (
-            df.P15YM_SE_F + df.P15PRI_INF + df.P15PRI_COF +
-            df.P15SEC_INF + df.P15SEC_COF)
-        df['P15_POSBAS_BPP_NE_M'] = df.P_15YMAS_M - (
-            df.P15YM_SE_M + df.P15PRI_INM + df.P15PRI_COM +
-            df.P15SEC_INM + df.P15SEC_COM)
-        df['P18_BAS_BPP_NE_F'] = df.P_18YMAS_F - df.P18YM_PB_F
-        df['P18_BAS_BPP_NE_M'] = df.P_18YMAS_M - df.P18YM_PB_M
+        # df['P8A14AS_F'] = df.P_8A14_F - df.P8A14AN_F
+        # df['P8A14AS_M'] = df.P_8A14_M - df.P8A14AN_M
+        # df['P15YM_AS_F'] = df.P_15YMAS_F - df.P15YM_AN_F
+        # df['P15YM_AS_M'] = df.P_15YMAS_M - df.P15YM_AN_M
 
-        df['PE_BPP_NE_F'] = df.P_12YMAS_F - (df.PEA_F + df.PE_INAC_F)
-        df['PE_BPP_NE_M'] = df.P_12YMAS_M - (df.PEA_M + df.PE_INAC_M)
+        # df['P15_POSBAS_BPP_NE_F'] = df.P_15YMAS_F - (
+        #     df.P15YM_SE_F + df.P15PRI_INF + df.P15PRI_COF +
+        #     df.P15SEC_INF + df.P15SEC_COF)
+        # df['P15_POSBAS_BPP_NE_M'] = df.P_15YMAS_M - (
+        #     df.P15YM_SE_M + df.P15PRI_INM + df.P15PRI_COM +
+        #     df.P15SEC_INM + df.P15SEC_COM)
+        # df['P18_BAS_BPP_NE_F'] = df.P_18YMAS_F - df.P18YM_PB_F
+        # df['P18_BAS_BPP_NE_M'] = df.P_18YMAS_M - df.P18YM_PB_M
 
-        df['PDER_NE'] = df.POBTOT - (df.PSINDER + df.PDER_SS)
+        # df['PE_BPP_NE_F'] = df.P_12YMAS_F - (df.PEA_F + df.PE_INAC_F)
+        # df['PE_BPP_NE_M'] = df.P_12YMAS_M - (df.PEA_M + df.PE_INAC_M)
 
-        df['P12YM_BPP_NE'] = df.P_12YMAS - (
-            df.P12YM_SOLT + df.P12YM_CASA + df.P12YM_SEPA)
+        # df['PDER_NE'] = df.POBTOT - (df.PSINDER + df.PDER_SS)
 
-        df['PRELIG_NE'] = df.POBTOT - (
-            df.PCATOLICA + df.PRO_CRIEVA + df.POTRAS_REL + df.PSIN_RELIG
-        )
+        # df['P12YM_BPP_NE'] = df.P_12YMAS - (
+        #     df.P12YM_SOLT + df.P12YM_CASA + df.P12YM_SEPA)
+
+        # df['PRELIG_NE'] = df.POBTOT - (
+        #     df.PCATOLICA + df.PRO_CRIEVA + df.POTRAS_REL + df.PSIN_RELIG
+        # )
+
+        df['PAFIL_PUB'] = (df.PDER_IMSS + df.PDER_ISTE + df.PDER_ISTEE
+                           + df.PAFIL_PDOM + df.PDER_SEGP + df.PDER_IMSSB)
+
+        df['PNOCUPA'] = df.PDESOCUP + df.PE_INAC
+        df['PNOCUPA_M'] = df.PDESOCUP_M + df.PE_INAC_M
+        df['PNOCUPA_F'] = df.PDESOCUP_F + df.PE_INAC_F
+
+        df['P8YM_AN'] = df.P8A14AN + df.P15YM_AN
+        df['P8YM_AN_M'] = df.P8A14AN_M + df.P15YM_AN_M
+        df['P8YM_AN_F'] = df.P8A14AN_F + df.P15YM_AN_F
+
+        df['P6A14NOA'] = df.P6A11_NOA + df.P12A14NOA
+        df['P6A14NOAF'] = df.P6A11_NOAF + df.P12A14NOAF
+        df['P6A14NOAM'] = df.P6A11_NOAM + df.P12A14NOAM
 
         # VIVIENDAS
 
-        df['VPH_PISONE'] = df['TOTHOG'] - (df['VPH_PISODT'] + df['VPH_PISOTI'])
-        df['VPH_NEDOR'] = df['TOTHOG'] - (df['VPH_1DOR'] + df['VPH_2YMASD'])
-        df['VPH_NECUART'] = df['TOTHOG'] - (
-            df.VPH_1CUART + df.VPH_2CUART + df.VPH_3YMASC
-        )
-        df['VPH_NE_ELEC'] = df['TOTHOG'] - (
-            df.VPH_C_ELEC + df.VPH_S_ELEC
-        )
-        df['VPH_AGUANE'] = df['TOTHOG'] - (
-            df.VPH_AGUADV + df.VPH_AGUAFV
-        )
-        df['VPH_AENSP'] = df['VPH_AGUADV'] - df.VPH_AEASP
-        df['VPH_TINACO_NO_NE'] = df['TOTHOG'] - df.VPH_TINACO
-        df['VPH_CISTER_NO_NE'] = df['TOTHOG'] - df.VPH_CISTER
-        df['VPH_NO_EXCSA'] = df['TOTHOG'] - (df.VPH_EXCSA + df.VPH_LETR)
-        df['VPH_NEDREN'] = df['TOTHOG'] - (df.VPH_DRENAJ + df.VPH_NODREN)
-        df['VPH_REFRI_NO'] = df['TOTHOG'] - df.VPH_REFRI
-        df['VPH_LAVAD_NO'] = df['TOTHOG'] - df.VPH_LAVAD
-        df['VPH_HMICRO_NO'] = df['TOTHOG'] - df.VPH_HMICRO
-        df['VPH_AUTOM_NO'] = df['TOTHOG'] - df.VPH_AUTOM
-        df['VPH_MOTO_NO'] = df['TOTHOG'] - df.VPH_MOTO
-        df['VPH_BICI_NO'] = df['TOTHOG'] - df.VPH_BICI
-        df['VPH_RADIO_NO'] = df['TOTHOG'] - df.VPH_RADIO
-        df['VPH_TV_NO'] = df['TOTHOG'] - df.VPH_TV
-        df['VPH_PC_NO'] = df['TOTHOG'] - df.VPH_PC
-        df['VPH_TELEF_NO'] = df['TOTHOG'] - df.VPH_TELEF
-        df['VPH_CEL_NO'] = df['TOTHOG'] - df.VPH_CEL
-        df['VPH_INTER_NO'] = df['TOTHOG'] - df.VPH_INTER
-        df['VPH_STVP_NO'] = df['TOTHOG'] - df.VPH_STVP
-        df['VPH_SPMVPI_NO'] = df['TOTHOG'] - df.VPH_SPMVPI
-        df['VPH_CVJ_NO'] = df['TOTHOG'] - df.VPH_CVJ
+        # df['VPH_PISONE'] = df['TOTHOG'] - (df['VPH_PISODT'] + df['VPH_PISOTI'])
+        # df['VPH_NEDOR'] = df['TOTHOG'] - (df['VPH_1DOR'] + df['VPH_2YMASD'])
+        # df['VPH_NECUART'] = df['TOTHOG'] - (
+        #     df.VPH_1CUART + df.VPH_2CUART + df.VPH_3YMASC
+        # )
+        # df['VPH_NE_ELEC'] = df['TOTHOG'] - (
+        #     df.VPH_C_ELEC + df.VPH_S_ELEC
+        # )
+        # df['VPH_AGUANE'] = df['TOTHOG'] - (
+        #     df.VPH_AGUADV + df.VPH_AGUAFV
+        # )
+        # df['VPH_AENSP'] = df['VPH_AGUADV'] - df.VPH_AEASP
+        # df['VPH_TINACO_NO_NE'] = df['TOTHOG'] - df.VPH_TINACO
+        # df['VPH_CISTER_NO_NE'] = df['TOTHOG'] - df.VPH_CISTER
+        # df['VPH_NO_EXCSA'] = df['TOTHOG'] - (df.VPH_EXCSA + df.VPH_LETR)
+        # df['VPH_NEDREN'] = df['TOTHOG'] - (df.VPH_DRENAJ + df.VPH_NODREN)
+        # df['VPH_REFRI_NO'] = df['TOTHOG'] - df.VPH_REFRI
+        # df['VPH_LAVAD_NO'] = df['TOTHOG'] - df.VPH_LAVAD
+        # df['VPH_HMICRO_NO'] = df['TOTHOG'] - df.VPH_HMICRO
+        # df['VPH_AUTOM_NO'] = df['TOTHOG'] - df.VPH_AUTOM
+        # df['VPH_MOTO_NO'] = df['TOTHOG'] - df.VPH_MOTO
+        # df['VPH_BICI_NO'] = df['TOTHOG'] - df.VPH_BICI
+        # df['VPH_RADIO_NO'] = df['TOTHOG'] - df.VPH_RADIO
+        # df['VPH_TV_NO'] = df['TOTHOG'] - df.VPH_TV
+        # df['VPH_PC_NO'] = df['TOTHOG'] - df.VPH_PC
+        # df['VPH_TELEF_NO'] = df['TOTHOG'] - df.VPH_TELEF
+        # df['VPH_CEL_NO'] = df['TOTHOG'] - df.VPH_CEL
+        # df['VPH_INTER_NO'] = df['TOTHOG'] - df.VPH_INTER
+        # df['VPH_STVP_NO'] = df['TOTHOG'] - df.VPH_STVP
+        # df['VPH_SPMVPI_NO'] = df['TOTHOG'] - df.VPH_SPMVPI
+        # df['VPH_CVJ_NO'] = df['TOTHOG'] - df.VPH_CVJ
 
-    new_cols_viv = [
-        'VPH_PISONE', 'VPH_NEDOR', 'VPH_NECUART', 'VPH_NE_ELEC',
-        'VPH_AGUANE', 'VPH_AENSP', 'VPH_TINACO_NO_NE',
-        'VPH_CISTER_NO_NE', 'VPH_NO_EXCSA', 'VPH_NEDREN',
-        'VPH_REFRI_NO', 'VPH_LAVAD_NO', 'VPH_HMICRO_NO',
-        'VPH_AUTOM_NO', 'VPH_MOTO_NO', 'VPH_BICI_NO',
-        'VPH_RADIO_NO', 'VPH_TV_NO', 'VPH_PC_NO', 'VPH_TELEF_NO',
-        'VPH_CEL_NO', 'VPH_INTER_NO', 'VPH_STVP_NO',
-        'VPH_SPMVPI_NO', 'VPH_CVJ_NO'
+        # COLLECTIVE
+        df['POBCOL'] = df.POBTOT - df.POBHOG
+        df['TOTCOL'] = df.TVIVHAB - df.TVIVPARHAB
+
+    new_cols = [
+        'P34HLI', 'P34HLI_HE', 'P34HLI_NHE',
+        'PAFIL_PUB',
+        'PNOCUPA', 'PNOCUPA_M', 'PNOCUPA_F',
+        'P8YM_AN', 'P8YM_AN_M', 'P8YM_AN_F',
+        'POBCOL', 'TOTCOL',
+        'P6A14NOA', 'P6A14NOAM', 'P6A14NOAF'
     ]
 
     # Mark uncertain values with -1 again
-    for col in new_cols + new_cols_viv:
+    for col in new_cols:
         # assert df_min[col].min() >= 0, col
         # assert df_max[col].min() >= 0, col
         df_censo[col] = df_censo[col].where(
@@ -400,6 +393,6 @@ def process_census(census_iter_path, census_resageburb_path):
         df_agebs_max
     ) = create_implicit_consts(df_agebs)
 
-    return (df_iter_mun, df_iter_mun_min, df_iter_mun_max,
-            df_iter_loc, df_iter_loc_min, df_iter_loc_max,
+    return (df_iter_mun,  # df_iter_mun_min, df_iter_mun_max,
+            df_iter_loc,  # df_iter_loc_min, df_iter_loc_max,
             df_agebs, df_agebs_min, df_agebs_max)

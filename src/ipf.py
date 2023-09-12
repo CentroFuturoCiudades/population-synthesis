@@ -36,7 +36,10 @@ def ipf_classic_numba(x, W, c, max_iters=10000, tol=1e-1):
     converged = False
     for niter in range(max_iters):
         for i in range(nc):
-            alpha = (c[i] / (W[i] @ x))
+            if c[i] != 0:
+                alpha = (c[i] / (W[i] @ x))
+            else:
+                alpha = 0.0
 
             for j in range(nx):
                 if W[i, j] > 0:
@@ -46,6 +49,7 @@ def ipf_classic_numba(x, W, c, max_iters=10000, tol=1e-1):
         norm_l1 = np.linalg.norm(delta, ord=1)
         if norm_l1 < tol:
             converged = True
+            print(f'Converged in {niter} iterations.')
             break
 
     if not converged:

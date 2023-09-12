@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
-from scipy.spatial.distance import cdist
+# from scipy.spatial.distance import cdist
 from scipy.optimize import nnls
 from scipy.linalg import pinv, qr
 import sparse
-from itertools import product
-import pickle
+# from itertools import product
+# import pickle
 from collections import defaultdict
 
 
@@ -25,72 +25,62 @@ def make_init_system(personas, viviendas,
     personas = personas.copy()
     viviendas = viviendas.copy()
 
-    # IMPORTANT NOTE / TODO:
-    # Nuevo León has global zero cell problem for the constraint
-    # P34HLI_NHE involving EDAD=3-4 and HLENGUA=Si/No español
-    # We create an artifical set of households using nearest neighbor
-    # imputation as to fill the zero cells.
-    # This process is note yet automatized for households and
-    # specifically for HLENGUA we need to split the columns again into
-    # HLENGUA and HESPANOL
-    # We give priority to No especificado neighbors over other
-    # neighbors.
-    # To identify the global zero cells use the find_zero_cell_global
-    # function.
-    viv_imp_ids = personas.query(
-        'EDAD == "3-4" & HLENGUA == "Sí/No especificado"'
-    ).ID_VIV.unique()
-
-    personas_imp = personas[personas.ID_VIV.isin(viv_imp_ids)].copy()
-    personas_imp['MUN'] = 'IMPUTED'
-    personas_imp['MUN'] = personas_imp.MUN.astype('category')
-    personas_imp['HLENGUA'] = personas_imp.HLENGUA.replace(
-        'Sí/No especificado', 'Sí/No español'
-    ).astype(personas.HLENGUA.dtype)
-
-    viviendas_imp = viviendas.loc[viv_imp_ids]
-    viviendas_imp['MUN'] = 'IMPUTED'
-
-    # Create an artifitial id for created households
-    viv_imp_ids_map = {
-        vid: 500000000000 + i
-        for i, vid in enumerate(viv_imp_ids)
-    }
-    personas_imp['ID_VIV'] = personas_imp.ID_VIV.map(viv_imp_ids_map)
-    viviendas_imp.index = viviendas_imp.index.map(viv_imp_ids_map)
-
-    personas = pd.concat([personas, personas_imp])
-    personas['MUN'] = personas.MUN.astype('category')
-    viviendas = pd.concat([viviendas, viviendas_imp])
-    viviendas['MUN'] = viviendas.MUN.astype('category')
-
     # Get X
-    # personas = personas.drop(columns=['MUN', 'MUN_RES_5A'])
     cat_cols = [
         col for col in personas.columns
         if personas[col].dtype == 'category'
     ]
 
-    X = personas.groupby(
+    X = personas.reset_index().groupby(
         cat_cols,
         observed=True
-    ).agg({'FACTOR': np.sum, 'ID_VIV': list}).sort_index().reset_index()
+    ).agg(
+        {
+            'FACTOR': 'sum',
+            'ID_VIV': list,
+            'index': list
+        }
+    ).sort_index().reset_index()
 
-    # Get I matrix
+    # Get I and J matrices
     # Get map of viv ids to unique integers for indexing
     id_viv_l = np.sort(np.unique(personas.ID_VIV.values))
     id_viv_map = {id_viv: i for i, id_viv in enumerate(id_viv_l)}
 
     I = defaultdict(lambda: 0)
+    J = defaultdict(lambda: 0)
     for i, row in X.iterrows():
         for id_viv in row.ID_VIV:
             I[(id_viv_map[id_viv], i)] += 1
+        for id_per in row['index']:
+            J[(i, id_per)] += 1
     I = sparse.COO(
         sparse.DOK(
             shape=(len(id_viv_l), len(X)),
             data=I,
             dtype=np.uint8)
     )
+    J = sparse.COO(
+        sparse.DOK(
+            shape=(len(X), len(personas)),
+            data=J,
+            dtype=int)
+    )
+
+    coords = np.row_stack(
+        [
+            personas.ID_VIV.map(id_viv_map).values,
+            personas.index.values
+        ]
+    )
+    L = sparse.COO(coords, data=1, shape=(len(id_viv_l), len(personas)))
+
+    assert np.all(I.sum(axis=1).todense() == viviendas.NUMPERS)
+    assert J.sum(axis=0).min() == 1
+    assert J.sum(axis=0).max() == 1
+    assert L.sum(axis=0).min() == 1
+    assert L.sum(axis=0).max() == 1
+    assert np.all(L.sum(axis=1).todense() == viviendas.NUMPERS)
 
     W = get_W(X, constraints_ind)
 
@@ -99,19 +89,29 @@ def make_init_system(personas, viviendas,
         columns=id_viv_l,
         index=W.index
     )
-    Uh = get_W(viviendas, constraints_viv)
+    Uh = get_W(viviendas.set_index('ID_VIV'), constraints_viv)
+
     assert np.all(Uh.columns == Up.columns)
     U = pd.concat([Uh, Up])
 
-    C = df_mun[U.index.tolist()]
+    C = df_mun[
+        U.index.tolist()
+        # + ['POBHOG', 'POBCOL', 'PHOGJEF_F', 'PHOGJEF_M']
+    ]
 
-    Y = viviendas.loc[id_viv_l, ['MUN', 'FACTOR']].copy()
+    Y = viviendas.set_index('ID_VIV').loc[id_viv_l, ['MUN', 'FACTOR']].copy()
     Y = Y.rename(columns={'FACTOR': 'Survey'})
     mun_list = [m for m in Y.MUN.unique() if m != 'IMPUTED']
     for mun in mun_list:
         Y[mun] = Y.Survey * (Y.MUN == mun)
 
-    return viviendas, X.drop(columns='ID_VIV'), I, U, C, Y
+    return X.drop(columns=['ID_VIV', 'index']), I, J, L, W, Up, Uh, U, C, Y
+
+    pjoin = personas.drop(
+        columns=['MUN', 'FACTOR']
+    ).join(viviendas, on='ID_VIV')
+
+    return pjoin, viviendas, W, X.drop(columns=['ID_VIV', 'index']), I, J, L, U, C, Y, Uh,Up
 
 
 def fix_zero_cell_all(Y, U, C):
@@ -129,6 +129,9 @@ def fix_zero_cell_all(Y, U, C):
             # print(mun, 0)
             continue
 
+        print(mun)
+        print(Cr)
+        print('###############')
         # Find the ids invovled in zeroed constraints
         query = ' | '.join([f'{const} > 0' for const in consts])
         viv_ids = U.T.query(query).index
@@ -150,6 +153,109 @@ def fix_zero_cell_all(Y, U, C):
             find_zero_nozero_const(U.loc[:, mask], C.loc[mun])) == 0, mun
 
     return Y
+
+
+def get_conf_cols(consts, const_dict):
+    cols = []
+    for const in consts:
+        cols.extend(list(const_dict[const].keys()))
+    cols = tuple(set(cols))
+    return cols
+
+
+def get_conf_consts(mun, Y, U, C):
+    mask = Y.loc[:, mun] > 0
+    Ur = U.loc[:, mask]
+    conf_consts = find_conf_const(Ur, C.loc[mun])
+
+    return conf_consts
+
+
+def fix_confs_mun(mun, Y_ext, personas, viviendas, U, C, L, const_dict,
+                  fill_factor=1e-3):
+    conf_consts = get_conf_consts(mun, Y_ext, U, C)
+
+    n_ext = 0
+    while len(conf_consts) > 0:
+        # Find all combinations of conflicting constraints sets
+        combs = []
+        for consts in conf_consts:
+            # Find columns involved in the constraints
+            cols = get_conf_cols(consts, const_dict)
+
+            # Find all combinations of cols, ignore Blanco por pase
+            ccombs = list(zip(*[personas[c] for c in cols]))
+            ccombs = set([c for c in ccombs if 'Blanco por pase' not in c])
+            combs.extend([(cols, ccomb) for ccomb in ccombs])
+
+        combs = set(combs)
+        combs_dict = defaultdict(list)
+        for cols, comb in combs:
+            combs_dict[cols].append(comb)
+        # Get full list of constraints
+        consts = list(set(sum(conf_consts, [])))
+
+        # Find all combinations already present in mun
+        # as well as missing combinations
+        mask_in = Y_ext[mun] > 0
+        # viviendas_in = viviendas.loc[mask_in]
+        maskP_in = L[mask_in].sum(axis=0).astype(bool).todense()
+        personas_in = personas.loc[maskP_in]
+
+        combs_in_dict = defaultdict(list)
+        combs_miss_dict = defaultdict(list)
+        for cols, combs in combs_dict.items():
+            combs_in_dict[cols] = set(zip(*[personas_in[c] for c in cols]))
+            combs_miss_dict[cols] = set(combs_dict[cols]) - combs_in_dict[cols]
+
+        # Build query to search for them
+
+        def s_or_i(c):
+            if isinstance(c, str):
+                return f'"{c}"'
+            else:
+                return c
+
+        query_l = []
+        for cols, combs in combs_miss_dict.items():
+            ss = []
+            for comb in combs:
+                s = ' & '.join(
+                    f'{col}=={s_or_i(c)}'for col, c in zip(cols, comb)
+                )
+                ss.append(f'({s})')
+            ss = ' | '.join(ss)
+            query_l.append(f'({ss})')
+        query = ' | '.join(query_l)
+        # Get viv ids
+        maskP_miss = personas.eval(query)
+        mask_miss = L.T[maskP_miss].sum(axis=0).astype(bool).todense()
+        assert mask_miss.sum() > 0
+
+        # Solve restrictred nnls problem
+        mask = mask_in | mask_miss
+        Cr = C.loc[mun, consts]
+        Ur = U.loc[consts, mask]
+        Yr, err = nnls(Ur, Cr)
+        assert err < 1e-10, (mun, err)
+        # print(mun, err)
+        mask0 = np.zeros_like(mask, dtype=bool)
+        mask0[mask] = Yr.astype(bool)
+
+        # Find nnls solutions belonging to missing set
+        mask_ext = mask0 & mask_miss
+        n_ext += mask_ext.sum()
+        assert 100 > n_ext > 0
+
+        # Add them to seed with small weight
+        # reflecting they are missing from original seed (How small?)
+        Y_ext.loc[mask_ext, mun] = fill_factor
+
+        conf_consts = get_conf_consts(mun, Y_ext, U, C)
+        # break
+    print(mun, n_ext)
+
+    # return mask
 
 
 def get_w_vec(X, const):
@@ -213,6 +319,11 @@ def find_conf_const(W, C):
     mask = np.abs(np.diag(qr(W.T.values)[1])) > 1e-10
     W_ind = W.loc[mask].copy()
     W_dep = W.loc[~mask].copy()
+    if np.linalg.matrix_rank(W_ind) != rank:
+        r, P = qr(W.T.values, mode='r', pivoting=True)
+        assert (abs(np.diag(r)) > 1e-10).sum() == rank
+        W_ind = W.iloc[P[:rank]].copy()
+        W_dep = W.iloc[P[rank:]].copy()
     assert np.linalg.matrix_rank(W_ind) == rank
 
     # W_sorted = list(W.sum(axis=1).sort_values(ascending=False).index)

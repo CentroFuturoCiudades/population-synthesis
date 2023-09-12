@@ -541,3 +541,32 @@ def fix_zero_cell(XWC_dict,
         pickle.dump(XWC_ext, f)
 
     return XWC_ext
+
+
+def are_people(cols, X):
+    col_test = [c in X.columns for c in cols]
+    all_people = np.all([c in X.columns for c in cols])
+    all_viv = np.all([c not in X.columns for c in cols])
+    if all_people:
+        return True
+    elif all_viv:
+        return False
+    else:
+        raise NotImplementedError
+
+
+def get_cat_dicts(X, viviendas):
+    # Get a dictionary with all possible columns categories.
+    cat_personas = {}
+    for col in X.columns:
+        if col == 'FACTOR':
+            continue
+        cat_personas[col] = X[col].cat.categories.tolist()
+
+    cat_viviendas = {}
+    for col in viviendas.columns:
+        if viviendas[col].dtype != 'category':
+            continue
+        cat_viviendas[col] = viviendas[col].cat.categories.tolist()
+    cat_personas.update(cat_viviendas)
+    return cat_personas
