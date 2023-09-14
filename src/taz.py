@@ -121,16 +121,16 @@ def merge_mg_taz(mun, taz, mg, mun_dict):
     overlay = overlay.set_index(['LOC', 'AGEB']).sort_index()
 
     # Filter by ratio to remove false intersections
-    overlay_dropped = overlay.query('0 < ratio <= 0.5')
-    overlay = overlay.query('ratio > 0.5')
+    # overlay_dropped = overlay.query('0 < ratio <= 0.5')
+    # overlay = overlay.query('ratio > 0.10')
 
-    if '0000' in overlay_dropped.index.get_level_values(1):
-        overlay_dropped = overlay_dropped.drop('0000', level=1)
+    # if '0000' in overlay_dropped.index.get_level_values(1):
+    #     overlay_dropped = overlay_dropped.drop('0000', level=1)
 
     # Add unassigned mg geometries
     mg_unass = mg_mun.drop(overlay.index)
     # print(mun, len(overlay_dropped))
-    print(mun, overlay_dropped.query('ratio > 0.01').ratio.sort_values(ascending=False))
+    # print(mun, overlay_dropped.query('ratio > 0.01').sort_values('ratio', ascending=False)[['ratio', 'POBTOT', 'TVIVHAB']])
     # print(mun, overlay_dropped.ratio.sort_values(ascending=True).values[:5])
     # print(mun,
     #       overlay_dropped.ratio.sort_values(ascending=True).values[:5]
@@ -138,7 +138,7 @@ def merge_mg_taz(mun, taz, mg, mun_dict):
 
     mg_unass['ZONA'] = -10
     mg_unass['ratio'] = 0
-    mg_unass.loc[overlay_dropped.index, 'ratio'] = overlay_dropped.ratio
+    # mg_unass.loc[overlay_dropped.index, 'ratio'] = overlay_dropped.ratio
 
     overlay = pd.concat([overlay, mg_unass]).loc[mg_mun.index]
 
@@ -146,7 +146,7 @@ def merge_mg_taz(mun, taz, mg, mun_dict):
 
     overlay['geometry'] = mg_mun.geometry
 
-    return overlay, overlay_dropped
+    return overlay
 
 
 def plot_taz_mg(mg_gdf, taz_gdf, title,
@@ -190,7 +190,7 @@ def plot_taz_mg(mg_gdf, taz_gdf, title,
 def plot_taz_mg_unass(mg_gdf, taz_gdf, title,
                       display=True, savepath=None, ax=None):
 
-    mg_gdf = mg_gdf.query('ratio > 0')
+    # mg_gdf = mg_gdf.query('ratio > 0')
 
     if ax is None:
         fig, ax = plt.subplots(1, 1, figsize=(20, 15))
