@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
+from census import mun_d
 
 
-def load_marco_geo(marco_geo_path, df_mun, df_loc, df_agebs):
+def load_marco_geo(marco_geo_path, df_mun, df_loc_agebs):
     mg_agebs = gpd.read_file(marco_geo_path, layer='19a')
     mg_agebs = mg_agebs.drop(columns=['CVE_ENT'])
 
@@ -32,10 +33,13 @@ def load_marco_geo(marco_geo_path, df_mun, df_loc, df_agebs):
             'CVE_LOC': 'LOC',
             'CVE_AGEB': 'AGEB'}
     )
+    mg_agebs['MUN'] = mg_agebs.MUN.map(mun_d)
     mg_agebs = mg_agebs.set_index(['MUN', 'LOC', 'AGEB']).sort_index()
     mg_loc = mg_loc.rename(columns={'CVE_MUN': 'MUN', 'CVE_LOC': 'LOC'})
+    mg_loc['MUN'] = mg_loc.MUN.map(mun_d)
     mg_loc = mg_loc.set_index(['MUN', 'LOC']).sort_index()
     mg_loc_pr = mg_loc_pr.rename(columns={'CVE_MUN': 'MUN', 'CVE_LOC': 'LOC'})
+    mg_loc_pr['MUN'] = mg_loc_pr.MUN.map(mun_d)
     mg_loc_pr = mg_loc_pr.set_index(['MUN', 'LOC']).sort_index()
     mg_loc_pr['CVEGEO'] = mg_loc_pr.CVEGEO.str[:9]
 
@@ -46,7 +50,9 @@ def load_marco_geo(marco_geo_path, df_mun, df_loc, df_agebs):
     # Merge polygon and point localities, for total localities
     # Filter out empty localities
     mg_loc = mg_loc.join(mg_loc_pr, rsuffix='_pr', how='outer')
-    mg_loc = mg_loc.loc[df_loc.index]
+    mg_loc = mg_loc.loc[
+        df_loc_agebs.reset_index('AGEB').query('AGEB=="0000"').index
+    ]
     mg_loc['CVEGEO'] = mg_loc.CVEGEO.mask(
         mg_loc.CVEGEO.isna(), mg_loc.CVEGEO_pr
     )
@@ -56,45 +62,55 @@ def load_marco_geo(marco_geo_path, df_mun, df_loc, df_agebs):
     mg_loc = mg_loc.drop(columns=['CVEGEO_pr', 'geometry_pr'])
 
     # Filter out empty agebs
-    mg_agebs = mg_agebs.loc[df_agebs.index]
+    mg_agebs = mg_agebs.loc[
+        df_loc_agebs.query('AGEB!="0000"').index
+    ]
 
     # Add population information
-    # TODO: Once implementation complete, we should add full census counts
-    mg_loc = mg_loc.join(df_loc)  # [['POBTOT', 'TVIVHAB']])
-    mg_agebs = mg_agebs.join(df_agebs)  # [['POBTOT', 'TVIVHAB']])
-    assert df_loc.shape[0] == mg_loc.shape[0]
-    assert mg_agebs.shape[0] == df_agebs.shape[0]
+    mg_concat = pd.concat(
+        [
+            (
+                mg_loc
+                .assign(AGEB='0000')
+                .set_index('AGEB', append=True)
+            ),
+            mg_agebs]
+    ).sort_index()
+    mg = mg_concat.join(df_loc_agebs)
+    # mg_loc = mg_loc.join(df_loc)
+    # mg_agebs = mg_agebs.join(df_agebs)
 
     # Make sure total pop by mun is sum of localities populations
     assert np.all(
-        mg_loc.POBTOT.groupby('MUN').sum().values == df_mun.POBTOT.values
+        mg.POBTOT.groupby('MUN').sum().sort_index()
+        == df_mun.POBTOT.sort_index()
     )
 
     # Make a single gdf with all localities and agebs with population
     # drop localities that are disaggregated into agebs
-    mg_loc['AGEB'] = '0000'
-    mg_loc_t = mg_loc.reset_index().set_index(
-        ['MUN', 'LOC', 'AGEB']
-    ).drop(
-        mg_agebs.index.droplevel(2).drop_duplicates()
-    )
-    mg = pd.concat(
-        [mg_agebs, mg_loc_t]
-    ).sort_index()
+    # mg_loc['AGEB'] = '0000'
+    # mg_loc_t = mg_loc.reset_index().set_index(
+    #     ['MUN', 'LOC', 'AGEB']
+    # ).drop(
+    #     mg_agebs.index.droplevel(2).drop_duplicates()
+    # )
+    # mg = pd.concat(
+    #     [mg_agebs, mg_loc_t]
+    # ).sort_index()
 
     # Assert all population by municipality is taken into account
-    assert np.all(
-        mg.groupby('MUN').POBTOT.sum().values == df_mun.POBTOT.values
-    )
+    # assert np.all(
+    #     mg.groupby('MUN').POBTOT.sum().values == df_mun.POBTOT.values
+    # )
 
-    assert mg.index.is_unique
+    assert np.all(mg.index == df_loc_agebs.index)
 
     return mg
 
 
-def merge_mg_taz(mun, taz, mg, mun_dict):
+def merge_mg_taz(mun, taz, mg):
     taz_mun = taz[taz.MUNICIPIO == mun].copy()
-    mg_mun = mg.loc[mun_dict[mun]].copy()
+    mg_mun = mg.loc[mun].copy()
 
     mg_mun['mg_AREA'] = mg_mun.area
 
@@ -335,3 +351,14 @@ def plot_chull(taz_gdf, title,
             plt.close()
         if savepath is not None:
             fig.savefig(savepath)
+
+
+def load_taz(taz_path, mun_list):
+    taz_dict = {}
+    for mun in mun_list:
+        try:
+            taz_dict[mun] = gpd.read_file(taz_path, layer=mun)
+        except:
+            pass
+
+    return taz_dict

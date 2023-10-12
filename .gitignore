@@ -7,4 +7,6 @@ data/ENIGH/
 data/ENOE/
 data/ENVI/
 data/INV/
-data/OD_SURVEY/
+*.log
+*.pkl
+*.lp

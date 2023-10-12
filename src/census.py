@@ -1,6 +1,60 @@
 import numpy as np
 import pandas as pd
 
+mun_d = {
+    1: 'Abasolo',
+    2: 'Agualeguas',
+    3: 'Los Aldamas',
+    4: 'Allende',
+    5: 'Anáhuac',
+    6: 'Apodaca',
+    7: 'Aramberri',
+    8: 'Bustamante',
+    9: 'Cadereyta Jiménez',
+    10: 'El Carmen',
+    11: 'Cerralvo',
+    12: 'Ciénega de Flores',
+    13: 'China',
+    14: 'Doctor Arroyo',
+    15: 'Doctor Coss',
+    16: 'Doctor González',
+    17: 'Galeana',
+    18: 'García',
+    19: 'San Pedro Garza García',
+    20: 'General Bravo',
+    21: 'General Escobedo',
+    22: 'General Terán',
+    23: 'General Treviño',
+    24: 'General Zaragoza',
+    25: 'General Zuazua',
+    26: 'Guadalupe',
+    27: 'Los Herreras',
+    28: 'Higueras',
+    29: 'Hualahuises',
+    30: 'Iturbide',
+    31: 'Juárez',
+    32: 'Lampazos de Naranjo',
+    33: 'Linares',
+    34: 'Marín',
+    35: 'Melchor Ocampo',
+    36: 'Mier y Noriega',
+    37: 'Mina',
+    38: 'Montemorelos',
+    39: 'Monterrey',
+    40: 'Parás',
+    41: 'Pesquería',
+    42: 'Los Ramones',
+    43: 'Rayones',
+    44: 'Sabinas Hidalgo',
+    45: 'Salinas Victoria',
+    46: 'San Nicolás de los Garza',
+    47: 'Hidalgo',
+    48: 'Santa Catarina',
+    49: 'Santiago',
+    50: 'Vallecillo',
+    51: 'Villaldama'
+}
+
 
 def get_mun_codes():
     df_mun_codes = pd.read_csv(
@@ -18,156 +72,59 @@ def get_mun_codes():
 
 
 def create_implicit_consts(df_censo):
+    # Return lower bounds for counts
+
     df_min = df_censo.replace(-1, 0)
     df_max = df_censo.replace(-1, 2)
 
     # Create columns
-    for df in [df_censo, df_min, df_max]:
-        # df['IMP_EDAD'] = df.POBTOT - (df.P_0A2 + df.P_3YMAS)
-        # df['IMP_EDAD_F'] = df.POBFEM - (df.P_0A2_F + df.P_3YMAS_F)
-        # df['IMP_EDAD_M'] = df.POBMAS - (df.P_0A2_M + df.P_3YMAS_M)
+    # This needed to identify zero cell of true values
+    # Substration of lb - up
+    df_min['P34HLI'] = df_min.P3YM_HLI - df_max.P5_HLI
+    df_min['P34HLI_HE'] = df_min.P3HLI_HE - df_max.P5_HLI_HE
+    df_min['P34HLI_NHE'] = df_min.P3HLINHE - df_max.P5_HLI_NHE
 
-        # df['IMP_MIG_NAC'] = df.POBTOT - (df.PNACENT + df.PNACOE)
-        # df['IMP_MIG_NAC_F'] = df.POBFEM - (df.PNACENT_F + df.PNACOE_F)
-        # df['IMP_MIG_NAC_M'] = df.POBMAS - (df.PNACENT_M + df.PNACOE_M)
+    df_min['PAFIL_PUB'] = (
+        df_min.PDER_IMSS + df_min.PDER_ISTE + df_min.PDER_ISTEE
+        + df_min.PAFIL_PDOM + df_min.PDER_SEGP + df_min.PDER_IMSSB
+    )
 
-        # df['IMP_MIG_RES'] = df.P_5YMAS - (df.PRES2015 + df.PRESOE15)
-        # df['IMP_MIG_RES_F'] = df.P_5YMAS_F - (df.PRES2015_F + df.PRESOE15_F)
-        # df['IMP_MIG_RES_M'] = df.P_5YMAS_M - (df.PRES2015_M + df.PRESOE15_M)
+    df_min['PNOCUPA'] = df_min.PDESOCUP + df_min.PE_INAC
+    df_min['PNOCUPA_M'] = df_min.PDESOCUP_M + df_min.PE_INAC_M
+    df_min['PNOCUPA_F'] = df_min.PDESOCUP_F + df_min.PE_INAC_F
 
-        # df['IMP_3HLI'] = df.P_3YMAS - df.P3YM_HLI
-        # df['IMP_3HLI_F'] = df.P_3YMAS_F - df.P3YM_HLI_F
-        # df['IMP_3HLI_M'] = df.P_3YMAS_M - df.P3YM_HLI_M
+    df_min['P8YM_AN'] = df_min.P8A14AN + df_min.P15YM_AN
+    df_min['P8YM_AN_M'] = df_min.P8A14AN_M + df_min.P15YM_AN_M
+    df_min['P8YM_AN_F'] = df_min.P8A14AN_F + df_min.P15YM_AN_F
 
-        # df['IMP_3HESPANOL'] = df.P3YM_HLI - (df.P3HLINHE + df.P3HLI_HE)
-        # df['IMP_3HESPANOL_F'] = df.P3YM_HLI_F - (df.P3HLINHE_F + df.P3HLI_HE_F)
-        # df['IMP_3HESPANOL_M'] = df.P3YM_HLI_M - (df.P3HLINHE_M + df.P3HLI_HE_M)
+    df_min['P6A14NOA'] = df_min.P6A11_NOA + df_min.P12A14NOA
+    df_min['P6A14NOAF'] = df_min.P6A11_NOAF + df_min.P12A14NOAF
+    df_min['P6A14NOAM'] = df_min.P6A11_NOAM + df_min.P12A14NOAM
 
-        # df['IMP_5HLE'] = df.P_5YMAS - df.P5_HLI
-        # df['IMP_5HESPANOL'] = df.P5_HLI - (df.P5_HLI_NHE + df.P5_HLI_HE)
+    # COLLECTIVE
+    df_min['POBCOL'] = df_min.POBTOT - df_max.POBHOG
+    df_min['TOTCOL'] = df_min.TVIVHAB - df_max.TVIVPARHAB
 
-        # This needed to identify zero cell of true values
-        df['P34HLI'] = df.P3YM_HLI - df.P5_HLI
-        df['P34HLI_HE'] = df.P3HLI_HE - df.P5_HLI_HE
-        df['P34HLI_NHE'] = df.P3HLINHE - df.P5_HLI_NHE
-        # df['IMP_34HESPANOL'] = df.P3HLI_NE_F + df.P3HLI_NE_M - df.P5HLI_NE
-
-        # df['POB_AFRO_NO_NE_F'] = df.POBFEM - df.POB_AFRO_F
-        # df['POB_AFRO_NO_NE_M'] = df.POBMAS - df.POB_AFRO_M
-
-        # df['P3A5_A_NE_BPP_F'] = df.P_3A5_F - df.P3A5_NOA_F
-        # df['P3A5_A_NE_BPP_M'] = df.P_3A5_M - df.P3A5_NOA_M
-        # df['P6A11_A_NE_BPP_F'] = df.P_6A11_F - df.P6A11_NOAF
-        # df['P6A11_A_NE_BPP_M'] = df.P_6A11_M - df.P6A11_NOAM
-        # df['P12A14_A_NE_BPP_F'] = df.P_12A14_F - df.P12A14NOAF
-        # df['P12A14_A_NE_BPP_M'] = df.P_12A14_M - df.P12A14NOAM
-        # df['P15A17_NOA_NE_BPP_F'] = df.P_15A17_F - df.P15A17A_F
-        # df['P15A17_NOA_NE_BPP_M'] = df.P_15A17_M - df.P15A17A_M
-        # df['P18A24_NOA_NE_BPP_F'] = df.P_18A24_F - df.P18A24A_F
-        # df['P18A24_NOA_NE_BPP_M'] = df.P_18A24_M - df.P18A24A_M
-
-        # df['P8A14AS_F'] = df.P_8A14_F - df.P8A14AN_F
-        # df['P8A14AS_M'] = df.P_8A14_M - df.P8A14AN_M
-        # df['P15YM_AS_F'] = df.P_15YMAS_F - df.P15YM_AN_F
-        # df['P15YM_AS_M'] = df.P_15YMAS_M - df.P15YM_AN_M
-
-        # df['P15_POSBAS_BPP_NE_F'] = df.P_15YMAS_F - (
-        #     df.P15YM_SE_F + df.P15PRI_INF + df.P15PRI_COF +
-        #     df.P15SEC_INF + df.P15SEC_COF)
-        # df['P15_POSBAS_BPP_NE_M'] = df.P_15YMAS_M - (
-        #     df.P15YM_SE_M + df.P15PRI_INM + df.P15PRI_COM +
-        #     df.P15SEC_INM + df.P15SEC_COM)
-        # df['P18_BAS_BPP_NE_F'] = df.P_18YMAS_F - df.P18YM_PB_F
-        # df['P18_BAS_BPP_NE_M'] = df.P_18YMAS_M - df.P18YM_PB_M
-
-        # df['PE_BPP_NE_F'] = df.P_12YMAS_F - (df.PEA_F + df.PE_INAC_F)
-        # df['PE_BPP_NE_M'] = df.P_12YMAS_M - (df.PEA_M + df.PE_INAC_M)
-
-        # df['PDER_NE'] = df.POBTOT - (df.PSINDER + df.PDER_SS)
-
-        # df['P12YM_BPP_NE'] = df.P_12YMAS - (
-        #     df.P12YM_SOLT + df.P12YM_CASA + df.P12YM_SEPA)
-
-        # df['PRELIG_NE'] = df.POBTOT - (
-        #     df.PCATOLICA + df.PRO_CRIEVA + df.POTRAS_REL + df.PSIN_RELIG
-        # )
-
-        df['PAFIL_PUB'] = (df.PDER_IMSS + df.PDER_ISTE + df.PDER_ISTEE
-                           + df.PAFIL_PDOM + df.PDER_SEGP + df.PDER_IMSSB)
-
-        df['PNOCUPA'] = df.PDESOCUP + df.PE_INAC
-        df['PNOCUPA_M'] = df.PDESOCUP_M + df.PE_INAC_M
-        df['PNOCUPA_F'] = df.PDESOCUP_F + df.PE_INAC_F
-
-        df['P8YM_AN'] = df.P8A14AN + df.P15YM_AN
-        df['P8YM_AN_M'] = df.P8A14AN_M + df.P15YM_AN_M
-        df['P8YM_AN_F'] = df.P8A14AN_F + df.P15YM_AN_F
-
-        df['P6A14NOA'] = df.P6A11_NOA + df.P12A14NOA
-        df['P6A14NOAF'] = df.P6A11_NOAF + df.P12A14NOAF
-        df['P6A14NOAM'] = df.P6A11_NOAM + df.P12A14NOAM
-
-        # VIVIENDAS
-
-        # df['VPH_PISONE'] = df['TOTHOG'] - (df['VPH_PISODT'] + df['VPH_PISOTI'])
-        # df['VPH_NEDOR'] = df['TOTHOG'] - (df['VPH_1DOR'] + df['VPH_2YMASD'])
-        # df['VPH_NECUART'] = df['TOTHOG'] - (
-        #     df.VPH_1CUART + df.VPH_2CUART + df.VPH_3YMASC
-        # )
-        # df['VPH_NE_ELEC'] = df['TOTHOG'] - (
-        #     df.VPH_C_ELEC + df.VPH_S_ELEC
-        # )
-        # df['VPH_AGUANE'] = df['TOTHOG'] - (
-        #     df.VPH_AGUADV + df.VPH_AGUAFV
-        # )
-        # df['VPH_AENSP'] = df['VPH_AGUADV'] - df.VPH_AEASP
-        # df['VPH_TINACO_NO_NE'] = df['TOTHOG'] - df.VPH_TINACO
-        # df['VPH_CISTER_NO_NE'] = df['TOTHOG'] - df.VPH_CISTER
-        # df['VPH_NO_EXCSA'] = df['TOTHOG'] - (df.VPH_EXCSA + df.VPH_LETR)
-        # df['VPH_NEDREN'] = df['TOTHOG'] - (df.VPH_DRENAJ + df.VPH_NODREN)
-        # df['VPH_REFRI_NO'] = df['TOTHOG'] - df.VPH_REFRI
-        # df['VPH_LAVAD_NO'] = df['TOTHOG'] - df.VPH_LAVAD
-        # df['VPH_HMICRO_NO'] = df['TOTHOG'] - df.VPH_HMICRO
-        # df['VPH_AUTOM_NO'] = df['TOTHOG'] - df.VPH_AUTOM
-        # df['VPH_MOTO_NO'] = df['TOTHOG'] - df.VPH_MOTO
-        # df['VPH_BICI_NO'] = df['TOTHOG'] - df.VPH_BICI
-        # df['VPH_RADIO_NO'] = df['TOTHOG'] - df.VPH_RADIO
-        # df['VPH_TV_NO'] = df['TOTHOG'] - df.VPH_TV
-        # df['VPH_PC_NO'] = df['TOTHOG'] - df.VPH_PC
-        # df['VPH_TELEF_NO'] = df['TOTHOG'] - df.VPH_TELEF
-        # df['VPH_CEL_NO'] = df['TOTHOG'] - df.VPH_CEL
-        # df['VPH_INTER_NO'] = df['TOTHOG'] - df.VPH_INTER
-        # df['VPH_STVP_NO'] = df['TOTHOG'] - df.VPH_STVP
-        # df['VPH_SPMVPI_NO'] = df['TOTHOG'] - df.VPH_SPMVPI
-        # df['VPH_CVJ_NO'] = df['TOTHOG'] - df.VPH_CVJ
-
-        # COLLECTIVE
-        df['POBCOL'] = df.POBTOT - df.POBHOG
-        df['TOTCOL'] = df.TVIVHAB - df.TVIVPARHAB
-
-    new_cols = [
-        'P34HLI', 'P34HLI_HE', 'P34HLI_NHE',
-        'PAFIL_PUB',
-        'PNOCUPA', 'PNOCUPA_M', 'PNOCUPA_F',
-        'P8YM_AN', 'P8YM_AN_M', 'P8YM_AN_F',
-        'POBCOL', 'TOTCOL',
-        'P6A14NOA', 'P6A14NOAM', 'P6A14NOAF'
-    ]
+    # new_cols = [
+    #     'P34HLI', 'P34HLI_HE', 'P34HLI_NHE',
+    #     'PAFIL_PUB',
+    #     'PNOCUPA', 'PNOCUPA_M', 'PNOCUPA_F',
+    #     'P8YM_AN', 'P8YM_AN_M', 'P8YM_AN_F',
+    #     'POBCOL', 'TOTCOL',
+    #     'P6A14NOA', 'P6A14NOAM', 'P6A14NOAF'
+    # ]
 
     # Mark uncertain values with -1 again
-    for col in new_cols:
-        # assert df_min[col].min() >= 0, col
-        # assert df_max[col].min() >= 0, col
-        df_censo[col] = df_censo[col].where(
-            np.logical_or(
-                df_min[col] == df_max[col],
-                df_censo[col].isna()
-            ),
-            -1
-        )
-        # assert df_censo[col].min() >= -1, col
+    # for col in new_cols:
+    #     df_censo[col] = df_censo[col].where(
+    #         np.logical_or(
+    #             df_min[col] == df_max[col],
+    #             df_censo[col].isna()
+    #         ),
+    #         -1
+    #     )
 
-    return df_censo, df_min, df_max
+    return df_min
 
 
 def locate_collective(df_mun, df_loc):
@@ -247,6 +204,16 @@ def process_census(census_iter_path, census_resageburb_path):
         df_censo.values == '*',
         np.broadcast_to(
             (df_censo.VIVTOT.values <= 2)[:, None],
+            df_censo.shape
+        )
+    )
+    df_censo = df_censo.mask(mask, np.nan)
+
+    # For agebs the same happens when TVIVHAB <=2
+    mask = np.logical_and(
+        df_censo.values == '*',
+        np.broadcast_to(
+            (df_censo.TVIVHAB.isin(['0', '1', '2'])).values[:, None],
             df_censo.shape
         )
     )
@@ -373,26 +340,112 @@ def process_census(census_iter_path, census_resageburb_path):
     mun_codes = get_mun_codes()
     df_iter_mun.index = [mun_codes[19][i] for i in df_iter_mun.index]
 
-    # Create implicit constraints to identify
-    # zero cell problems
-    (
-        df_iter_mun,
-        df_iter_mun_min,
-        df_iter_mun_max
-    ) = create_implicit_consts(df_iter_mun)
+    # Create implicit constraints and return lower bounds
+    df_iter_mun = create_implicit_consts(df_iter_mun)
 
-    (
-        df_iter_loc,
-        df_iter_loc_min,
-        df_iter_loc_max
-    ) = create_implicit_consts(df_iter_loc)
+    df_iter_loc = create_implicit_consts(df_iter_loc)
 
-    (
-        df_agebs,
-        df_agebs_min,
-        df_agebs_max
-    ) = create_implicit_consts(df_agebs)
+    df_agebs = create_implicit_consts(df_agebs)
 
-    return (df_iter_mun,  # df_iter_mun_min, df_iter_mun_max,
-            df_iter_loc,  # df_iter_loc_min, df_iter_loc_max,
-            df_agebs, df_agebs_min, df_agebs_max)
+    return df_iter_mun, df_iter_loc, df_agebs
+
+
+def merge_loc_agebs(df_mun, df_loc, df_agebs, impute=False):
+    df_mun = df_mun.copy().sort_index()
+    df_agebs = df_agebs.copy()
+    df_loc = df_loc.copy()
+
+    idx_to_drop = df_agebs.index.droplevel('AGEB').unique()
+    df_loc_agebs = pd.concat(
+        [
+            (
+                df_loc
+                .drop(idx_to_drop)
+                .assign(AGEB='0000')
+                .set_index('AGEB', append=True)
+            ),
+            df_agebs]
+    ).sort_index().reset_index()
+    df_loc_agebs['MUN'] = df_loc_agebs.MUN.map(mun_d)
+    df_loc_agebs = df_loc_agebs.set_index(['MUN', 'LOC', 'AGEB']).sort_index()
+
+    if not impute:
+        return df_loc_agebs
+
+    tot_cols = ['POBTOT', 'POBHOG', 'POBCOL', 'TVIVHAB', 'TOTHOG', 'TOTCOL']
+
+    df_diff = df_mun[tot_cols] - df_loc_agebs.groupby('MUN').sum()[tot_cols]
+
+    # If pobcol and tothog match municipality levels,
+    # we can impute at ageb level
+    for mun in df_mun.index:
+        if np.isclose(df_diff.loc[mun, 'POBCOL'], 0):
+            df_loc_agebs.loc[mun, 'POBHOG'] = (
+                df_loc_agebs
+                .loc[mun, 'POBHOG']
+                .mask(
+                    df_loc_agebs.loc[mun, 'POBHOG'].isna(),
+                    df_loc_agebs.loc[mun, 'POBTOT']
+                ).values
+            )
+        if np.isclose(df_diff.loc[mun, 'TOTCOL'], 0):
+            df_loc_agebs.loc[mun, 'TOTHOG'] = (
+                df_loc_agebs.loc[mun, 'TOTHOG']
+                .mask(
+                    df_loc_agebs.loc[mun, 'TOTHOG'].isna(),
+                    df_loc_agebs.loc[mun, 'TVIVHAB']
+                ).values
+            )
+
+    df_diff = df_mun[tot_cols] - df_loc_agebs.groupby('MUN').sum()[tot_cols]
+
+    # Set lower bounds to 0
+    df_loc_agebs = df_loc_agebs.fillna(0)
+
+    # Add capacity columns
+    df_loc_agebs['capacity_P'] = df_loc_agebs.POBTOT - (
+        df_loc_agebs.POBHOG + df_loc_agebs.POBCOL)
+    df_loc_agebs['capacity_H'] = df_loc_agebs.TVIVHAB - (
+        df_loc_agebs.TOTHOG + df_loc_agebs.TOTCOL
+    )
+
+    # Add p/h ratio
+    df_loc_agebs['ph_ratio'] = df_loc_agebs.POBTOT / df_loc_agebs.TVIVHAB
+
+    # Assign pop and h
+    for mun in df_mun.index:
+        h_sup = df_diff.loc[mun, 'TOTCOL']
+        p_sup = df_diff.loc[mun, 'POBCOL']
+        if p_sup == 0:
+            continue
+        # So far we can handle a single household
+        assert h_sup == 1
+
+        # Find candidate with max ph_ratio and available capacity
+        loc_idx, ageb_idx = (
+            df_loc_agebs
+            .loc[mun]
+            .query(
+                'capacity_P > 0 & capacity_P >= @p_sup & capacity_H > 0'
+            ).ph_ratio.idxmax()
+        )
+
+        df_loc_agebs.loc[
+            (mun, loc_idx, ageb_idx),
+            ['POBCOL', 'TOTCOL']
+        ] = p_sup, h_sup
+
+    df_diff = df_mun[tot_cols] - df_loc_agebs.groupby('MUN').sum()[tot_cols]
+    assert df_diff.POBCOL.sum() == 0
+    assert df_diff.TOTCOL.sum() == 0
+
+    # Now that collective population is assigned, make hogares equalities
+    df_loc_agebs['POBHOG'] = df_loc_agebs.POBTOT - df_loc_agebs.POBCOL
+    df_loc_agebs['TOTHOG'] = df_loc_agebs.TVIVHAB - df_loc_agebs.TOTCOL
+
+    df_diff = df_mun[tot_cols] - df_loc_agebs.groupby('MUN').sum()[tot_cols]
+    assert df_diff.sum().sum() == 0
+
+    return df_loc_agebs.drop(columns=[
+        'capacity_P', 'capacity_H', 'ph_ratio'
+    ])
