@@ -105,7 +105,51 @@ def make_init_system(personas, viviendas,
     for mun in mun_list:
         Y[mun] = Y.Survey * (Y.MUN == mun)
 
-    return X.drop(columns=['ID_VIV', 'index']), I, J, L, W, Up, Uh, U, C, Y
+    X = X.drop(columns=['ID_VIV', 'index'])
+
+    # We need to add collective people to the Gurobi model
+    # Take information from X and W
+    # X do not need modifications, but we need to create Y_people from it
+    Yp = X[['MUN']].copy()
+    Yp.index.name = 'ID_PER'
+    Yp[Y.columns.drop('MUN')] = 0
+
+    # Now, we need to modify W into Up
+    # POBTOT constraints is OK, no need to modify it
+    # We need to add POBCOL row of 1's
+    # We need to add POBHOG row of 0's
+    Up = W.copy()
+    Up.index.name = 'ID_PER'
+    Up.loc['POBCOL'] = 1
+    Up.loc['POBHOG'] = 0
+
+    # Now, we need to add constraints POBCOL, POBHOG to U
+    # We are not controlling for TOTCOL, grouping all collective population
+    # since we are ignorant of the appropriate household structure, and
+    # do not expect to resemble those of private households.
+    U.loc['POBCOL'] = 0
+    U.loc['POBHOG'] = U.loc['POBTOT']
+
+    # We need to add contraints to C, these constraints exist already in TAZ
+    # Need to add POBCOL and POBHOG and remove POBTOT
+    # since there is no need to constraint it if
+    # contraining POBCOL and POGHOG
+    C.loc[:, ['POBCOL', 'POBHOG']] = df_mun[['POBCOL', 'POBHOG']]
+    C = C.drop(columns=['POBTOT'])
+
+    # Assign proper variables to household mateices
+    Uh = U
+    Uh.columns.name = 'ID_VIV'
+    Yh = Y
+
+    Uh = Uh.drop(index='POBTOT')
+    Up = Up.drop(index='POBTOT')
+
+    # Now we need to join this up into a single Y and U
+    Y = pd.concat([Yh, Yp])
+    U = pd.concat([Uh, Up], axis=1).fillna(0).astype(int)
+
+    return X, I, J, L, Up, Uh, U, Yp, Yh, Y, C
 
     pjoin = personas.drop(
         columns=['MUN', 'FACTOR']

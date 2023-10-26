@@ -813,7 +813,7 @@ def get_viv_const():
 
         # NOTE: While not controlling for collective, use
         # Change to TOTHOG later
-        'TVIVHAB': {
+        'TOTHOG': {
             'CLAVIVP': ['Vivienda', 'Otro']
         },  # Same as TVIVPARHAB
 

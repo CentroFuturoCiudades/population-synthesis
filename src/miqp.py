@@ -2,6 +2,40 @@ import numpy as np
 import pandas as pd
 import gurobipy as gp
 from gurobipy import GRB
+from pathlib import Path
+
+
+def relax_model(model, verbose=False):
+    model_f = model.copy()
+    orignumvars = model_f.NumVars
+    constrs = [c for c in model.getConstrs() if c.Sense != '=']
+    model_f.feasRelax(
+        relaxobjtype=0,
+        minrelax=False,
+        vars=None,
+        lbpen=None,
+        ubpen=None,
+        constrs=constrs,
+        rhspen=[1.0]*len(constrs)
+    )
+    model_f.optimize()
+
+    if verbose:
+        print('\nSlack values:')
+
+    slacks = model_f.getVars()[orignumvars:]
+    slacks_2 = []
+    for sv in slacks:
+        if sv.X > 1e-9:
+            # Check that the RHS decreases
+            assert 'ArtP_' in sv.VarName
+            slacks_2.append(
+                (sv.VarName.replace('ArtP_', ''), sv.X)
+            )
+            if verbose:
+                print('%s = %g' % (sv.VarName, sv.X))
+
+    return slacks_2
 
 
 def reduce_matrices(U, Y):
@@ -55,23 +89,33 @@ def setup_gb(mun, taz_dict, df_mun, C, Yh, Uh):
     print(f'{mun} has {N_T} taz and {N_mun} households and {N_S} respondents and {N_C} constraints.')
 
 
-def solve_gurobi_taz(U_mun, Y_mun, C_taz, obj_type, jitter=False, save=False):
+def solve_gurobi_taz(U_mun, Y_mun, C_taz, obj_type,
+                     jitter=False, save=False):
 
+    assert np.all(U_mun.index == C_taz.index)
+    assert np.all(U_mun.columns == Y_mun.index)
     # Some useful quantities
     N_S = Y_mun.shape[0]  # Total number of survey entries
-    N_t = C_taz.TVIVHAB  # Total number of households in taz
+    N_t = C_taz.TOTHOG  # Total number of households in taz
+    N_p = C_taz.POBCOL  # Total number collective people
     N_C = C_taz.shape[0]  # Number of constraints
     N_s = Y_mun.sum()  # Sum of survey weights
 
     model = gp.Model(f'MUN_{Y_mun.name}_TAZ_{C_taz.name}')
 
     # Create vector of household variables
-    yT = model.addMVar(shape=N_S, vtype=GRB.INTEGER, name='yT', lb=0, ub=N_t)
+    yT = model.addMVar(
+        shape=N_S,
+        vtype=GRB.INTEGER,
+        name='yT',
+        lb=0,
+        ub=(Y_mun.values > 0) * N_t + (Y_mun.values == 0) * N_p
+    )
 
     # The constraints can be easily added in matrix form
     # Treat total people and household as =, other constraints as >=
     sense = np.array(['>']*N_C)
-    sense[C_taz.index.isin(['TVIVHAB', 'POBTOT'])] = '='
+    sense[C_taz.index.isin(['TVIVHAB', 'TOTHOG', 'POBCOL', 'POBHOG'])] = '='
 
     model.addMConstr(
         A=U_mun.values,
@@ -85,34 +129,50 @@ def solve_gurobi_taz(U_mun, Y_mun, C_taz, obj_type, jitter=False, save=False):
     if jitter:
         Y_mun = Y_mun + np.random.uniform(0.1, 0.5, len(Y_mun))
 
-    if obj_type == 'L1':
-        ydiff = model.addMVar(
-            shape=N_S,
-            vtype=GRB.CONTINUOUS,
-            name='ydiff',
-            lb=-1, ub=1)
-        model.addConstr(yT/N_t - Y_mun.values/N_s == ydiff)
-        norm = model.addVar(name='norm', ub=N_S)
-        model.addGenConstrNorm(norm, ydiff, 1, name='norm')
-        model.setObjective(norm, GRB.MINIMIZE)
-    elif obj_type == 'L2':
+    # if obj_type == 'L1':
+    #     ydiff = model.addMVar(
+    #         shape=N_S,
+    #         vtype=GRB.CONTINUOUS,
+    #         name='ydiff',
+    #         lb=-1, ub=1)
+    #     model.addConstr(yT/N_t - Y_mun.values/N_s == ydiff)
+    #     norm = model.addVar(name='norm', ub=N_S)
+    #     model.addGenConstrNorm(norm, ydiff, 1, name='norm')
+    #     model.setObjective(norm, GRB.MINIMIZE)
+    if obj_type == 'L2':
+        model.setObjective(
+            (yT/N_t - Y_mun.values/N_s) @ (yT/N_t - Y_mun.values/N_s),
+            GRB.MINIMIZE
+        )
+    elif obj_type == 0:
         model.setObjective(
             # (yT/N_t - Y_mun.values/N_s) @ (yT/N_t - Y_mun.values/N_s),
             # (yT - Y) @ (yT - Y),
             0,
             GRB.MINIMIZE
         )
+    else:
+        assert False, 'Incorrect value.'
 
     model.Params.LogToConsole = 0
     model.Params.PoolSolutions = 100
     # model.Params.SolutionLimit = 100
     model.Params.TimeLimit = 120
-    model.Params.LogFile = f'MUN_{Y_mun.name}_TAZ_{C_taz.name}.log'
+    # model.Params.LogFile = f'MUN_{Y_mun.name}_TAZ_{C_taz.name}.log'
+    model.Params.JSONSolDetail = 1
     model.optimize()
 
-    if model.SolCount < 1:
-        print(f'MUN_{Y_mun.name}_TAZ_{C_taz.name}')
-    return model
+    if model.Status == GRB.INFEASIBLE:
+        # print(f'MUN_{Y_mun.name}_TAZ_{C_taz.name} INFEASIBLE')
+        return False, None, model
+    elif (
+            model.Status == GRB.OPTIMAL
+            or model.Status == GRB.TIME_LIMIT
+            or model.Status == GRB.SOLUTION_LIMIT
+    ):
+        pass
+    else:
+        assert False, 'Unexpected behaviour.'
 
     # Extract all solutions, save to disk
     sol_arr = np.zeros((model.SolCount, Y_mun.size), dtype=int)
@@ -132,8 +192,9 @@ def solve_gurobi_taz(U_mun, Y_mun, C_taz, obj_type, jitter=False, save=False):
 
     if save:
         sol_df.to_pickle(f'MUN_{Y_mun.name}_TAZ_{C_taz.name}_gsols.pkl')
+        model.write(f'MUN_{Y_mun.name}_TAZ_{C_taz.name}_gsols.json')
 
-    return sol_df
+    return True, sol_df, model
 
 
 def solve_gurobi_mun(U_mun, Y_mun, C_mun, C_taz_all):
@@ -226,3 +287,52 @@ def solve_gurobi_mun(U_mun, Y_mun, C_mun, C_taz_all):
     )
 
     return model, YT, Y
+
+
+def solve_gb(mun, taz, taz_dict, Y, U, C, obj_type, save, force=False):
+
+    sol_file = Path(f'MUN_{mun}_TAZ_{taz}_gsols.json')
+    if sol_file.exists() and not force:
+        return None, None
+
+    # Load the constraints as a dictionary
+    C_mun = C.loc[mun].astype(int).to_dict()
+    C_taz = (
+        taz_dict[mun]
+        .set_index('ZONA')[C_mun.keys()]
+        .fillna(0)
+        .astype(int)
+        .loc[taz]
+        .copy()
+    )
+    if C_taz.TOTHOG < 1:
+        return None, None
+
+    # Get the sample households ids and the contraint weight matrix
+    Y_mun = Y.loc[Y['MUN'] == mun, mun]
+    U_mun = U.loc[:, Y_mun.index]
+    assert Y_mun.sum() > 0
+
+    status, sol_df, model = solve_gurobi_taz(
+        U_mun, Y_mun, C_taz, obj_type=obj_type,
+        jitter=False, save=save
+    )
+
+    if not status:
+        # Relax the model
+        print(f'Relaxing {mun} {taz} ... ')
+        slacks = relax_model(model, verbose=True)
+
+        # Adjust constraints
+        for cname, c_adj in slacks:
+            C_taz[cname] = C_taz[cname] - c_adj
+            assert C_taz[cname] >= 0, C_taz[cname]
+
+        # Run model again
+        status, sol_df, model = solve_gurobi_taz(
+            U_mun, Y_mun, C_taz, obj_type=obj_type,
+            jitter=False, save=save
+        )
+    assert status, (mun, taz)
+
+    return sol_df, model
