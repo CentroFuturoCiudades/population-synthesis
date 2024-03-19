@@ -206,6 +206,105 @@ nivacad_posmap = {
     BPP: BPP
 }
 
+nivacad_posmap_fine = {
+    'Ninguno_0': 'Sin Educación',
+    'Preescolar_1': 'Sin Educación',
+    'Preescolar_2': 'Sin Educación',
+    'Preescolar_3': 'Sin Educación',
+    'Preescolar_nan': 'Sin Educación',
+
+    'Primaria_1': 'Básica',
+    'Primaria_2': 'Básica',
+    'Primaria_3': 'Básica',
+    'Primaria_4': 'Básica',
+    'Primaria_5': 'Básica',
+    'Primaria_6': 'Básica',
+    'Primaria_nan': 'Básica',
+
+    'Estudios técnicos o comerciales con primaria terminada_1': 'Básica',
+    'Estudios técnicos o comerciales con primaria terminada_2': 'Básica',
+    'Estudios técnicos o comerciales con primaria terminada_3': 'Básica',
+    'Estudios técnicos o comerciales con primaria terminada_4': 'Básica',
+    'Estudios técnicos o comerciales con primaria terminada_nan': 'Básica',
+
+    'Secundaria_1': 'Básica',
+    'Secundaria_2': 'Básica',
+    'Secundaria_3': 'Básica',
+    'Secundaria_nan': 'Básica',
+
+    'Preparatoria o bachillerato general_1': 'MediaSup',
+    'Preparatoria o bachillerato general_2': 'MediaSup',
+    'Preparatoria o bachillerato general_3': 'MediaSup',
+    'Preparatoria o bachillerato general_4': 'MediaSup',
+    'Preparatoria o bachillerato general_nan': 'MediaSup',
+
+    'Bachillerato tecnológico_1': 'MediaSup',
+    'Bachillerato tecnológico_2': 'MediaSup',
+    'Bachillerato tecnológico_3': 'MediaSup',
+    'Bachillerato tecnológico_4': 'MediaSup',
+    'Bachillerato tecnológico_nan': 'MediaSup',
+
+    'Estudios técnicos o comerciales con secundaria terminada_1': 'MediaSup',
+    'Estudios técnicos o comerciales con secundaria terminada_2': 'MediaSup',
+    'Estudios técnicos o comerciales con secundaria terminada_3': 'MediaSup',
+    'Estudios técnicos o comerciales con secundaria terminada_4': 'MediaSup',
+    'Estudios técnicos o comerciales con secundaria terminada_5': 'MediaSup',
+    'Estudios técnicos o comerciales con secundaria terminada_nan': 'MediaSup',
+
+    'Estudios técnicos o comerciales con preparatoria terminada_1': 'Superior',
+    'Estudios técnicos o comerciales con preparatoria terminada_2': 'Superior',
+    'Estudios técnicos o comerciales con preparatoria terminada_3': 'Superior',
+    'Estudios técnicos o comerciales con preparatoria terminada_4': 'Superior',
+    'Estudios técnicos o comerciales con preparatoria terminada_nan': 'Superior',
+
+    'Normal con primaria o secundaria terminada_1': 'MediaSup',
+    'Normal con primaria o secundaria terminada_2': 'MediaSup',
+    'Normal con primaria o secundaria terminada_3': 'MediaSup',
+    'Normal con primaria o secundaria terminada_4': 'MediaSup',
+    'Normal con primaria o secundaria terminada_nan': 'MediaSup',
+
+    'Normal de licenciatura_1': 'Superior',
+    'Normal de licenciatura_2': 'Superior',
+    'Normal de licenciatura_3': 'Superior',
+    'Normal de licenciatura_4': 'Superior',
+    'Normal de licenciatura_5': 'Superior',
+    'Normal de licenciatura_6': 'Superior',
+    'Normal de licenciatura_nan': 'Superior',
+
+    'Licenciatura_1': 'Superior',
+    'Licenciatura_2': 'Superior',
+    'Licenciatura_3': 'Superior',
+    'Licenciatura_4': 'Superior',
+    'Licenciatura_5': 'Superior',
+    'Licenciatura_6': 'Superior',
+    'Licenciatura_7': 'Superior',
+    'Licenciatura_8': 'Superior',
+    'Licenciatura_nan': 'Superior',
+
+    'Especialidad_1': 'Superior',
+    'Especialidad_2': 'Superior',
+    'Especialidad_nan': 'Superior',
+
+    'Maestría_1': 'Superior',
+    'Maestría_2': 'Superior',
+    'Maestría_3': 'Superior',
+    'Maestría_4': 'Superior',
+    'Maestría_5': 'Superior',
+    'Maestría_6': 'Superior',
+    'Maestría_nan': 'Superior',
+
+    'Doctorado_1': 'Superior',
+    'Doctorado_2': 'Superior',
+    'Doctorado_3': 'Superior',
+    'Doctorado_4': 'Superior',
+    'Doctorado_5': 'Superior',
+    'Doctorado_6': 'Superior',
+    'Doctorado_nan': 'Superior',
+
+    # 'No especificado': 'No especificado',
+    BPP: BPP
+}
+
 
 def process_people_df(file_path):
 
@@ -862,25 +961,25 @@ def process_places_df(file_path):
         defs['clavivp']
     ).astype('category')
 
-    # viviendas_cat['PAREDES'] = viviendas.PAREDES.fillna(
-    #     'Blanco por pase').map(defs['paredes']).astype(cats['paredes'])
+    viviendas_cat['PAREDES'] = viviendas.PAREDES.fillna(
+        'Blanco por pase').map(defs['paredes']).astype(cats['paredes'])
 
-    # viviendas_cat['TECHOS'] = viviendas.TECHOS.fillna(
-    #     'Blanco por pase').map(defs['techos']).astype(cats['techos'])
+    viviendas_cat['TECHOS'] = viviendas.TECHOS.fillna(
+        'Blanco por pase').map(defs['techos']).astype(cats['techos'])
 
-    # viviendas_cat['PISOS'] = viviendas.PISOS.fillna(
-    #     BPP).map(
-    #         {
-    #             1: 'Tierra',
-    #             2: 'Cemento o firme',
-    #             3: 'Madera, mosaico u otro recubrimiento',
-    #             # 9: 'No especificado',
-    #             BPP: BPP
-    #         }
-    #     ).astype('category')
+    viviendas_cat['PISOS'] = viviendas.PISOS.fillna(
+        BPP).map(
+            {
+                1: 'Tierra',
+                2: 'Cemento o firme',
+                3: 'Madera, mosaico u otro recubrimiento',
+                # 9: 'No especificado',
+                BPP: BPP
+            }
+        ).astype('category')
 
-    # viviendas_cat['COCINA'] = viviendas.COCINA.fillna(
-    #     'Blanco por pase').map(defs['cocina']).astype(cats['cocina'])
+    viviendas_cat['COCINA'] = viviendas.COCINA.fillna(
+        'Blanco por pase').map(defs['cocina']).astype(cats['cocina'])
 
     viviendas_cat['CUADORM'] = viviendas.CUADORM.fillna(
         BPP).replace(99, np.nan).astype('category')
@@ -888,139 +987,139 @@ def process_places_df(file_path):
     viviendas_cat['TOTCUART'] = viviendas.TOTCUART.fillna(BPP).replace(
         99, np.nan).astype('category')
 
-    # viviendas_cat['LUG_COC'] = viviendas.LUG_COC.fillna(
-    #     'Blanco por pase').map(defs['lug_coc']).astype(cats['lug_coc'])
+    viviendas_cat['LUG_COC'] = viviendas.LUG_COC.fillna(
+        'Blanco por pase').map(defs['lug_coc']).astype(cats['lug_coc'])
 
-    # viviendas_cat['COMBUSTIBLE'] = viviendas.COMBUSTIBLE.fillna(
-    #     'Blanco por pase').map(defs['combustible']).astype(cats['combustible'])
+    viviendas_cat['COMBUSTIBLE'] = viviendas.COMBUSTIBLE.fillna(
+        'Blanco por pase').map(defs['combustible']).astype(cats['combustible'])
 
-    # viviendas_cat['ESTUFA'] = viviendas.ESTUFA.fillna(
-    #     'Blanco por pase').map(defs['estufa']).astype(cats['estufa'])
+    viviendas_cat['ESTUFA'] = viviendas.ESTUFA.fillna(
+        'Blanco por pase').map(defs['estufa']).astype(cats['estufa'])
 
-    # viviendas_cat['ELECTRICIDAD'] = viviendas.ELECTRICIDAD.fillna(
-    #     BPP).map(
-    #         {
-    #             1: SI,
-    #             3: NO,
-    #             BPP: BPP
-    #         }
-    #     ).astype('category')
+    viviendas_cat['ELECTRICIDAD'] = viviendas.ELECTRICIDAD.fillna(
+        BPP).map(
+            {
+                1: SI,
+                3: NO,
+                BPP: BPP
+            }
+        ).astype('category')
 
-    # viviendas_cat['FOCOS'] = viviendas.FOCOS.fillna(
-    #     'Blanco por pase').map(
-    #         defs['focos']).astype(cats['focos'])
+    viviendas_cat['FOCOS'] = viviendas.FOCOS.fillna(
+        'Blanco por pase').map(
+            defs['focos']).astype(cats['focos'])
 
-    # viviendas_cat['FOCOS_AHORRA'] = viviendas.FOCOS_AHORRA.fillna(
-    #     'Blanco por pase').map(
-    #         defs['focos_ahorra']).astype(cats['focos_ahorra'])
+    viviendas_cat['FOCOS_AHORRA'] = viviendas.FOCOS_AHORRA.fillna(
+        'Blanco por pase').map(
+            defs['focos_ahorra']).astype(cats['focos_ahorra'])
 
-    # viviendas_cat['AGUA_ENTUBADA'] = viviendas.AGUA_ENTUBADA.fillna(
-    #     BPP).map(
-    #         {
-    #             1: 'Dentro de la vivienda',
-    #             2: 'Sólo en el patio o terreno',
-    #             3: 'No tiene',
-    #             BPP: BPP
-    #         }
-    #     ).astype('category')
+    viviendas_cat['AGUA_ENTUBADA'] = viviendas.AGUA_ENTUBADA.fillna(
+        BPP).map(
+            {
+                1: 'Dentro de la vivienda',
+                2: 'Sólo en el patio o terreno',
+                3: 'No tiene',
+                BPP: BPP
+            }
+        ).astype('category')
 
-    # viviendas_cat['ABA_AGUA_ENTU'] = viviendas.ABA_AGUA_ENTU.fillna(BPP).map(
-    #         {
-    #             1: 'Del servicio público de agua.',
-    #             2: 'De un pozo comunitario.',
-    #             3: 'De un pozo particular.',
-    #             4: 'De una pipa.',
-    #             5: 'De otra vivienda.',
-    #             6: 'De la lluvia.',
-    #             7: 'De otro lugar.',
-    #             BPP: BPP
-    #         }
-    # ).astype('category')
+    viviendas_cat['ABA_AGUA_ENTU'] = viviendas.ABA_AGUA_ENTU.fillna(BPP).map(
+            {
+                1: 'Del servicio público de agua.',
+                2: 'De un pozo comunitario.',
+                3: 'De un pozo particular.',
+                4: 'De una pipa.',
+                5: 'De otra vivienda.',
+                6: 'De la lluvia.',
+                7: 'De otro lugar.',
+                BPP: BPP
+            }
+    ).astype('category')
 
-    # viviendas_cat['ABA_AGUA_NO_ENTU'] = viviendas.ABA_AGUA_NO_ENTU.fillna(
-    #     'Blanco por pase').map(
-    #         defs['aba_agua_no_entu']).astype(cats['aba_agua_no_entu'])
+    viviendas_cat['ABA_AGUA_NO_ENTU'] = viviendas.ABA_AGUA_NO_ENTU.fillna(
+        'Blanco por pase').map(
+            defs['aba_agua_no_entu']).astype(cats['aba_agua_no_entu'])
 
-    # viviendas_cat['TINACO'] = viviendas.TINACO.fillna(
-    #     BPP).map(
-    #         defs['tinaco']).astype(cats['tinaco'])
+    viviendas_cat['TINACO'] = viviendas.TINACO.fillna(
+        BPP).map(
+            defs['tinaco']).astype(cats['tinaco'])
 
-    # viviendas_cat['CISTERNA'] = viviendas.CISTERNA.fillna(
-    #     BPP).map(
-    #         defs['cisterna']).astype(cats['cisterna'])
+    viviendas_cat['CISTERNA'] = viviendas.CISTERNA.fillna(
+        BPP).map(
+            defs['cisterna']).astype(cats['cisterna'])
 
-    # viviendas_cat['BOMBA_AGUA'] = viviendas.BOMBA_AGUA.fillna(
-    #     'Blanco por pase').map(
-    #         defs['bomba_agua']).astype(cats['bomba_agua'])
+    viviendas_cat['BOMBA_AGUA'] = viviendas.BOMBA_AGUA.fillna(
+        'Blanco por pase').map(
+            defs['bomba_agua']).astype(cats['bomba_agua'])
 
-    # viviendas_cat['REGADERA'] = viviendas.REGADERA.fillna(
-    #     'Blanco por pase').map(
-    #         defs['regadera']).astype(cats['regadera'])
+    viviendas_cat['REGADERA'] = viviendas.REGADERA.fillna(
+        'Blanco por pase').map(
+            defs['regadera']).astype(cats['regadera'])
 
-    # viviendas_cat['BOILER'] = viviendas.BOILER.fillna(
-    #     'Blanco por pase').map(
-    #         defs['boiler']).astype(cats['boiler'])
+    viviendas_cat['BOILER'] = viviendas.BOILER.fillna(
+        'Blanco por pase').map(
+            defs['boiler']).astype(cats['boiler'])
 
-    # viviendas_cat['CALENTADOR_SOLAR'] = viviendas.CALENTADOR_SOLAR.fillna(
-    #     'Blanco por pase').map(
-    #         defs['calentador_solar']).astype(cats['calentador_solar'])
+    viviendas_cat['CALENTADOR_SOLAR'] = viviendas.CALENTADOR_SOLAR.fillna(
+        'Blanco por pase').map(
+            defs['calentador_solar']).astype(cats['calentador_solar'])
 
-    # viviendas_cat['AIRE_ACON'] = viviendas.AIRE_ACON.fillna(
-    #     'Blanco por pase').map(
-    #         defs['aire_acon']).astype(cats['aire_acon'])
+    viviendas_cat['AIRE_ACON'] = viviendas.AIRE_ACON.fillna(
+        'Blanco por pase').map(
+            defs['aire_acon']).astype(cats['aire_acon'])
 
-    # viviendas_cat['PANEL_SOLAR'] = viviendas.PANEL_SOLAR.fillna(
-    #     'Blanco por pase').map(
-    #         defs['panel_solar']).astype(cats['panel_solar'])
+    viviendas_cat['PANEL_SOLAR'] = viviendas.PANEL_SOLAR.fillna(
+        'Blanco por pase').map(
+            defs['panel_solar']).astype(cats['panel_solar'])
 
-    # viviendas_cat['SERSAN'] = viviendas.SERSAN.fillna(
-    #     BPP).map(defs['sersan']).astype('category')
+    viviendas_cat['SERSAN'] = viviendas.SERSAN.fillna(
+        BPP).map(defs['sersan']).astype('category')
 
-    # viviendas_cat['CONAGUA'] = viviendas.CONAGUA.fillna(
-    #     BPP).map(
-    #         {
-    #             1: 'Tiene descarga directa de agua.',
-    #             2: 'Le echan agua con cubeta.',
-    #             3: 'No se le puede echar agua.',
-    #             BPP: BPP
-    #         }
-    #     ).astype('category')
+    viviendas_cat['CONAGUA'] = viviendas.CONAGUA.fillna(
+        BPP).map(
+            {
+                1: 'Tiene descarga directa de agua.',
+                2: 'Le echan agua con cubeta.',
+                3: 'No se le puede echar agua.',
+                BPP: BPP
+            }
+        ).astype('category')
 
-    # viviendas_cat['USOEXC'] = viviendas.USOEXC.fillna(
-    #     'Blanco por pase').map(
-    #         defs['usoexc']).astype(cats['usoexc'])
+    viviendas_cat['USOEXC'] = viviendas.USOEXC.fillna(
+        'Blanco por pase').map(
+            defs['usoexc']).astype(cats['usoexc'])
 
-    # viviendas_cat['DRENAJE'] = viviendas.DRENAJE.fillna(
-    #     BPP).map(
-    #         {
-    #             1: 'La red pública.',
-    #             2: 'Una fosa séptica o tanque séptico (biodigestor).',
-    #             3: 'Una tubería que va a dar a una barranca o grieta.',
-    #             4: 'Una tubería que va a dar a un río, lago o mar.',
-    #             5: 'No tiene drenaje.',
-    #             BPP: BPP
-    #         }
-    # ).astype('category')
+    viviendas_cat['DRENAJE'] = viviendas.DRENAJE.fillna(
+        BPP).map(
+            {
+                1: 'La red pública.',
+                2: 'Una fosa séptica o tanque séptico (biodigestor).',
+                3: 'Una tubería que va a dar a una barranca o grieta.',
+                4: 'Una tubería que va a dar a un río, lago o mar.',
+                5: 'No tiene drenaje.',
+                BPP: BPP
+            }
+    ).astype('category')
 
-    # viviendas_cat['SEPARACION1'] = viviendas.SEPARACION1.fillna(
-    #     'Blanco por pase').map(
-    #         defs['separacion1']).astype(cats['separacion1'])
+    viviendas_cat['SEPARACION1'] = viviendas.SEPARACION1.fillna(
+        'Blanco por pase').map(
+            defs['separacion1']).astype(cats['separacion1'])
 
-    # viviendas_cat['SEPARACION2'] = viviendas.SEPARACION2.fillna(
-    #     'Blanco por pase').map(
-    #         defs['separacion2']).astype(cats['separacion2'])
+    viviendas_cat['SEPARACION2'] = viviendas.SEPARACION2.fillna(
+        'Blanco por pase').map(
+            defs['separacion2']).astype(cats['separacion2'])
 
-    # viviendas_cat['SEPARACION3'] = viviendas.SEPARACION3.fillna(
-    #     'Blanco por pase').map(
-    #         defs['separacion3']).astype(cats['separacion3'])
+    viviendas_cat['SEPARACION3'] = viviendas.SEPARACION3.fillna(
+        'Blanco por pase').map(
+            defs['separacion3']).astype(cats['separacion3'])
 
-    # viviendas_cat['SEPARACION4'] = viviendas.SEPARACION4.fillna(
-    #     'Blanco por pase').map(
-    #         defs['separacion4']).astype(cats['separacion4'])
+    viviendas_cat['SEPARACION4'] = viviendas.SEPARACION4.fillna(
+        'Blanco por pase').map(
+            defs['separacion4']).astype(cats['separacion4'])
 
-    # viviendas_cat['DESTINO_BAS'] = viviendas.DESTINO_BAS.fillna(
-    #     'Blanco por pase').map(
-    #         defs['destino_bas']).astype(cats['destino_bas'])
+    viviendas_cat['DESTINO_BAS'] = viviendas.DESTINO_BAS.fillna(
+        'Blanco por pase').map(
+            defs['destino_bas']).astype(cats['destino_bas'])
 
     viviendas_cat['REFRIGERADOR'] = viviendas.REFRIGERADOR.fillna(
         BPP).map(
@@ -1082,82 +1181,82 @@ def process_places_df(file_path):
         BPP).map(
             defs['con_vjuegos']).astype(cats['con_vjuegos'])
 
-    # viviendas_cat['TENENCIA'] = viviendas.TENENCIA.fillna(
-    #     'Blanco por pase').map(
-    #         defs['tenencia']).astype(cats['tenencia'])
+    viviendas_cat['TENENCIA'] = viviendas.TENENCIA.fillna(
+        'Blanco por pase').map(
+            defs['tenencia']).astype(cats['tenencia'])
 
-    # viviendas_cat['ESCRITURAS'] = viviendas.ESCRITURAS.fillna(
-    #     'Blanco por pase').map(
-    #         defs['escrituras']).astype(cats['escrituras'])
+    viviendas_cat['ESCRITURAS'] = viviendas.ESCRITURAS.fillna(
+        'Blanco por pase').map(
+            defs['escrituras']).astype(cats['escrituras'])
 
-    # viviendas_cat['FORMA_ADQUI'] = viviendas.FORMA_ADQUI.fillna(
-    #     'Blanco por pase').map(
-    #         defs['forma_adqui']).astype(cats['forma_adqui'])
+    viviendas_cat['FORMA_ADQUI'] = viviendas.FORMA_ADQUI.fillna(
+        'Blanco por pase').map(
+            defs['forma_adqui']).astype(cats['forma_adqui'])
 
-    # viviendas_cat['FINANCIAMIENTO1'] = viviendas.FINANCIAMIENTO1.fillna(
-    #     'Blanco por pase').map(
-    #         defs['financiamiento1']).astype(cats['financiamiento1'])
+    viviendas_cat['FINANCIAMIENTO1'] = viviendas.FINANCIAMIENTO1.fillna(
+        'Blanco por pase').map(
+            defs['financiamiento1']).astype(cats['financiamiento1'])
 
-    # viviendas_cat['FINANCIAMIENTO2'] = viviendas.FINANCIAMIENTO2.fillna(
-    #     'Blanco por pase').map(
-    #         defs['financiamiento2']).astype(cats['financiamiento2'])
+    viviendas_cat['FINANCIAMIENTO2'] = viviendas.FINANCIAMIENTO2.fillna(
+        'Blanco por pase').map(
+            defs['financiamiento2']).astype(cats['financiamiento2'])
 
-    # viviendas_cat['FINANCIAMIENTO3'] = viviendas.FINANCIAMIENTO3.fillna(
-    #     'Blanco por pase').map(
-    #         defs['financiamiento3']).astype(cats['financiamiento3'])
+    viviendas_cat['FINANCIAMIENTO3'] = viviendas.FINANCIAMIENTO3.fillna(
+        'Blanco por pase').map(
+            defs['financiamiento3']).astype(cats['financiamiento3'])
 
-    # viviendas_cat['DEUDA'] = viviendas.DEUDA.fillna(
-    #     'Blanco por pase').map(
-    #         defs['deuda']).astype(cats['deuda'])
+    viviendas_cat['DEUDA'] = viviendas.DEUDA.fillna(
+        'Blanco por pase').map(
+            defs['deuda']).astype(cats['deuda'])
 
     viviendas_cat['NUMPERS'] = viviendas.NUMPERS.astype('category')
 
-    # viviendas_cat['MCONMIG'] = viviendas.MCONMIG.fillna(
-    #     'Blanco por pase').map(
-    #         defs['mconmig']).astype(cats['mconmig'])
+    viviendas_cat['MCONMIG'] = viviendas.MCONMIG.fillna(
+        'Blanco por pase').map(
+            defs['mconmig']).astype(cats['mconmig'])
 
-    # viviendas_cat['MNUMPERS'] = viviendas.MNUMPERS.fillna(
-    #     'Blanco por pase').astype('category')
+    viviendas_cat['MNUMPERS'] = viviendas.MNUMPERS.fillna(
+        'Blanco por pase').astype('category')
 
-    # viviendas_cat['INGR_PEROTROPAIS'] = viviendas.INGR_PEROTROPAIS.fillna(
-    #     'Blanco por pase').map(
-    #         defs['ingr_perotropais']).astype(cats['ingr_perotropais'])
+    viviendas_cat['INGR_PEROTROPAIS'] = viviendas.INGR_PEROTROPAIS.fillna(
+        'Blanco por pase').map(
+            defs['ingr_perotropais']).astype(cats['ingr_perotropais'])
 
-    # viviendas_cat['INGR_PERDENTPAIS'] = viviendas.INGR_PERDENTPAIS.fillna(
-    #     'Blanco por pase').map(
-    #         defs['ingr_perdentpais']).astype(cats['ingr_perdentpais'])
+    viviendas_cat['INGR_PERDENTPAIS'] = viviendas.INGR_PERDENTPAIS.fillna(
+        'Blanco por pase').map(
+            defs['ingr_perdentpais']).astype(cats['ingr_perdentpais'])
 
-    # viviendas_cat['INGR_AYUGOB'] = viviendas.INGR_AYUGOB.fillna(
-    #     'Blanco por pase').map(
-    #         defs['ingr_ayugob']).astype(cats['ingr_ayugob'])
+    viviendas_cat['INGR_AYUGOB'] = viviendas.INGR_AYUGOB.fillna(
+        'Blanco por pase').map(
+            defs['ingr_ayugob']).astype(cats['ingr_ayugob'])
 
-    # viviendas_cat['INGR_JUBPEN'] = viviendas.INGR_JUBPEN.fillna(
-    #     'Blanco por pase').map(
-    #         defs['ingr_jubpen']).astype(cats['ingr_jubpen'])
+    viviendas_cat['INGR_JUBPEN'] = viviendas.INGR_JUBPEN.fillna(
+        'Blanco por pase').map(
+            defs['ingr_jubpen']).astype(cats['ingr_jubpen'])
 
-    # viviendas_cat['ALIMENTACION'] = viviendas.ALIMENTACION.fillna(
-    #     'Blanco por pase').map(
-    #         defs['alimentacion']).astype(cats['alimentacion'])
+    viviendas_cat['ALIMENTACION'] = viviendas.ALIMENTACION.fillna(
+        'Blanco por pase').map(
+            defs['alimentacion']).astype(cats['alimentacion'])
 
-    # viviendas_cat['ALIM_ADL1'] = viviendas.ALIM_ADL1.fillna(
-    #     'Blanco por pase').map(
-    #         defs['alim_adl1']).astype(cats['alim_adl1'])
+    viviendas_cat['ALIM_ADL1'] = viviendas.ALIM_ADL1.fillna(
+        'Blanco por pase').map(
+            defs['alim_adl1']).astype(cats['alim_adl1'])
 
-    # viviendas_cat['ALIM_ADL2'] = viviendas.ALIM_ADL2.fillna(
-    #     'Blanco por pase').map(
-    #         defs['alim_adl2']).astype(cats['alim_adl2'])
+    viviendas_cat['ALIM_ADL2'] = viviendas.ALIM_ADL2.fillna(
+        'Blanco por pase').map(
+            defs['alim_adl2']).astype(cats['alim_adl2'])
 
-    # viviendas_cat['ING_ALIM_ADL1'] = viviendas.ING_ALIM_ADL1.fillna(
-    #     'Blanco por pase').map(
-    #         defs['ing_alim_adl1']).astype(cats['ing_alim_adl1'])
+    viviendas_cat['ING_ALIM_ADL1'] = viviendas.ING_ALIM_ADL1.fillna(
+        'Blanco por pase').map(
+            defs['ing_alim_adl1']).astype(cats['ing_alim_adl1'])
 
-    # viviendas_cat['ING_ALIM_ADL2'] = viviendas.ING_ALIM_ADL2.fillna(
-    #     'Blanco por pase').map(
-    #         defs['ing_alim_adl2']).astype(cats['ing_alim_adl2'])
+    viviendas_cat['ING_ALIM_ADL2'] = viviendas.ING_ALIM_ADL2.fillna(
+        'Blanco por pase').map(
+            defs['ing_alim_adl2']).astype(cats['ing_alim_adl2'])
 
-    # viviendas_cat['ING_ALIM_ADL3'] = viviendas.ING_ALIM_ADL3.fillna(
-    #     'Blanco por pase').map(
-    #         defs['ing_alim_adl3']).astype(cats['ing_alim_adl3'])
+    viviendas_cat['ING_ALIM_ADL3'] = viviendas.ING_ALIM_ADL3.fillna(
+        'Blanco por pase').map(
+            defs['ing_alim_adl3']).astype(cats['ing_alim_adl3'])
 
     viviendas_cat['TIPOHOG'] = viviendas.TIPOHOG.fillna(
         BPP).map(
@@ -1269,3 +1368,39 @@ def categorize_v(viviendas):
     ).astype('category')
 
     return viviendas_cat
+
+
+def has_dis(s):
+    for c in s:
+        if 1 < int(c) < 6 or int(c) == 8:
+            return 1
+    if '9' in s:
+        return np.nan
+    return 0
+
+
+def get_modo_agr(r):
+    if r['MED_TRASLADO_ESC_TPUB'] == 1:
+        return 'TPUB'
+    elif r['MED_TRASLADO_ESC_Automóvil o camioneta'] == 1:
+        return 'Automóvil o camioneta'
+    elif r['MED_TRASLADO_ESC_Motocicleta o motoneta'] == 1:
+        return 'Motocicleta o motoneta'
+    elif r['MED_TRASLADO_ESC_Transporte escolar'] == 1:
+        return 'Transporte escolar'
+    elif r['MED_TRASLADO_ESC_Taxi (App Internet)'] == 1:
+        return 'Taxi (App Internet)'
+    elif r['MED_TRASLADO_ESC_Taxi (sitio, calle, otro)'] == 1:
+        return 'Taxi (sitio, calle, otro)'
+    elif r['MED_TRASLADO_ESC_Bicicleta'] == 1:
+        return 'Bicicleta'
+    elif r['MED_TRASLADO_ESC_Caminando'] == 1:
+        return 'Caminando'
+    elif r['MED_TRASLADO_ESC_Otro'] == 1:
+        return 'Otro'
+    elif r['MED_TRASLADO_ESC_No especificado'] == 1:
+        return 'No especificado'
+    elif r['MED_TRASLADO_ESC_Blanco por pase'] == 1:
+        return 'Blanco por pase'
+    else:
+        raise NotImplementedError
