@@ -3,7 +3,6 @@
 data/DENUE/
 data/ENAPE/
 data/ENH/
-data/ENIGH/
 data/ENOE/
 data/ENVI/
 data/INV/
@@ -11,3 +10,5 @@ data/INV/
 *.pkl
 *.lp
 *.json
+.virtual_documents/
+azure_maps_key
