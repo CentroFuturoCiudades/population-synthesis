@@ -291,7 +291,7 @@ def process_census(census_iter_path, census_resageburb_path):
     # ommited values in RESAGEBURB
     assert np.all(
         df_mun.values == df_iter_mun.values,
-        where=~np.logical_or(df_mun.isna(), df_mun == -1)
+        where=~np.logical_or(df_mun.isna(), df_mun == -1).values
     )
 
     # Aggregate matches from mun -> ent when non-count columns removed
@@ -302,7 +302,7 @@ def process_census(census_iter_path, census_resageburb_path):
     # Check if mutual localities match
     assert np.all(
         (df_loc == df_iter_loc[df_iter_loc.index.isin(df_loc.index)]).values,
-        where=~np.logical_or(df_loc.isna(), df_loc == -1)
+        where=~np.logical_or(df_loc.isna(), df_loc == -1).values
     )
 
     # For iter check if aggregation locality -> mun holds
@@ -312,7 +312,7 @@ def process_census(census_iter_path, census_resageburb_path):
     # Check cells without missing values
     assert np.all(
         (df_iter_mun == sum_iter_loc).values,
-        where=num_missing_iter_loc == 0
+        where=(num_missing_iter_loc == 0).values
     )
     # Check cells with missing values
     assert np.all((df_iter_mun >= sum_iter_loc).values)
@@ -328,11 +328,12 @@ def process_census(census_iter_path, census_resageburb_path):
     # Check cells without missing values
     assert np.all(
         (df_loc == sum_agebs).values,
-        where=num_missing_agebs == 0
+        where=(num_missing_agebs == 0).values
     )
     # Check cells with missing values
     assert np.all((df_loc >= sum_agebs).values,
-                  where=~df_loc.replace(-1, np.nan).isna())
+                  where=~(df_loc.replace(-1, np.nan).isna()).values
+                  )
 
     # Eliminar AGEBS sin población
     df_agebs = df_agebs[df_agebs.POBTOT > 0].copy()
