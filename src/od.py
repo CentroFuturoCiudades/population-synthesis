@@ -2764,7 +2764,7 @@ def build_people_table(od_df, trips):
     )
     people['TAZ_TRAB'] = 'Blanco por pase'
     people.loc[people.CONACT == 'Trabajó', 'TAZ_TRAB'] = np.nan
-    people.loc[taz_trab.index, 'TAZ_TRAB'] = taz_asi
+    people.loc[taz_trab.index, 'TAZ_TRAB'] = taz_trab
 
     # TIE_TRASLADO_TRAB
     people['TIE_TRASLADO_TRAB'] = 'Blanco por pase'
