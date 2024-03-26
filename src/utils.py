@@ -1,6 +1,34 @@
 from itertools import product
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import struct
 
+def mtx2df (file:str):
+	#header schema based in https://tmg.utoronto.ca/doc/1.6/gtamodel/user_guide/file_formats/emme_binary_matrix.html
+	header_schema = [ 'magic',
+			'version',
+			'type',  #float32 = 1, float64 = 2, int32 = 3, int64 = 4
+			'dim',  #Scalar = 0, Vector = 1, Matrix = 2
+			'index',
+			'zones'
+			]
+	type_dict = {1:np.float32, 2:np.float64, 3:np.int32, 4:np.int64}  
+	with open(file, mode='rb') as inF:
+	    header = { h : struct.unpack('i', inF.read(4))[0] for h in header_schema}
+	    #reading columns and rows numbers
+	    columnsRows = [struct.unpack('i', inF.read(4))[0] for i in range(header['dim'] * header['zones'])]
+	    #reading data
+	    data = inF.read( header['index'] * header['zones'] * np.dtype(type_dict[header['type']]).itemsize)
+
+
+
+	data = np.frombuffer(data, dtype= type_dict[header['type']])
+	data = np.resize(data,(header['index'], header['zones']))
+	df = pd.DataFrame(data)
+	df.columns = df.columns + 1
+	df.index = df.index + 1
+	return df
 
 def draw_table_1way(tabkey, table, constraints, df):
     colname = tabkey[0]
