@@ -12,3 +12,4 @@ data/INV/
 *.json
 .virtual_documents/
 azure_maps_key
+**/.DS_Store
