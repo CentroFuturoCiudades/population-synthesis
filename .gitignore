@@ -13,3 +13,6 @@ data/INV/
 .virtual_documents/
 azure_maps_key
 **/.DS_Store
+data/
+data/*
+data.zip
