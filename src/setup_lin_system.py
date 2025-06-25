@@ -1,12 +1,14 @@
-import numpy as np
-import pandas as pd
-# from scipy.spatial.distance import cdist
-from scipy.optimize import nnls
-from scipy.linalg import pinv, qr
-import sparse
 # from itertools import product
 # import pickle
 from collections import defaultdict
+
+import numpy as np
+import pandas as pd
+import sparse
+from scipy.linalg import pinv, qr
+
+# from scipy.spatial.distance import cdist
+from scipy.optimize import nnls
 
 
 def check_solvable(W, C):
@@ -18,29 +20,21 @@ def check_solvable(W, C):
     return solvable
 
 
-def make_init_system(personas, viviendas,
-                     constraints_ind, constraints_viv,
-                     df_mun):
+def make_init_system(personas, viviendas, constraints_ind, constraints_viv, df_mun):
 
     personas = personas.copy()
     viviendas = viviendas.copy()
 
     # Get X
-    cat_cols = [
-        col for col in personas.columns
-        if personas[col].dtype == 'category'
-    ]
+    cat_cols = [col for col in personas.columns if personas[col].dtype == "category"]
 
-    X = personas.reset_index().groupby(
-        cat_cols,
-        observed=True
-    ).agg(
-        {
-            'FACTOR': 'sum',
-            'ID_VIV': list,
-            'index': list
-        }
-    ).sort_index().reset_index()
+    X = (
+        personas.reset_index()
+        .groupby(cat_cols, observed=True)
+        .agg({"FACTOR": "sum", "ID_VIV": list, "index": list})
+        .sort_index()
+        .reset_index()
+    )
 
     # Get I and J matrices
     # Get map of viv ids to unique integers for indexing
@@ -52,26 +46,13 @@ def make_init_system(personas, viviendas,
     for i, row in X.iterrows():
         for id_viv in row.ID_VIV:
             I[(id_viv_map[id_viv], i)] += 1
-        for id_per in row['index']:
+        for id_per in row["index"]:
             J[(i, id_per)] += 1
-    I = sparse.COO(
-        sparse.DOK(
-            shape=(len(id_viv_l), len(X)),
-            data=I,
-            dtype=np.uint8)
-    )
-    J = sparse.COO(
-        sparse.DOK(
-            shape=(len(X), len(personas)),
-            data=J,
-            dtype=int)
-    )
+    I = sparse.COO(sparse.DOK(shape=(len(id_viv_l), len(X)), data=I, dtype=np.uint8))
+    J = sparse.COO(sparse.DOK(shape=(len(X), len(personas)), data=J, dtype=int))
 
     coords = np.row_stack(
-        [
-            personas.ID_VIV.map(id_viv_map).values,
-            personas.index.values
-        ]
+        [personas.ID_VIV.map(id_viv_map).values, personas.index.values]
     )
     L = sparse.COO(coords, data=1, shape=(len(id_viv_l), len(personas)))
 
@@ -84,12 +65,8 @@ def make_init_system(personas, viviendas,
 
     W = get_W(X, constraints_ind)
 
-    Up = pd.DataFrame(
-        W.values @ I.T,
-        columns=id_viv_l,
-        index=W.index
-    )
-    Uh = get_W(viviendas.set_index('ID_VIV'), constraints_viv)
+    Up = pd.DataFrame(W.values @ I.T, columns=id_viv_l, index=W.index)
+    Uh = get_W(viviendas.set_index("ID_VIV"), constraints_viv)
 
     assert np.all(Uh.columns == Up.columns)
     U = pd.concat([Uh, Up])
@@ -99,51 +76,51 @@ def make_init_system(personas, viviendas,
         # + ['POBHOG', 'POBCOL', 'PHOGJEF_F', 'PHOGJEF_M']
     ]
 
-    Y = viviendas.set_index('ID_VIV').loc[id_viv_l, ['MUN', 'FACTOR']].copy()
-    Y = Y.rename(columns={'FACTOR': 'Survey'})
-    mun_list = [m for m in Y.MUN.unique() if m != 'IMPUTED']
+    Y = viviendas.set_index("ID_VIV").loc[id_viv_l, ["MUN", "FACTOR"]].copy()
+    Y = Y.rename(columns={"FACTOR": "Survey"})
+    mun_list = [m for m in Y.MUN.unique() if m != "IMPUTED"]
     for mun in mun_list:
         Y[mun] = Y.Survey * (Y.MUN == mun)
 
-    X = X.drop(columns=['ID_VIV', 'index'])
+    X = X.drop(columns=["ID_VIV", "index"])
 
     # We need to add collective people to the Gurobi model
     # Take information from X and W
     # X do not need modifications, but we need to create Y_people from it
-    Yp = X[['MUN']].copy()
-    Yp.index.name = 'ID_PER'
-    Yp[Y.columns.drop('MUN')] = 0
+    Yp = X[["MUN"]].copy()
+    Yp.index.name = "ID_PER"
+    Yp[Y.columns.drop("MUN")] = 0
 
     # Now, we need to modify W into Up
     # POBTOT constraints is OK, no need to modify it
     # We need to add POBCOL row of 1's
     # We need to add POBHOG row of 0's
     Up = W.copy()
-    Up.index.name = 'ID_PER'
-    Up.loc['POBCOL'] = 1
-    Up.loc['POBHOG'] = 0
+    Up.index.name = "ID_PER"
+    Up.loc["POBCOL"] = 1
+    Up.loc["POBHOG"] = 0
 
     # Now, we need to add constraints POBCOL, POBHOG to U
     # We are not controlling for TOTCOL, grouping all collective population
     # since we are ignorant of the appropriate household structure, and
     # do not expect to resemble those of private households.
-    U.loc['POBCOL'] = 0
-    U.loc['POBHOG'] = U.loc['POBTOT']
+    U.loc["POBCOL"] = 0
+    U.loc["POBHOG"] = U.loc["POBTOT"]
 
     # We need to add contraints to C, these constraints exist already in TAZ
     # Need to add POBCOL and POBHOG and remove POBTOT
     # since there is no need to constraint it if
     # contraining POBCOL and POGHOG
-    C.loc[:, ['POBCOL', 'POBHOG']] = df_mun[['POBCOL', 'POBHOG']]
-    C = C.drop(columns=['POBTOT'])
+    C.loc[:, ["POBCOL", "POBHOG"]] = df_mun[["POBCOL", "POBHOG"]]
+    C = C.drop(columns=["POBTOT"])
 
     # Assign proper variables to household mateices
     Uh = U
-    Uh.columns.name = 'ID_VIV'
+    Uh.columns.name = "ID_VIV"
     Yh = Y
 
-    Uh = Uh.drop(index='POBTOT')
-    Up = Up.drop(index='POBTOT')
+    Uh = Uh.drop(index="POBTOT")
+    Up = Up.drop(index="POBTOT")
 
     # Now we need to join this up into a single Y and U
     Y = pd.concat([Yh, Yp])
@@ -151,16 +128,27 @@ def make_init_system(personas, viviendas,
 
     return X, I, J, L, Up, Uh, U, Yp, Yh, Y, C
 
-    pjoin = personas.drop(
-        columns=['MUN', 'FACTOR']
-    ).join(viviendas, on='ID_VIV')
+    pjoin = personas.drop(columns=["MUN", "FACTOR"]).join(viviendas, on="ID_VIV")
 
-    return pjoin, viviendas, W, X.drop(columns=['ID_VIV', 'index']), I, J, L, U, C, Y, Uh,Up
+    return (
+        pjoin,
+        viviendas,
+        W,
+        X.drop(columns=["ID_VIV", "index"]),
+        I,
+        J,
+        L,
+        U,
+        C,
+        Y,
+        Uh,
+        Up,
+    )
 
 
 def fix_zero_cell_all(Y, U, C):
     Y = Y.copy()
-    mun_list = [m for m in Y.MUN.unique() if m != 'IMPUTED']
+    mun_list = [m for m in Y.MUN.unique() if m != "IMPUTED"]
     for mun in mun_list:
         Y[mun] = Y[mun].astype(float)
 
@@ -175,9 +163,9 @@ def fix_zero_cell_all(Y, U, C):
 
         print(mun)
         print(Cr)
-        print('###############')
+        print("###############")
         # Find the ids invovled in zeroed constraints
-        query = ' | '.join([f'{const} > 0' for const in consts])
+        query = " | ".join([f"{const} > 0" for const in consts])
         viv_ids = U.T.query(query).index
 
         # Find U for the restricted nnls problem
@@ -193,8 +181,7 @@ def fix_zero_cell_all(Y, U, C):
         # Assign new weights in Y
         Y.loc[viv_ids, mun] = factors_new
         mask = Y.loc[:, mun] > 0
-        assert len(
-            find_zero_nozero_const(U.loc[:, mask], C.loc[mun])) == 0, mun
+        assert len(find_zero_nozero_const(U.loc[:, mask], C.loc[mun])) == 0, mun
 
     return Y
 
@@ -215,8 +202,9 @@ def get_conf_consts(mun, Y, U, C):
     return conf_consts
 
 
-def fix_confs_mun(mun, Y_ext, personas, viviendas, U, C, L, const_dict,
-                  fill_factor=1e-3):
+def fix_confs_mun(
+    mun, Y_ext, personas, viviendas, U, C, L, const_dict, fill_factor=1e-3
+):
     conf_consts = get_conf_consts(mun, Y_ext, U, C)
 
     n_ext = 0
@@ -229,7 +217,7 @@ def fix_confs_mun(mun, Y_ext, personas, viviendas, U, C, L, const_dict,
 
             # Find all combinations of cols, ignore Blanco por pase
             ccombs = list(zip(*[personas[c] for c in cols]))
-            ccombs = set([c for c in ccombs if 'Blanco por pase' not in c])
+            ccombs = set([c for c in ccombs if "Blanco por pase" not in c])
             combs.extend([(cols, ccomb) for ccomb in ccombs])
 
         combs = set(combs)
@@ -264,13 +252,11 @@ def fix_confs_mun(mun, Y_ext, personas, viviendas, U, C, L, const_dict,
         for cols, combs in combs_miss_dict.items():
             ss = []
             for comb in combs:
-                s = ' & '.join(
-                    f'{col}=={s_or_i(c)}'for col, c in zip(cols, comb)
-                )
-                ss.append(f'({s})')
-            ss = ' | '.join(ss)
-            query_l.append(f'({ss})')
-        query = ' | '.join(query_l)
+                s = " & ".join(f"{col}=={s_or_i(c)}" for col, c in zip(cols, comb))
+                ss.append(f"({s})")
+            ss = " | ".join(ss)
+            query_l.append(f"({ss})")
+        query = " | ".join(query_l)
         # Get viv ids
         maskP_miss = personas.eval(query)
         mask_miss = L.T[maskP_miss].sum(axis=0).astype(bool).todense()
@@ -337,7 +323,7 @@ def get_W(X, const_dict, ignore=[]):
     for k, const in const_dict.items():
         if k in ignore:
             continue
-        if k == 'POBTOT':
+        if k == "POBTOT":
             w = np.ones(len(X), dtype=int)
         else:
             w = get_w_vec(X, const)
@@ -364,7 +350,7 @@ def find_conf_const(W, C):
     W_ind = W.loc[mask].copy()
     W_dep = W.loc[~mask].copy()
     if np.linalg.matrix_rank(W_ind) != rank:
-        r, P = qr(W.T.values, mode='r', pivoting=True)
+        r, P = qr(W.T.values, mode="r", pivoting=True)
         assert (abs(np.diag(r)) > 1e-10).sum() == rank
         W_ind = W.iloc[P[:rank]].copy()
         W_dep = W.iloc[P[rank:]].copy()
@@ -429,25 +415,25 @@ def replace_mun(df, mun_col, mun_orig, mun_dest):
     muntype = df[mun_col].dtype
     df[mun_col] = df[mun_col].where(
         df[mun_col].isin(
-            [
-                mun_orig,
-                'Blanco por pase', 'No especificado',
-                'OtroPais', 'OtraEnt'
-            ]
+            [mun_orig, "Blanco por pase", "No especificado", "OtroPais", "OtraEnt"]
         ),
-        'No especificado'
+        "No especificado",
     )
     df[mun_col] = df[mun_col].replace(mun_orig, mun_dest)
     df[mun_col] = df[mun_col].astype(muntype)
 
 
-def setup_ls(personas_cat, viviendas_cat,
-             df_mun,
-             constraints_ind, constraints_viv,
-             out_path,
-             ignore_cols_p=[],
-             ignore_cols_v=[],
-             verbose=True):
+def setup_ls(
+    personas_cat,
+    viviendas_cat,
+    df_mun,
+    constraints_ind,
+    constraints_viv,
+    out_path,
+    ignore_cols_p=[],
+    ignore_cols_v=[],
+    verbose=True,
+):
 
     # Setup list of ignored constraints
     ignore_const_p = []
@@ -466,73 +452,77 @@ def setup_ls(personas_cat, viviendas_cat,
 
     # Build initial dict
     XWC_init = make_init_dict(
-        personas_cat, viviendas_cat,
-        df_mun,
-        constraints_ind, constraints_viv,
-        out_path)
+        personas_cat, viviendas_cat, df_mun, constraints_ind, constraints_viv, out_path
+    )
 
     # Seconf loop, fix zero cell problmes
     XWC_ext = fix_zero_cell(
         XWC_init,
-        personas_cat, viviendas_cat,
+        personas_cat,
+        viviendas_cat,
         df_mun,
-        constraints_ind, constraints_viv,
-        out_path)
+        constraints_ind,
+        constraints_viv,
+        out_path,
+    )
 
     # Third loop to fix conflicts among constraints
-    print('Fixing conflicting constraints ... ')
+    print("Fixing conflicting constraints ... ")
     for mun in personas_cat.keys():
-        if mun == 'IMPUTED':
+        if mun == "IMPUTED":
             continue
 
-        print(f'    {mun} ...', end='')
-        conf_consts = XWC_dict[mun]['conf_consts']
-        zero_consts = XWC_dict[mun]['zero_nozero'].index.tolist()
+        print(f"    {mun} ...", end="")
+        conf_consts = XWC_dict[mun]["conf_consts"]
+        zero_consts = XWC_dict[mun]["zero_nozero"].index.tolist()
         consts = set(zero_consts + conf_consts)
         if len(consts) == 0:
-            Y_ext = XWC_dict[mun]['Y']
-            U_ext = XWC_dict[mun]['U']
-            C_ext = XWC_dict[mun]['C']
+            Y_ext = XWC_dict[mun]["Y"]
+            U_ext = XWC_dict[mun]["U"]
+            C_ext = XWC_dict[mun]["C"]
         else:
             X_ext, I_ext, W_ext, U_ext, Y_ext, C_ext = fill_zero_h(
                 mun,
                 XWC_dict,
                 consts,
-                constraints_ind, constraints_viv,
-                personas_cat, viviendas_cat,
-                df_mun)
+                constraints_ind,
+                constraints_viv,
+                personas_cat,
+                viviendas_cat,
+                df_mun,
+            )
 
         zero_nozero = find_zero_nozero_const(U_ext, C_ext)
         assert len(zero_nozero) == 0, zero_nozero
 
-        XWC_dict[mun]['Y_ext'] = Y_ext
-        XWC_dict[mun]['U_ext'] = U_ext
-        XWC_dict[mun]['C_ext'] = C_ext
+        XWC_dict[mun]["Y_ext"] = Y_ext
+        XWC_dict[mun]["U_ext"] = U_ext
+        XWC_dict[mun]["C_ext"] = C_ext
 
-        Y = XWC_dict[mun]['Y']
-        print(f'Added {len(Y_ext) - len(Y)} extra households.')
+        Y = XWC_dict[mun]["Y"]
+        print(f"Added {len(Y_ext) - len(Y)} extra households.")
 
         conf_consts = find_conf_const(U_ext, C_ext)
-        XWC_dict[mun]['conf_consts'] = conf_consts
+        XWC_dict[mun]["conf_consts"] = conf_consts
 
         # if verbose:
-            # print(f'    Solvable: {check_solvable(U_ext, C_ext)}')
-            # print()
-            # print('Non-zero-zero constraints: ')
-            # print(find_nonzero_zero_const(U, C))
-            # print()
-            # C = df_mun.loc[mun]
-            # assert C.POBHOG == C.OCUPVIVPAR
-            # assert C.TOTHOG == C.TVIVPARHAB
-            # print(f'Total people: {C.POBTOT}\n'
-            #       f'people in particular dwelligns: {C.POBHOG}\n'
-            #       f'people in collective dwellings: {C.POBTOT - C.POBHOG}')
-            # print(f'Particular+Collective dwellings: {C.TVIVHAB}\n'
-            #       f'Total collective dwellings: {C.TVIVHAB - C.TVIVPARHAB}\n'
-            #       f'Total particular dwellings/households (1 household per dwelling): {C.TVIVPARHAB}\n'
-            #       f'Particular with characteristics: {C.VIVPARH_CV}. Controlled by census constraints.\n'
-            #       f'Particular without characteristics: {C.TVIVPARHAB - C.VIVPARH_CV}.'
-            #       )
+        # print(f'    Solvable: {check_solvable(U_ext, C_ext)}')
+        # print()
+        # print('Non-zero-zero constraints: ')
+        # print(find_nonzero_zero_const(U, C))
+        # print()
+        # C = df_mun.loc[mun]
+        # assert C.POBHOG == C.OCUPVIVPAR
+        # assert C.TOTHOG == C.TVIVPARHAB
+        # print(f'Total people: {C.POBTOT}\n'
+        #       f'people in particular dwelligns: {C.POBHOG}\n'
+        #       f'people in collective dwellings: {C.POBTOT - C.POBHOG}')
+        # print(f'Particular+Collective dwellings: {C.TVIVHAB}\n'
+        #       f'Total collective dwellings: {C.TVIVHAB - C.TVIVPARHAB}\n'
+        #       f'Total particular dwellings/households (1 household per dwelling): {C.TVIVPARHAB}\n'
+        #       f'Particular with characteristics: {C.VIVPARH_CV}. Controlled by census constraints.\n'
+        #       f'Particular without characteristics: {C.TVIVPARHAB - C.VIVPARH_CV}.'
+        #       )
 
         # Fill zero cells with non-zero constraints in X
         # Identify zero cell problems as zero weight vectors

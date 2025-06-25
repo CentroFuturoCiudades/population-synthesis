@@ -1,0 +1,1019 @@
+variables:
+  no_especificado: &NA 'No especificado'
+  'si': &si 'Sí'
+  'no': &no 'No'
+
+MUN:
+  1: 'Abasolo'
+  2: 'Agualeguas'
+  3: 'Los Aldamas'
+  4: 'Allende'
+  5: 'Anáhuac'
+  6: 'Apodaca'
+  7: 'Aramberri'
+  8: 'Bustamante'
+  9: 'Cadereyta Jiménez'
+  10: 'El Carmen'
+  11: 'Cerralvo'
+  12: 'Ciénega de Flores'
+  13: 'China'
+  14: 'Doctor Arroyo'
+  15: 'Doctor Coss'
+  16: 'Doctor González'
+  17: 'Galeana'
+  18: 'García'
+  19: 'San Pedro Garza García'
+  20: 'General Bravo'
+  21: 'General Escobedo'
+  22: 'General Terán'
+  23: 'General Treviño'
+  24: 'General Zaragoza'
+  25: 'General Zuazua'
+  26: 'Guadalupe'
+  27: 'Los Herreras'
+  28: 'Higueras'
+  29: 'Hualahuises'
+  30: 'Iturbide'
+  31: 'Juárez'
+  32: 'Lampazos de Naranjo'
+  33: 'Linares'
+  34: 'Marín'
+  35: 'Melchor Ocampo'
+  36: 'Mier y Noriega'
+  37: 'Mina'
+  38: 'Montemorelos'
+  39: 'Monterrey'
+  40: 'Parás'
+  41: 'Pesquería'
+  42: 'Los Ramones'
+  43: 'Rayones'
+  44: 'Sabinas Hidalgo'
+  45: 'Salinas Victoria'
+  46: 'San Nicolás de los Garza'
+  47: 'Hidalgo'
+  48: 'Santa Catarina'
+  49: 'Santiago'
+  50: 'Vallecillo'
+  51: 'Villaldama'
+
+CLAVIVP:
+  1: 'Casa única en el terreno'
+  2: 'Casa que comparte terreno con otra(s)'
+  3: 'Casa dúplex'
+  4: 'Departamento en edificio'
+  5: 'Vivienda en vecindad o cuartería'
+  6: 'Vivienda en cuarto de azotea de un edificio'
+  7: 'Local no construido para habitación'
+  8: 'Vivienda móvil'
+  9: 'Refugio'
+  99: *NA
+
+SEXO:
+  1: 'M'
+  3: 'F'
+
+PARENTESCO:
+  101: 'Jefa(e)'
+  201: 'Esposa(o)'
+  202: 'Concubina(o) o unión libre'
+  203: 'Amante o querida(o)'
+  301: 'Hija(o)'
+  302: 'Hija(o) adoptiva(o)'
+  303: 'Hijastra(o)'
+  304: 'Hija(o) de crianza'
+  401: 'Madre o padre'
+  402: 'Madrastra o padrastro'
+  403: 'Hermana(o)'
+  404: 'Media(o) hermana(o)'
+  405: 'Hermanastra(o)'
+  406: 'Abuela(o)'
+  407: 'Bisabuela(o) o tatarabuela(o)'
+  408: 'Nieta(o)'
+  409: 'Nietastra(o)'
+  410: 'Esposa(o) de nieto(a)'
+  411: 'Bisnieta(o) o tataranieta(o)'
+  412: 'Tía(o)'
+  413: 'Sobrina(o)'
+  414: 'Sobrina(o) nieta(o)'
+  415: 'Prima(o)'
+  416: 'Suegra(o)'
+  417: 'Consuegra(o)'
+  418: 'Nuera o yerno'
+  419: 'Cuñada(o)'
+  420: 'Concuña(o)'
+  421: 'Madrina o padrino'
+  422: 'Ahijada(o)'
+  423: 'Comadre o compadre'
+  424: 'Otros familiares'
+  501: 'Sin parentesco'
+  502: 'Tutor(a)'
+  503: 'Tutelada(o)'
+  601: 'Trabajador(a) doméstico(a)'
+  611: 'Esposa(o) de trabajador(a) doméstico(a)'
+  612: 'Hija(o) de trabajador(a) doméstico(a)'
+  613: 'Otro pariente de trabajador(a) doméstico(a)'
+  701: 'Huésped'
+  999: *NA
+
+IDENT_MADRE:
+  96: 'Otra vivienda'
+  97: 'Falleció'
+  98: 'No sabe'
+  99: *NA
+
+IDENT_PADRE:
+  96: 'Otra vivienda'
+  97: 'Falleció'
+  98: 'No sabe'
+  99: *NA
+
+ENT_PAIS_NAC:
+  original:
+    1: Aguascalientes
+    2: Baja California
+    3: Baja California Sur
+    4: Campeche
+    5: Coahuila de Zaragoza
+    6: Colima
+    7: Chiapas
+    8: Chihuahua
+    9: Ciudad de México
+    10: Durango
+    11: Guanajuato
+    12: Guerrero
+    13: Hidalgo
+    14: Jalisco
+    15: México
+    16: Michoacán de Ocampo
+    17: Morelos
+    18: Nayarit
+    19: Nuevo León
+    20: Oaxaca
+    21: Puebla
+    22: Querétaro
+    23: Quintana Roo
+    24: San Luis Potosí
+    25: Sinaloa
+    26: Sonora
+    27: Tabasco
+    28: Tamaulipas
+    29: Tlaxcala
+    30: Veracruz de Ignacio de la Llave
+    31: Yucatán
+    32: Zacatecas
+    100: África
+    101: República de Angola
+    102: República Argelina Democrática y Popular
+    104: República de Benín
+    105: República de Botsuana
+    106: Burkina Faso
+    107: República de Burundi
+    108: República de Cabo Verde
+    109: República de Camerún
+    112: República de Ruanda
+    113: República del Congo
+    114: República de Costa de Marfil
+    115: República del Chad
+    116: República de Yibuti
+    117: República Árabe de Egipto
+    118: Estado de Eritrea
+    119: República Democrática Federal de Etiopía
+    120: República Gabonesa
+    121: República de Gambia
+    122: República de Ghana
+    123: República de Guinea
+    124: República de Guinea Bissau
+    125: República de Guinea Ecuatorial
+    126: República de Kenia
+    127: Reino de Lesotho
+    128: República de Liberia
+    129: Estado de Libia
+    130: República de Madagascar
+    133: República de Malaui
+    134: República de Malí
+    135: Reino de Marruecos
+    136: República de Mauricio
+    137: República Islámica de Mauritania
+    139: República de Mozambique
+    140: República de Namibia
+    141: República del Níger
+    142: República Federal de Nigeria
+    143: República Centroafricana
+    147: Isla Santa Helena
+    148: República Democrática de Santo Tomé y Príncipe
+    149: República de Senegal
+    150: República de las Seychelles
+    151: República de Sierra Leona
+    152: Unión de las Comoras
+    153: República Federal de Somalia
+    154: República de Sudáfrica
+    160: Reino de Suazilandia
+    161: República Unida de Tanzania
+    162: República Togolesa
+    164: República Tunecina
+    165: República de Uganda
+    167: República de Zambia
+    168: República de Zimbabue
+    169: República Democrática del Congo
+    170: República Árabe Saharaui Democrática
+    171: República del Sudán
+    172: República de Sudán del Sur
+    200: América
+    201: Anguila
+    202: Antigua y Barbuda
+    204: República Argentina
+    205: Aruba
+    206: Mancomunidad de las Bahamas
+    207: Barbados
+    208: Belice
+    209: Bermudas
+    210: Estado Plurinacional de Bolivia
+    211: República Federativa de Brasil
+    212: Islas Caimán
+    213: Canadá
+    214: República de Colombia
+    215: República de Costa Rica
+    216: República de Cuba
+    217: República de Chile
+    218: Mancomunidad de Dominica
+    219: República del Ecuador
+    220: República de El Salvador
+    221: Estados Unidos de América
+    222: Granada
+    223: Groenlandia
+    225: República de Guatemala
+    226: República Cooperativa de Guyana
+    228: República de Haití
+    229: República de Honduras
+    230: Jamaica
+    231: Islas Malvinas
+    233: Montserrat
+    234: República de Nicaragua
+    235: República de Panamá
+    236: República del Paraguay
+    237: República del Perú
+    238: Estado Libre Asociado de Puerto Rico
+    239: República Dominicana
+    240: Federación de San Cristóbal y Nieves
+    241: Isla de Man
+    242: San Vicente y las Granadinas
+    243: Santa Lucía
+    244: República de Surinam
+    245: República de Trinidad y Tobago
+    246: Islas Turcas y Caicos
+    247: República Oriental del Uruguay
+    248: Islas Vírgenes de los Estados Unidos
+    249: Islas Vírgenes Británicas
+    250: República Bolivariana de Venezuela
+    251: Curazao
+    252: Isla de Sint Maarten
+    300: Asia
+    301: República Islámica de Afganistán
+    302: Reino de Arabia Saudita
+    303: República de Armenia
+    304: República de Azerbaiyán
+    305: Reino de Bahréin
+    306: República Popular de Bangladesh
+    307: Reino de Bután
+    308: Sultanato de Brunéi
+    309: Reino de Camboya
+    312: República Popular Democrática de Corea
+    313: República de Corea
+    315: República Popular China
+    316: Taiwán
+    318: República de Chipre
+    321: Emiratos Árabes Unidos
+    322: República de Filipinas
+    323: Georgia
+    325: República de La India
+    326: República de Indonesia
+    327: República Islámica de Irán
+    328: República de Irak
+    329: Estado de Israel
+    330: Japón
+    331: Reino Hachemita de Jordania
+    332: República de Kazajstán
+    333: República Kirguisa
+    334: Estado de Kuwait
+    335: República Libanesa
+    337: Malasia
+    338: República de Maldivas
+    339: Mongolia
+    340: Unión de Myanmar
+    341: República Federal Democrática de Nepal
+    342: Sultanato de Omán
+    343: República Islámica de Pakistán
+    344: Estado de Qatar
+    345: República Democrática Popular Lao
+    346: República de Singapur
+    347: República Árabe Siria
+    348: República Socialista Democrática de Sri Lanka
+    349: Reino de Tailandia
+    350: República de Tayikistán
+    351: Turkmenistán
+    352: República de Turquía
+    353: República de Uzbekistán
+    354: República Socialista de Vietnam
+    355: República de Yemen
+    356: República de Palaos
+    357: República Democrática de Timor Oriental
+    358: Estado de Palestina
+    400: Europa
+    401: República de Albania
+    402: República Federal de Alemania
+    403: Principado de Andorra
+    405: República de Austria
+    407: República de Bielorrusia
+    408: Reino de Bélgica
+    409: Bosnia y Herzegovina
+    410: República de Bulgaria
+    411: República de Croacia
+    412: Reino de Dinamarca
+    413: República Eslovaca
+    414: República de Eslovenia
+    415: Reino de España
+    416: República de Estonia
+    417: Islas Feroe
+    418: República de Finlandia
+    419: República Francesa
+    420: Gibraltar
+    421: República Helénica
+    422: Hungría
+    423: República de Irlanda
+    424: República de Islandia
+    425: República Italiana
+    426: República de Letonia
+    427: Principado de Liechtenstein
+    428: República de Lituania
+    429: Gran Ducado de Luxemburgo
+    430: Antigua República Yugoslava de Macedonia
+    431: República de Malta
+    433: República de Moldavia
+    434: Principado de Mónaco
+    435: Reino de Noruega
+    436: Reino de los Países Bajos
+    437: República de Polonia
+    438: República Portuguesa
+    439: Reino Unido de Gran Bretaña e Irlanda del Norte
+    440: República Checa
+    441: Rumania
+    442: Federación de Rusia
+    443: República de San Marino
+    444: Estado de la Ciudad del Vaticano
+    445: Reino de Suecia
+    446: Confederación Suiza
+    447: Ucrania
+    452: República de Serbia
+    453: República de Montenegro
+    500: Oceanía
+    501: Mancomunidad de Australia
+    503: Islas Cook
+    505: Guam
+    507: República de Kiribati
+    512: Mancomunidad de las Islas Marianas del Norte
+    513: República de las Islas Marshall
+    514: Estados Federados de Micronesia
+    516: República de Nauru
+    517: Niue
+    520: Nueva Zelandia
+    522: Isla Wake
+    523: Estado Independiente de Papúa Nueva Guinea
+    524: Islas Pitcairn, Henderson, Ducie y Oeno
+    526: Islas Salomón
+    527: Estado Independiente de Samoa
+    528: Samoa Americana
+    530: Tokelau
+    531: Reino de Tonga
+    532: Tuvalu
+    533: República de Vanuatu
+    535: República de Fiji
+    997: No especificado de Entidad Federativa
+    998: No especificado de País
+    999: *NA
+  simplified:
+    function: code_ent
+
+NACIONALIDAD:
+  1: *si
+  3: *no
+  9: *NA
+
+SERSALUD:
+  1: 'IMSS'
+  2: 'ISSSTE'
+  3: 'ISSSTE Estatal'
+  4: 'PEMEX, Defensa o Marina'
+  5: 'SSA/Seguro Popular/Bienestar'
+  6: 'IMSS-PROSPERA o IMSS-BIENESTAR'
+  7: 'Consultorio, clínica u hospital privado'
+  8: 'Consultorio de farmacia'
+  9: 'Otro lugar'
+  10: 'No se atiende'
+  99: *NA
+
+AFRODES:
+  1: *si
+  3: *no
+  9: *NA
+
+REGIS_NAC:
+  1: México
+  2: Otro país
+  3: No tiene
+  9: *NA
+
+DHSERSAL1:
+  1: 'IMSS'
+  2: 'ISSSTE'
+  3: 'ISSSTE_E'
+  4: 'P_D_M'
+  5: 'Popular_NGenración_SBienestar'
+  6: 'IMSS_Prospera/Bienestar'
+  7: 'Privado'
+  8: 'Otro'
+  9: 'No afiliado'
+  99: *NA
+
+DHSERSAL2:
+  2: 'ISSSTE'
+  3: 'ISSSTE_E'
+  4: 'P_D_M'
+  5: 'Popular_NGenración_SBienestar'
+  6: 'IMSS_Prospera/Bienestar'
+  7: 'Privado'
+  8: 'Otro'
+
+RELIGION:
+  original:
+    1101: Católica
+    1201: Católica ortodoxa
+    1301: Anabautista/Menonita
+    1302: Anglicana/Episcopal
+    1303: Bautista
+    1304: Luterana
+    1305: Metodista
+    1306: Presbiteriana
+    1307: Otras protestantes
+    1311: Amistad Cristiana
+    1312: Asambleas de Dios
+    1313: Iglesia Apostólica de la Fe en Cristo Jesús
+    1314: Iglesia de Dios
+    1315: Iglesia de Dios de la Profecía
+    1316: Iglesia de Dios en México del Evangelio Completo
+    1317: Príncipe de Paz
+    1318: Otras asociaciones pentecostales
+    1321: Iglesia Cristiana Interdenominacional
+    1322: Iglesia del Dios Vivo, Columna y Apoyo de la Verdad, la Luz del Mundo
+    1323: Iglesia de Cristo
+    1324: Iglesia del Nazareno
+    1325: Movimientos Sincréticos Judaicos Neoisraelitas
+    1326: Otras cristianas evangélicas
+    1331: Adventista del Séptimo Día
+    1332: Iglesia de Jesucristo de los Santos de los Últimos Días (Mormón)
+    1333: Testigo de Jehová
+    1341: Cristiana
+    1342: Evangélica
+    1343: Pentecostal
+    1344: Protestante
+    2101: Judía
+    2201: Islámica
+    2301: Budista
+    2302: Hinduista
+    2303: Otras de origen oriental
+    2401: New Age y Escuelas esotéricas
+    2501: Raíces étnicas
+    2601: Raíces afro
+    2701: Espiritualista
+    2801: Cultos populares
+    2901: Otros movimientos religiosos
+    3101: Ninguna religión
+    3102: Ateos
+    3103: Agnósticos
+    3104: Sin adscripción religiosa (creyente)
+    9999: *NA
+  simplified:
+    1101: Católica
+    1201: &otros 'Otros credos'
+    1301: &protestante 'Protestante/cristiano evangélico'
+    1302: *protestante
+    1303: *protestante
+    1304: *protestante
+    1305: *protestante
+    1306: *protestante
+    1307: *protestante
+    1311: *protestante
+    1312: *protestante
+    1313: *protestante
+    1314: *protestante
+    1315: *protestante
+    1316: *protestante
+    1317: *protestante
+    1318: *protestante
+    1321: *protestante
+    1322: *protestante
+    1323: *protestante
+    1324: *protestante
+    1325: *protestante
+    1326: *protestante
+    1331: *protestante
+    1332: *protestante
+    1333: *protestante
+    1341: *protestante
+    1342: *protestante
+    1343: *protestante
+    1344: *protestante
+    2101: *otros
+    2201: *otros
+    2301: *otros
+    2302: *otros
+    2303: *otros
+    2401: *otros
+    2501: *otros
+    2601: *otros
+    2701: *otros
+    2801: *otros
+    2901: *otros
+    3101: &sin 'Sin religión / Sin adscripción religiosa'
+    3102: *sin
+    3103: *sin
+    3104: *sin
+    9999: *NA
+
+DIS_VER:
+  1: 'No tiene dificultad'
+  2: 'Lo hace con poca dificultad'
+  3: 'Lo hace con mucha dificultad'
+  4: 'No puede hacerlo'
+  8: 'Se desconoce el grado de la discapacidad'
+  9: *NA
+
+DIS_OIR:
+  1: 'No tiene dificultad'
+  2: 'Lo hace con poca dificultad'
+  3: 'Lo hace con mucha dificultad'
+  4: 'No puede hacerlo'
+  8: 'Se desconoce el grado de la discapacidad'
+  9: *NA
+
+DIS_CAMINAR:
+  1: 'No tiene dificultad'
+  2: 'Lo hace con poca dificultad'
+  3: 'Lo hace con mucha dificultad'
+  4: 'No puede hacerlo'
+  8: 'Se desconoce el grado de la discapacidad'
+  9: *NA
+
+DIS_RECORDAR:
+  1: 'No tiene dificultad'
+  2: 'Lo hace con poca dificultad'
+  3: 'Lo hace con mucha dificultad'
+  4: 'No puede hacerlo'
+  8: 'Se desconoce el grado de la discapacidad'
+  9: *NA
+
+DIS_BANARSE:
+  1: 'No tiene dificultad'
+  2: 'Lo hace con poca dificultad'
+  3: 'Lo hace con mucha dificultad'
+  4: 'No puede hacerlo'
+  8: 'Se desconoce el grado de la discapacidad'
+  9: *NA
+
+DIS_HABLAR:
+  1: 'No tiene dificultad'
+  2: 'Lo hace con poca dificultad'
+  3: 'Lo hace con mucha dificultad'
+  4: 'No puede hacerlo'
+  8: 'Se desconoce el grado de la discapacidad'
+  9: *NA
+
+DIS_MENTAL:
+  5: *si
+  6: *no
+  9: *NA
+
+CAU_VER:
+  1: Nacimiento
+  2: Enfermedad
+  3: Accidente
+  4: Edad avanzada
+  5: Otra causa
+  9: *NA
+
+CAU_OIR:
+  1: Nacimiento
+  2: Enfermedad
+  3: Accidente
+  4: Edad avanzada
+  5: Otra causa
+  9: *NA
+
+CAU_CAMINAR:
+  1: Nacimiento
+  2: Enfermedad
+  3: Accidente
+  4: Edad avanzada
+  5: Otra causa
+  9: *NA
+
+CAU_RECORDAR:
+  1: Nacimiento
+  2: Enfermedad
+  3: Accidente
+  4: Edad avanzada
+  5: Otra causa
+  9: *NA
+
+CAU_BANARSE:
+  1: Nacimiento
+  2: Enfermedad
+  3: Accidente
+  4: Edad avanzada
+  5: Otra causa
+  9: *NA
+
+CAU_HABLAR:
+  1: Nacimiento
+  2: Enfermedad
+  3: Accidente
+  4: Edad avanzada
+  5: Otra causa
+  9: *NA
+
+CAU_MENTAL:
+  1: Nacimiento
+  2: Enfermedad
+  3: Accidente
+  4: Edad avanzada
+  5: Otra causa
+  9: *NA
+
+HLENGUA:
+  1: *si
+  3: *no
+  9: *NA
+
+QDIALECT_INALI:
+  101: Kickapoo
+  201: Pápago
+  202: Pima
+  203: Tepehuano del norte
+  204: Tepehuano del sur
+  205: Tarahumara
+  206: Guarijío
+  207: Yaqui
+  208: Mayo
+  209: Cora
+  210: Huichol
+  211: Náhuatl
+  301: Paipai
+  303: Cucapá
+  304: Kumiai
+  305: Kiliwa
+  401: Seri
+  501: Otomí
+  502: Mazahua
+  503: Matlatzinca
+  504: Tlahuica
+  505: Pame
+  506: Chichimeco Jonaz
+  507: Chinanteco
+  508: Tlapaneco
+  509: Mazateco
+  510: Ixcateco
+  511: Chocholteco
+  512: Popoloca
+  513: Zapoteco
+  514: Chatino
+  515: Amuzgo
+  516: Mixteco
+  517: Cuicateco
+  518: Triqui
+  601: Huasteco
+  602: Maya
+  603: Lacandón
+  604: Ch'ol
+  605: Chontal de Tabasco
+  606: Tseltal
+  607: Tsotsil
+  608: Q’anjob’al
+  609: Akateko
+  610: Jakalteko
+  611: Qato'k
+  612: Chuj
+  613: Tojolabal
+  614: Q’eqchi’
+  615: K’iche’
+  616: Kaqchikel
+  617: Teko
+  618: Mam
+  619: Awakateko
+  620: Ixil
+  701: Totonaco
+  702: Tepehua
+  801: Tarasco
+  901: Mixe
+  902: Sayulteco
+  903: Oluteco
+  904: Texistepequeño
+  905: Ayapaneco
+  906: Popoluca de la Sierra
+  907: Zoque
+  1001: Chontal de Oaxaca
+  1101: Huave
+  8000: Otras lenguas indígenas de América
+  9000: No especificado
+  9010: Chontal insuficientemente especificado
+  9020: Tepehuano insuficientemente especificado
+  9030: Popoluca insuficientemente especificado
+  9999: *NA
+
+HESPANOL:
+  1: *si
+  3: *no
+  9: *NA
+
+ELENGUA:
+  5: *si
+  7: *no
+  9: *NA
+
+PERTE_INDIGENA:
+  1: *si
+  3: *no
+  9: *NA
+
+ASISTEN:
+  1: *si
+  3: *no
+  9: *NA
+
+ENT_PAIS_ASI:
+  original:
+    1: Aguascalientes
+    2: Baja California
+    3: Baja California Sur
+    4: Campeche
+    5: Coahuila de Zaragoza
+    6: Colima
+    7: Chiapas
+    8: Chihuahua
+    9: Ciudad de México
+    10: Durango
+    11: Guanajuato
+    12: Guerrero
+    13: Hidalgo
+    14: Jalisco
+    15: México
+    16: Michoacán de Ocampo
+    17: Morelos
+    18: Nayarit
+    19: Nuevo León
+    20: Oaxaca
+    21: Puebla
+    22: Querétaro
+    23: Quintana Roo
+    24: San Luis Potosí
+    25: Sinaloa
+    26: Sonora
+    27: Tabasco
+    28: Tamaulipas
+    29: Tlaxcala
+    30: Veracruz de Ignacio de la Llave
+    31: Yucatán
+    32: Zacatecas
+    100: África
+    101: República de Angola
+    102: República Argelina Democrática y Popular
+    104: República de Benín
+    105: República de Botsuana
+    106: Burkina Faso
+    107: República de Burundi
+    108: República de Cabo Verde
+    109: República de Camerún
+    112: República de Ruanda
+    113: República del Congo
+    114: República de Costa de Marfil
+    115: República del Chad
+    116: República de Yibuti
+    117: República Árabe de Egipto
+    118: Estado de Eritrea
+    119: República Democrática Federal de Etiopía
+    120: República Gabonesa
+    121: República de Gambia
+    122: República de Ghana
+    123: República de Guinea
+    124: República de Guinea Bissau
+    125: República de Guinea Ecuatorial
+    126: República de Kenia
+    127: Reino de Lesotho
+    128: República de Liberia
+    129: Estado de Libia
+    130: República de Madagascar
+    133: República de Malaui
+    134: República de Malí
+    135: Reino de Marruecos
+    136: República de Mauricio
+    137: República Islámica de Mauritania
+    139: República de Mozambique
+    140: República de Namibia
+    141: República del Níger
+    142: República Federal de Nigeria
+    143: República Centroafricana
+    147: Isla Santa Helena
+    148: República Democrática de Santo Tomé y Príncipe
+    149: República de Senegal
+    150: República de las Seychelles
+    151: República de Sierra Leona
+    152: Unión de las Comoras
+    153: República Federal de Somalia
+    154: República de Sudáfrica
+    160: Reino de Suazilandia
+    161: República Unida de Tanzania
+    162: República Togolesa
+    164: República Tunecina
+    165: República de Uganda
+    167: República de Zambia
+    168: República de Zimbabue
+    169: República Democrática del Congo
+    170: República Árabe Saharaui Democrática
+    171: República del Sudán
+    172: República de Sudán del Sur
+    200: América
+    201: Anguila
+    202: Antigua y Barbuda
+    204: República Argentina
+    205: Aruba
+    206: Mancomunidad de las Bahamas
+    207: Barbados
+    208: Belice
+    209: Bermudas
+    210: Estado Plurinacional de Bolivia
+    211: República Federativa de Brasil
+    212: Islas Caimán
+    213: Canadá
+    214: República de Colombia
+    215: República de Costa Rica
+    216: República de Cuba
+    217: República de Chile
+    218: Mancomunidad de Dominica
+    219: República del Ecuador
+    220: República de El Salvador
+    221: Estados Unidos de América
+    222: Granada
+    223: Groenlandia
+    225: República de Guatemala
+    226: República Cooperativa de Guyana
+    228: República de Haití
+    229: República de Honduras
+    230: Jamaica
+    231: Islas Malvinas
+    233: Montserrat
+    234: República de Nicaragua
+    235: República de Panamá
+    236: República del Paraguay
+    237: República del Perú
+    238: Estado Libre Asociado de Puerto Rico
+    239: República Dominicana
+    240: Federación de San Cristóbal y Nieves
+    241: Isla de Man
+    242: San Vicente y las Granadinas
+    243: Santa Lucía
+    244: República de Surinam
+    245: República de Trinidad y Tobago
+    246: Islas Turcas y Caicos
+    247: República Oriental del Uruguay
+    248: Islas Vírgenes de los Estados Unidos
+    249: Islas Vírgenes Británicas
+    250: República Bolivariana de Venezuela
+    251: Curazao
+    252: Isla de Sint Maarten
+    300: Asia
+    301: República Islámica de Afganistán
+    302: Reino de Arabia Saudita
+    303: República de Armenia
+    304: República de Azerbaiyán
+    305: Reino de Bahréin
+    306: República Popular de Bangladesh
+    307: Reino de Bután
+    308: Sultanato de Brunéi
+    309: Reino de Camboya
+    312: República Popular Democrática de Corea
+    313: República de Corea
+    315: República Popular China
+    316: Taiwán
+    318: República de Chipre
+    321: Emiratos Árabes Unidos
+    322: República de Filipinas
+    323: Georgia
+    325: República de La India
+    326: República de Indonesia
+    327: República Islámica de Irán
+    328: República de Irak
+    329: Estado de Israel
+    330: Japón
+    331: Reino Hachemita de Jordania
+    332: República de Kazajstán
+    333: República Kirguisa
+    334: Estado de Kuwait
+    335: República Libanesa
+    337: Malasia
+    338: República de Maldivas
+    339: Mongolia
+    340: Unión de Myanmar
+    341: República Federal Democrática de Nepal
+    342: Sultanato de Omán
+    343: República Islámica de Pakistán
+    344: Estado de Qatar
+    345: República Democrática Popular Lao
+    346: República de Singapur
+    347: República Árabe Siria
+    348: República Socialista Democrática de Sri Lanka
+    349: Reino de Tailandia
+    350: República de Tayikistán
+    351: Turkmenistán
+    352: República de Turquía
+    353: República de Uzbekistán
+    354: República Socialista de Vietnam
+    355: República de Yemen
+    356: República de Palaos
+    357: República Democrática de Timor Oriental
+    358: Estado de Palestina
+    400: Europa
+    401: República de Albania
+    402: República Federal de Alemania
+    403: Principado de Andorra
+    405: República de Austria
+    407: República de Bielorrusia
+    408: Reino de Bélgica
+    409: Bosnia y Herzegovina
+    410: República de Bulgaria
+    411: República de Croacia
+    412: Reino de Dinamarca
+    413: República Eslovaca
+    414: República de Eslovenia
+    415: Reino de España
+    416: República de Estonia
+    417: Islas Feroe
+    418: República de Finlandia
+    419: República Francesa
+    420: Gibraltar
+    421: República Helénica
+    422: Hungría
+    423: República de Irlanda
+    424: República de Islandia
+    425: República Italiana
+    426: República de Letonia
+    427: Principado de Liechtenstein
+    428: República de Lituania
+    429: Gran Ducado de Luxemburgo
+    430: Antigua República Yugoslava de Macedonia
+    431: República de Malta
+    433: República de Moldavia
+    434: Principado de Mónaco
+    435: Reino de Noruega
+    436: Reino de los Países Bajos
+    437: República de Polonia
+    438: República Portuguesa
+    439: Reino Unido de Gran Bretaña e Irlanda del Norte
+    440: República Checa
+    441: Rumania
+    442: Federación de Rusia
+    443: República de San Marino
+    444: Estado de la Ciudad del Vaticano
+    445: Reino de Suecia
+    446: Confederación Suiza
+    447: Ucrania
+    452: República de Serbia
+    453: República de Montenegro
+    500: Oceanía
+    501: Mancomunidad de Australia
+    503: Islas Cook
+    505: Guam
+    507: República de Kiribati
+    512: Mancomunidad de las Islas Marianas del Norte
+    513: República de las Islas Marshall
+    514: Estados Federados de Micronesia
+    516: República de Nauru
+    517: Niue
+    520: Nueva Zelandia
+    522: Isla Wake
+    523: Estado Independiente de Papúa Nueva Guinea
+    524: Islas Pitcairn, Henderson, Ducie y Oeno
+    526: Islas Salomón
+    527: Estado Independiente de Samoa
+    528: Samoa Americana
+    530: Tokelau
+    531: Reino de Tonga
+    532: Tuvalu
+    533: República de Vanuatu
+    535: República de Fiji
+    997: No especificado de Entidad Federativa
+    998: No especificado de País
+    999: *NA
+  simplified:
+    function: code_ent
+
+MUN_ASI:
+  original:
+  simplified:
